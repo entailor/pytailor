@@ -34,6 +34,6 @@ env_config = load_config_from_env()
 config.update(file_config)
 config.update(env_config)
 
-# put all config names directly under current namespace (tailor.internal.config)
+# put all config names directly under current namespace (tailor.config)
 for k, v in config.items():
     globals()[k] = v
