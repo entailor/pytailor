@@ -1,7 +1,6 @@
 from .client import client
 from ..models import UserModel
 from ..exceptions import ApiResponseError
-from typing import List
 
 
 def get_user() -> UserModel:

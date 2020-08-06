@@ -8,7 +8,7 @@ class TailorAuth(httpx.Auth):
         self.token = token
 
     def auth_flow(self, request):
-        # Send the request, with a custom `X-Authentication` header.
+        # Send the request, with an `Authorization` header.
         request.headers['Authorization'] = 'Bearer ' + self.token
         yield request
 
