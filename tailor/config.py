@@ -1,6 +1,6 @@
 import os
 import toml
-
+from pathlib import Path
 
 # set defaults
 config = {
@@ -12,10 +12,11 @@ config = {
 
 
 def load_config_from_file() -> dict:
-    homedir = os.path.expanduser('~')
-    config_file_homedir = os.path.join(homedir, '.tailor', 'config.toml')
-    if os.path.isfile(config_file_homedir):
-        return toml.load(config_file_homedir)
+    homedir = Path.home()
+    # homedir = os.path.expanduser('~')
+    config_file_homedir = homedir / '.tailor' / 'config.toml'
+    if config_file_homedir.exists():
+        return toml.load(str(config_file_homedir))
     else:
         return {}
 
