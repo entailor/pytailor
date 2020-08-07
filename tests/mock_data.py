@@ -22,3 +22,5 @@ user_dict = {
     'username': 'perhenden',
     'uuid': 'a92a7812-3acd-40cd-9ec9-cbabf1bb77e0'
 }
+
+project_dict = {}
