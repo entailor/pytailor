@@ -7,7 +7,7 @@ import os
 import pathlib
 import sys
 import traceback
-from collections import Mapping
+from collections.abc import Mapping
 from datetime import datetime
 from glob import glob
 from pathlib import Path
