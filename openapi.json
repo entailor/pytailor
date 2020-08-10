@@ -1,0 +1,1115 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Tailor.wf REST API",
+    "description": "Tailor Workflow System",
+    "version": "0.9.0"
+  },
+  "paths": {
+    "/projects/{project_uuid}/workflows": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Lists the workflows in the given project",
+        "operationId": "workflow_list_projects__project_uuid__workflows_get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Workflow List Projects  Project Uuid  Workflows Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowSummary"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/users": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Lists the users in the given project",
+        "operationId": "user_list_projects__project_uuid__users_get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response User List Projects  Project Uuid  Users Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/workflows/{wf_id}": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Details about the specified workflow",
+        "operationId": "workflow_details_projects__project_uuid__workflows__wf_id__get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "Workflow ID",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "integer",
+              "description": "Workflow ID"
+            },
+            "name": "wf_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/workflows/{wf_id}/tasks": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Lists the tasks for the specified workflow",
+        "operationId": "single_task_list_projects__project_uuid__workflows__wf_id__tasks_get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "Workflow ID",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "integer",
+              "description": "Workflow ID"
+            },
+            "name": "wf_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Single Task List Projects  Project Uuid  Workflows  Wf Id  Tasks Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SingleTaskSummary"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/tasks/{task_id}": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Details about the specified task",
+        "operationId": "single_task_details_projects__project_uuid__tasks__task_id__get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "SingleTask ID",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "integer",
+              "description": "SingleTask ID"
+            },
+            "name": "task_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleTask"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": [
+          "current_user"
+        ],
+        "summary": "The profile information for the current user",
+        "operationId": "profile_profile_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/workflows": {
+      "get": {
+        "tags": [
+          "current_user"
+        ],
+        "summary": "All workflows created by the current user",
+        "operationId": "workflows_workflows_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Workflows Workflows Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects": {
+      "get": {
+        "tags": [
+          "current_user"
+        ],
+        "summary": "All projects accessible by the current user",
+        "operationId": "projects_projects_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Projects Projects Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/accounts": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Lists all accounts",
+        "operationId": "account_list_admin_accounts_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Account List Admin Accounts Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create a new account",
+        "operationId": "create_account_admin_accounts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Account"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/accounts/{account_uuid}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Information about a specific account",
+        "operationId": "account_list_admin_accounts__account_uuid__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Account Uuid",
+              "type": "string"
+            },
+            "name": "account_uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/projects": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Lists all projects",
+        "operationId": "account_list_admin_projects_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Account List Admin Projects Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create a new project",
+        "operationId": "create_project_admin_projects_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Project"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/projects/{project_uuid}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Information about a specific project",
+        "operationId": "project_list_admin_projects__project_uuid__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Lists all users",
+        "operationId": "user_list_admin_users_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response User List Admin Users Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create a new user",
+        "operationId": "create_user_admin_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSummary"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/users/{uuid}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Information about a specific user",
+        "operationId": "user_admin_users__uuid__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Uuid",
+              "type": "string"
+            },
+            "name": "uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Account": {
+        "title": "Account",
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "title": "unique identifier",
+            "type": "string"
+          },
+          "organization_name": {
+            "title": "organization name",
+            "type": "string"
+          },
+          "organization_id": {
+            "title": "the official registration number of the organization",
+            "type": "string"
+          },
+          "projects": {
+            "title": "the projects owned by this account, by uuid",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "users": {
+            "title": "the users who are a member of this account, by uuid",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "Project": {
+        "title": "Project",
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "title": "unique identifier",
+            "type": "string"
+          },
+          "name": {
+            "title": "organization name",
+            "type": "string"
+          },
+          "account_uuid": {
+            "title": "the project owner account, by uuid",
+            "type": "string"
+          },
+          "storage_type": {
+            "$ref": "#/components/schemas/StorageType"
+          },
+          "storage_identifier": {
+            "title": "Name or equivalent within the given storage_type",
+            "type": "string"
+          },
+          "external_reference": {
+            "title": "a reference number or code this project uses in other systems",
+            "type": "string"
+          },
+          "users": {
+            "title": "the users who are a member of this account, by uuid",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Run": {
+        "title": "Run",
+        "type": "object",
+        "properties": {
+          "state": {
+            "title": "state of the singletask run",
+            "type": "string"
+          },
+          "ended_utc": {
+            "title": "timestamp of when the workflow ended, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "traceback": {
+            "title": "detailed error message",
+            "type": "string"
+          },
+          "error_message": {
+            "title": "summarized error message",
+            "type": "string"
+          }
+        }
+      },
+      "SingleTask": {
+        "title": "SingleTask",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "unique identifier of the task",
+            "type": "string"
+          },
+          "name": {
+            "title": "non-unique name of the task",
+            "type": "string"
+          },
+          "updated_utc": {
+            "title": "timestamp of the latest change, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "state": {
+            "title": "current state of the task",
+            "type": "string"
+          },
+          "created_utc": {
+            "title": "timestamp of when the task was created, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "runs": {
+            "title": "list of results from running this task",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Run"
+            }
+          },
+          "definition": {
+            "title": "definition of the task",
+            "type": "object"
+          }
+        }
+      },
+      "SingleTaskSummary": {
+        "title": "SingleTaskSummary",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "unique identifier of the task",
+            "type": "string"
+          },
+          "name": {
+            "title": "non-unique name of the task",
+            "type": "string"
+          },
+          "updated_utc": {
+            "title": "timestamp of the latest change, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "state": {
+            "title": "current state of the task",
+            "type": "string"
+          }
+        }
+      },
+      "StorageType": {
+        "title": "StorageType",
+        "type": "string",
+        "enum": [
+          "AZURE_BLOB_CONTAINER",
+          "LOCAL_FILESYSTEM",
+          "S3_BUCKET"
+        ],
+        "description": "An enumeration."
+      },
+      "User": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "unique username",
+            "type": "string"
+          },
+          "uuid": {
+            "title": "unique identifier",
+            "type": "string"
+          },
+          "accounts": {
+            "title": "the accounts the user has access to",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Account"
+            }
+          },
+          "projects": {
+            "title": "the projects the user has access to",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
+          },
+          "given_name": {
+            "title": "the user's given name",
+            "type": "string"
+          },
+          "family_name": {
+            "title": "the user's family name",
+            "type": "string"
+          },
+          "email": {
+            "title": "the user's email address",
+            "type": "string"
+          },
+          "phone_number": {
+            "title": "the user's phone number",
+            "type": "string"
+          }
+        }
+      },
+      "UserSummary": {
+        "title": "UserSummary",
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "unique username",
+            "type": "string"
+          },
+          "uuid": {
+            "title": "unique identifier",
+            "type": "string"
+          },
+          "accounts": {
+            "title": "the accounts the user has access to, by uuid",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "projects": {
+            "title": "the projects the user has access to, by uuid",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      },
+      "Workflow": {
+        "title": "Workflow",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "unique ID of the workflow",
+            "type": "string"
+          },
+          "name": {
+            "title": "non-unique name of the workflow",
+            "type": "string"
+          },
+          "project_uuid": {
+            "title": "project that owns this workflow",
+            "type": "string"
+          },
+          "updated_utc": {
+            "title": "timestamp of the latest change, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "user_uuid": {
+            "title": "user that created this workflow",
+            "type": "string"
+          },
+          "state": {
+            "title": "current aggregated state of the workflow's tasks",
+            "type": "string"
+          },
+          "created_utc": {
+            "title": "timestamp of when the workflow was created, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "task_links": {
+            "title": "links between tasks in the workflow",
+            "type": "object"
+          },
+          "root_tasks": {
+            "title": "root task(s) of the workflow",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "task_states": {
+            "title": "current state of each task",
+            "type": "object"
+          },
+          "file_list": {
+            "title": "list of input and output files for the workflow",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "WorkflowSummary": {
+        "title": "WorkflowSummary",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "unique ID of the workflow",
+            "type": "string"
+          },
+          "name": {
+            "title": "non-unique name of the workflow",
+            "type": "string"
+          },
+          "project_uuid": {
+            "title": "project that owns this workflow",
+            "type": "string"
+          },
+          "updated_utc": {
+            "title": "timestamp of the latest change, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "user_uuid": {
+            "title": "user that created this workflow",
+            "type": "string"
+          },
+          "state": {
+            "title": "current aggregated state of the workflow's tasks",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWTBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

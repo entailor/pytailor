@@ -1,5 +1,4 @@
-from tailor.services.project_service import get_project_by_uuid
-from tailor.models import ProjectModel
+from tailor.models import Project as ProjectModel
 
 
 class Project:
@@ -15,4 +14,4 @@ class Project:
 
     def __init__(self, project_uuid: str):
         self.uuid = project_uuid
-        self.__project_model: ProjectModel = get_project_by_uuid(self.uuid)
+        # self.__project_model: ProjectModel = get_project_by_uuid(self.uuid)

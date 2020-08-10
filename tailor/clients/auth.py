@@ -1,6 +1,6 @@
 import httpx
 
-from tailor.config import API_BASE_URL, AUTH_KEY
+from tailor.config import AUTH_KEY
 
 
 class TailorAuth(httpx.Auth):
@@ -11,6 +11,3 @@ class TailorAuth(httpx.Auth):
         # Send the request, with an `Authorization` header.
         request.headers['Authorization'] = 'Bearer ' + self.token
         yield request
-
-
-client = httpx.Client(base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY))
