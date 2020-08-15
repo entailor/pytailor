@@ -6,6 +6,55 @@
     "version": "0.9.0"
   },
   "paths": {
+    "/projects/{project_uuid}": {
+      "get": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Details about the specified project",
+        "operationId": "workflow_list_projects__project_uuid__get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/projects/{project_uuid}/workflows": {
       "get": {
         "tags": [
@@ -64,7 +113,7 @@
         "tags": [
           "project"
         ],
-        "summary": "Lists the users in the given project",
+        "summary": "Lists the users in the specified project",
         "operationId": "user_list_projects__project_uuid__users_get",
         "parameters": [
           {
@@ -136,7 +185,7 @@
             "required": true,
             "schema": {
               "title": "Wf Id",
-              "type": "integer",
+              "type": "string",
               "description": "Workflow ID"
             },
             "name": "wf_id",
@@ -196,7 +245,7 @@
             "required": true,
             "schema": {
               "title": "Wf Id",
-              "type": "integer",
+              "type": "string",
               "description": "Workflow ID"
             },
             "name": "wf_id",
@@ -236,13 +285,13 @@
         ]
       }
     },
-    "/projects/{project_uuid}/tasks/{task_id}": {
+    "/projects/{project_uuid}/workflows/{wf_id}/tasks/{task_id}": {
       "get": {
         "tags": [
           "project"
         ],
         "summary": "Details about the specified task",
-        "operationId": "single_task_details_projects__project_uuid__tasks__task_id__get",
+        "operationId": "single_task_details_projects__project_uuid__workflows__wf_id__tasks__task_id__get",
         "parameters": [
           {
             "description": "Project uuid",
@@ -260,7 +309,7 @@
             "required": true,
             "schema": {
               "title": "Task Id",
-              "type": "integer",
+              "type": "string",
               "description": "SingleTask ID"
             },
             "name": "task_id",
@@ -845,6 +894,10 @@
             "title": "detailed error message",
             "type": "string"
           },
+          "traceback_raw": {
+            "title": "unformatted, detailed error message",
+            "type": "string"
+          },
           "error_message": {
             "title": "summarized error message",
             "type": "string"
@@ -912,12 +965,12 @@
       },
       "StorageType": {
         "title": "StorageType",
-        "type": "string",
         "enum": [
           "AZURE_BLOB_CONTAINER",
           "LOCAL_FILESYSTEM",
           "S3_BUCKET"
         ],
+        "type": "string",
         "description": "An enumeration."
       },
       "User": {
