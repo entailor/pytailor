@@ -1,1 +1,24 @@
-site_name: My Docs
+site_name: Pytailor
+nav:
+  - Home: index.md
+  - Documentation:
+      - Concepts: documentation/concepts.md
+      - Getting started: documentation/getting_started.md
+      - Contexts: documentation/contexts.md
+  - API reference:
+      - Task definition classes: api/taskdefs.md
+  - Code examples:
+      Example 1: examples/example01.md
+theme:
+  name: material
+  palette:
+    scheme: slate
+markdown_extensions:
+  - admonition
+#  - codehilite
+  - pymdownx.superfences
+  - pymdownx.details
+  - mkautodoc
+  - pymdownx.highlight:
+      use_pygments: true
+repo_url: https://github.com/entailor/pytailor
