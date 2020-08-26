@@ -1,3 +1,2 @@
-from .taskdef import TaskDefinition, PythonTask, DuplicateTask, DAGTask
+from .dag import BaseTask, PythonTask, BranchTask, DAG
 from .project import Project
-from .workflow import Workflow
