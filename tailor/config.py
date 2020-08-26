@@ -24,7 +24,7 @@ def load_config_from_file() -> dict:
 def load_config_from_env() -> dict:
     env_cfg = {}
     for key in config:  # use keys in default config to search for valid config names
-        if key in os.environ:
+        if 'PYTAILOR_' + key in os.environ:
             env_cfg[key] = os.getenv(key)
     return env_cfg
 
