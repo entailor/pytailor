@@ -712,7 +712,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserSummary"
+                "$ref": "#/components/schemas/User"
               }
             }
           },
@@ -724,7 +724,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserSummary"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -753,7 +753,7 @@
           "admin"
         ],
         "summary": "Information about a specific user",
-        "operationId": "user_admin_users__uuid__get",
+        "operationId": "find_user_admin_users__uuid__get",
         "parameters": [
           {
             "required": true,
@@ -986,17 +986,17 @@
             "type": "string"
           },
           "accounts": {
-            "title": "the accounts the user has access to",
+            "title": "the accounts the user has access to, by uuid",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Account"
+              "type": "string"
             }
           },
           "projects": {
-            "title": "the projects the user has access to",
+            "title": "the projects the user has access to, by uuid",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Project"
+              "type": "string"
             }
           },
           "given_name": {
@@ -1124,6 +1124,10 @@
             "items": {
               "type": "object"
             }
+          },
+          "context_id": {
+            "title": "reference to the Workflow's context object",
+            "type": "string"
           }
         }
       },
