@@ -1,4 +1,5 @@
 from tailor.models import Project as ProjectModel
+from tailor.clients import ProjectClient
 
 
 class Project:
@@ -14,4 +15,6 @@ class Project:
 
     def __init__(self, project_uuid: str):
         self.uuid = project_uuid
-        # self.__project_model: ProjectModel = get_project_by_uuid(self.uuid)
+        with ProjectClient() as client:
+            self.__project_model: ProjectModel = client.get_project(self.uuid)
+        self.name = self.__project_model.name
