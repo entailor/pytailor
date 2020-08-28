@@ -164,7 +164,7 @@
     "/projects/{project_uuid}/workflows/{wf_id}": {
       "get": {
         "tags": [
-          "project"
+          "workflow"
         ],
         "summary": "Details about the specified workflow",
         "operationId": "workflow_details_projects__project_uuid__workflows__wf_id__get",
@@ -224,7 +224,7 @@
     "/projects/{project_uuid}/workflows/{wf_id}/tasks": {
       "get": {
         "tags": [
-          "project"
+          "workflow"
         ],
         "summary": "Lists the tasks for the specified workflow",
         "operationId": "single_task_list_projects__project_uuid__workflows__wf_id__tasks_get",
@@ -288,7 +288,7 @@
     "/projects/{project_uuid}/workflows/{wf_id}/tasks/{task_id}": {
       "get": {
         "tags": [
-          "project"
+          "workflow"
         ],
         "summary": "Details about the specified task",
         "operationId": "single_task_details_projects__project_uuid__workflows__wf_id__tasks__task_id__get",
@@ -305,12 +305,23 @@
             "in": "path"
           },
           {
-            "description": "SingleTask ID",
+            "description": "Workflow ID",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "string",
+              "description": "Workflow ID"
+            },
+            "name": "wf_id",
+            "in": "path"
+          },
+          {
+            "description": "Task ID",
             "required": true,
             "schema": {
               "title": "Task Id",
               "type": "string",
-              "description": "SingleTask ID"
+              "description": "Task ID"
             },
             "name": "task_id",
             "in": "path"
@@ -323,6 +334,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/workflows": {
+      "post": {
+        "tags": [
+          "workflow"
+        ],
+        "summary": "Create a new workflow",
+        "operationId": "create_workflow_projects__project_id__workflows_post",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
                 }
               }
             }
@@ -1603,6 +1673,36 @@
           },
           "fileset_uuid": {
             "title": "reference to the Workflow's fileset object",
+            "type": "string"
+          },
+          "dag": {
+            "title": "The Workflow's dag",
+            "type": "object"
+          }
+        }
+      },
+      "WorkflowCreate": {
+        "title": "WorkflowCreate",
+        "type": "object",
+        "properties": {
+          "wf_def_id": {
+            "title": "(Optional) the workflow definition to base this Workflow on",
+            "type": "string"
+          },
+          "dag": {
+            "title": "(Optional) The DAG specification as JSON",
+            "type": "object"
+          },
+          "name": {
+            "title": "The name selected for this Workflow",
+            "type": "string"
+          },
+          "inputs": {
+            "title": "(Optional) the inputs to the Workflow",
+            "type": "object"
+          },
+          "fileset_id": {
+            "title": "(Optional) use input files from the specified FileSet. If not specified, a new, initially empty, FileSet will be created",
             "type": "string"
           }
         }
