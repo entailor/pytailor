@@ -261,7 +261,7 @@
                   "title": "Response Single Task List Projects  Project Uuid  Workflows  Wf Id  Tasks Get",
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/SingleTaskSummary"
+                    "$ref": "#/components/schemas/TaskSummary"
                   }
                 }
               }
@@ -322,7 +322,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SingleTask"
+                  "$ref": "#/components/schemas/Task"
                 }
               }
             }
@@ -419,6 +419,393 @@
                   "items": {
                     "$ref": "#/components/schemas/Project"
                   }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/filesets": {
+      "post": {
+        "tags": [
+          "file_sets"
+        ],
+        "summary": "Creates a new fileset for the given project",
+        "operationId": "create_projects__project_uuid__filesets_post",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/filesets/{fileset_uuid}/uploads": {
+      "post": {
+        "tags": [
+          "file_sets"
+        ],
+        "summary": "Creates upload URLs for the given fileset, optionally scoped for the specified Task",
+        "operationId": "upload_projects__project_uuid__filesets__fileset_uuid__uploads_post",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "FileSet uuid",
+            "required": true,
+            "schema": {
+              "title": "Fileset Uuid",
+              "type": "string",
+              "description": "FileSet uuid"
+            },
+            "name": "fileset_uuid",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileSetUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/filesets/{fileset_uuid}/downloads": {
+      "post": {
+        "tags": [
+          "file_sets"
+        ],
+        "summary": "Creates download URLs for the given fileset, optionally scoped for the specified Task",
+        "operationId": "download_projects__project_uuid__filesets__fileset_uuid__downloads_post",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "FileSet uuid",
+            "required": true,
+            "schema": {
+              "title": "Fileset Uuid",
+              "type": "string",
+              "description": "FileSet uuid"
+            },
+            "name": "fileset_uuid",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileSetDownload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/workflows/{wf_id}/uploads": {
+      "post": {
+        "tags": [
+          "file_sets"
+        ],
+        "summary": "Creates upload URLs for the given workflow, optionally scoped for the specified Task",
+        "operationId": "upload_alias_projects__project_uuid__workflows__wf_id__uploads_post",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "Workflow id",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "string",
+              "description": "Workflow id"
+            },
+            "name": "wf_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileSetUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_uuid}/workflows/{wf_id}/downloads": {
+      "get": {
+        "tags": [
+          "file_sets"
+        ],
+        "summary": "Lists the files of the workflow, with download URLs",
+        "operationId": "download_alias_projects__project_uuid__workflows__wf_id__downloads_get",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "Workflow id",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "string",
+              "description": "Workflow id"
+            },
+            "name": "wf_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "file_sets"
+        ],
+        "summary": "Creates download URLs for the given workflow, optionally scoped for the specified Task",
+        "operationId": "download_alias_projects__project_uuid__workflows__wf_id__downloads_post",
+        "parameters": [
+          {
+            "description": "Project uuid",
+            "required": true,
+            "schema": {
+              "title": "Project Uuid",
+              "type": "string",
+              "description": "Project uuid"
+            },
+            "name": "project_uuid",
+            "in": "path"
+          },
+          {
+            "description": "Workflow id",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "string",
+              "description": "Workflow id"
+            },
+            "name": "wf_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileSetDownload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -829,6 +1216,98 @@
           }
         }
       },
+      "FileSet": {
+        "title": "FileSet",
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "title": "unique identifier",
+            "type": "string"
+          },
+          "tags": {
+            "title": "File links",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileSetLinks"
+            }
+          }
+        }
+      },
+      "FileSetDownload": {
+        "title": "FileSetDownload",
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "title": "Task to scope the fileset against",
+            "type": "string"
+          },
+          "tags": {
+            "title": "list of tags to download files for",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "FileSetLink": {
+        "title": "FileSetLink",
+        "required": [
+          "filename",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        }
+      },
+      "FileSetLinks": {
+        "title": "FileSetLinks",
+        "type": "object",
+        "properties": {
+          "tag_name": {
+            "title": "The tag name of the files",
+            "type": "string"
+          },
+          "links": {
+            "title": "The files",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileSetLink"
+            }
+          }
+        }
+      },
+      "FileSetUpload": {
+        "title": "FileSetUpload",
+        "required": [
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "title": "Task to scope the fileset against",
+            "type": "string"
+          },
+          "tags": {
+            "title": "list of tags, each containing a list of file names",
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
       "HTTPValidationError": {
         "title": "HTTPValidationError",
         "type": "object",
@@ -878,34 +1357,18 @@
           }
         }
       },
-      "Run": {
-        "title": "Run",
-        "type": "object",
-        "properties": {
-          "state": {
-            "title": "state of the singletask run",
-            "type": "string"
-          },
-          "ended_utc": {
-            "title": "timestamp of when the workflow ended, in ISO-8601 datetime format",
-            "type": "string"
-          },
-          "traceback": {
-            "title": "detailed error message",
-            "type": "string"
-          },
-          "traceback_raw": {
-            "title": "unformatted, detailed error message",
-            "type": "string"
-          },
-          "error_message": {
-            "title": "summarized error message",
-            "type": "string"
-          }
-        }
+      "StorageType": {
+        "title": "StorageType",
+        "enum": [
+          "AZURE_BLOB_CONTAINER",
+          "LOCAL_FILESYSTEM",
+          "S3_BUCKET"
+        ],
+        "type": "string",
+        "description": "An enumeration."
       },
-      "SingleTask": {
-        "title": "SingleTask",
+      "Task": {
+        "title": "Task",
         "type": "object",
         "properties": {
           "id": {
@@ -932,7 +1395,7 @@
             "title": "list of results from running this task",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Run"
+              "$ref": "#/components/schemas/TaskRun"
             }
           },
           "definition": {
@@ -941,8 +1404,34 @@
           }
         }
       },
-      "SingleTaskSummary": {
-        "title": "SingleTaskSummary",
+      "TaskRun": {
+        "title": "TaskRun",
+        "type": "object",
+        "properties": {
+          "state": {
+            "title": "state of the task run",
+            "type": "string"
+          },
+          "ended_utc": {
+            "title": "timestamp of when the workflow ended, in ISO-8601 datetime format",
+            "type": "string"
+          },
+          "traceback": {
+            "title": "detailed error message",
+            "type": "string"
+          },
+          "traceback_raw": {
+            "title": "unformatted, detailed error message",
+            "type": "string"
+          },
+          "error_message": {
+            "title": "summarized error message",
+            "type": "string"
+          }
+        }
+      },
+      "TaskSummary": {
+        "title": "TaskSummary",
         "type": "object",
         "properties": {
           "id": {
@@ -962,16 +1451,6 @@
             "type": "string"
           }
         }
-      },
-      "StorageType": {
-        "title": "StorageType",
-        "enum": [
-          "AZURE_BLOB_CONTAINER",
-          "LOCAL_FILESYSTEM",
-          "S3_BUCKET"
-        ],
-        "type": "string",
-        "description": "An enumeration."
       },
       "User": {
         "title": "User",
@@ -1118,15 +1597,12 @@
             "title": "current state of each task",
             "type": "object"
           },
-          "file_list": {
-            "title": "list of input and output files for the workflow",
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
-          },
           "context_id": {
             "title": "reference to the Workflow's context object",
+            "type": "string"
+          },
+          "fileset_uuid": {
+            "title": "reference to the Workflow's fileset object",
             "type": "string"
           }
         }
