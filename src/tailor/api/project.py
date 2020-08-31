@@ -1,4 +1,3 @@
-from tailor.models import Project as ProjectModel
 from tailor.clients import RestClient
 
 
@@ -16,11 +15,10 @@ class Project:
     def __init__(self, project_id: str):
         self.id = project_id
         with RestClient() as client:
-            self.__project_model: ProjectModel = client.get_project(self.id)
+            self.__project_model = client.get_project(self.id)
+            if self.__project_model is None:
+                raise ValueError(f'Could not find project with id {project_id}')
         self.name = self.__project_model.name
-
-    def __repr__(self):
-        return f'Project(id={self.id})'
 
     @classmethod
     def from_name(cls, project_name: str) -> 'Project':

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 from abc import ABC, abstractmethod
 from typing import Optional, List, Union, Any
@@ -71,7 +73,7 @@ class BaseTask(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, d: dict) -> 'BaseTask':
+    def from_dict(cls, d: dict) -> BaseTask:
         return NotImplemented
 
 
@@ -161,14 +163,14 @@ class PythonTask(BaseTask):
     def function(self, value):
         self._function = value
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Serialize task definition."""
         d = _object_to_dict(self, exclude_varnames=['parents'])
         d['type'] = self.TYPE.value
         return d
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d) -> PythonTask:
         """Create from serialized task definition."""
         d = copy.deepcopy(d)
         d.pop('type', None)
@@ -225,13 +227,13 @@ class BranchTask(BaseTask):
         self.args = args
         self.kwargs = kwargs
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         d = _object_to_dict(self, exclude_varnames=['parents'])
         d['type'] = self.TYPE.value
         return d
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d) -> BranchTask:
         d = copy.deepcopy(d)
         td = d.pop('job')
         d['job'] = _object_from_dict(td)
@@ -351,7 +353,7 @@ class DAG(BaseTask):
         return d
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls, d) -> DAG:
         d = copy.deepcopy(d)
         task_def_dicts = d.pop('tasks')
         task_defs = []
