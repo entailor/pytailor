@@ -183,11 +183,43 @@ class PythonTask(BaseTask):
         return PythonTask.from_dict(self.to_dict())
 
 
+# class NewBranchTask(BaseTask):
+#     """
+#     Parameters
+#     ----------
+#     task : BaseTask
+#         Task to be duplicated (PythonTask, BranchTask or DAG).
+#     name : str, optional
+#         A default name is used if not provided.
+#     parents : BaseTask or List[BaseTask], optional
+#         Specify one or more upstream job definitions that this job definition
+#         depends on.
+#     branch_data : ...
+#         Data to be used as basis for branching. Accepts a query-expression or a list of
+#         query-expressions. An axis parameter may also be specified along with the
+#         query-expression, then as a tuples: (query-expr, axis). The axis parameter is
+#         relevant the data are 2d or higher and will default to 0 if not provided.
+#     branch_files : ...
+#         Files to be used as basis for branching. Accepts a file tag or a list of
+#         file tags.
+#
+#     """
+#     def __init__(self,
+#                  task: BaseTask,
+#                  name: Optional[str] = None,
+#                  parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+#                  branch_data=None,
+#                  branch_files=None
+#                  ):
+#         super().__init__(name=name, parents=parents)
+#         self.task = task
+
+
 class BranchTask(BaseTask):
     """
-    Dynamically duplicate a job during a workflow run.
+    Dynamically duplicate a task during a workflow run.
 
-    Provides parallelization or "fan-out" functionality. The *job* object
+    Provides parallelization or "fan-out" functionality. The *task* object
     is duplicated based on the data provided with *args*, *kwargs*
     and *download*. At least one of these must be specified. Different
     formats of these arguments are allowed. See the examples/*duplicate*.py
@@ -200,7 +232,7 @@ class BranchTask(BaseTask):
     name : str, optional
         A default name is used if not provided.
     parents : BaseTask or List[BaseTask], optional
-        Specify one or more upstream job definitions that this job definition
+        Specify one or more upstream tasks that this task
         depends on.
     download : str or list, optional
         Specify one or more file tags to be used as basis for duplication.
@@ -208,7 +240,7 @@ class BranchTask(BaseTask):
         Specify data to be used for *args* input in duplicated tasks Can be a single
         query expression or .
     kwargs : str or dict, optional
-        Specify data to be used for *kwargs* input in duplicated job definitions
+        Specify data to be used for *kwargs* input in duplicated tasks
 
     """
 
@@ -258,7 +290,7 @@ class DAG(BaseTask):
     name : str, optional
         A default name is used if not provided.
     parents : BaseTask or List[BaseTask], optional
-        Specify one or more upstream job definitions that this job definition
+        Specify one or more upstream tasks that this task
         depends on.
     links : dict, optional
         Parent/children relationships can be specified with the dict on the form
@@ -284,7 +316,7 @@ class DAG(BaseTask):
         links = self._as_index_links(links)
         task_links = self._as_task_links(links)
 
-        # add empty list to job definitions without children
+        # add empty list to tasks without children
         for i, td in enumerate(self.tasks):
             if i not in links:
                 links[i] = []
@@ -304,7 +336,7 @@ class DAG(BaseTask):
         self.links = links
         self.task_links = task_links
 
-        # Update parents in job definition objects
+        # Update parents in task objects
         for td in self.tasks:
             td.parents = self.__get_parents(td)
 
