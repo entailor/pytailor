@@ -1,7 +1,7 @@
 from typing import List, Optional
 import httpx
 from pydantic import BaseModel, ValidationError
-from tailor.models import Project, User, Workflow, FileSet, FileSetDownload
+from tailor.models import *
 from tailor.config import API_BASE_URL, AUTH_KEY
 from .auth import TailorAuth
 
@@ -36,7 +36,6 @@ class RestClient(httpx.Client):
 
     def new_fileset(self, project_id: str) -> Optional[FileSet]:
         url = f'projects/{project_id}/filesets'
-        print(url)
         response = self.post(url)
         if response.status_code == httpx.codes.OK:
             return FileSet.parse_obj(response.json())
@@ -50,6 +49,18 @@ class RestClient(httpx.Client):
                           ) -> Optional[FileSet]:
         url = f'projects/{project_id}/filesets/{fileset_id}/downloads'
         response = self.post(url, data=fileset_download.json())
+        if response.status_code == httpx.codes.OK:
+            return FileSet.parse_obj(response.json())
+        else:
+            return None
+
+    def get_upload_urls(self,
+                        project_id: str,
+                        fileset_id: str,
+                        fileset_upload: FileSetUpload
+                        ) -> Optional[FileSet]:
+        url = f'projects/{project_id}/filesets/{fileset_id}/uploads'
+        response = self.post(url, data=fileset_upload.json())
         if response.status_code == httpx.codes.OK:
             return FileSet.parse_obj(response.json())
         else:
