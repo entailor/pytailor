@@ -3,7 +3,7 @@ from pathlib import Path
 
 from .base import APIBase
 from .project import Project
-from tailor.clients import RestClient, S3Client
+from tailor.clients import RestClient, FileClient
 from tailor.models import FileSetDownload, FileSetUpload
 
 
@@ -54,5 +54,5 @@ class FileSet(APIBase):
                 error_msg='Error while getting upload urls from the backend.'
             )
 
-        with S3Client() as client:
+        with FileClient() as client:
             client.upload_files(fileset_upload, fileset_model)

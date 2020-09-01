@@ -3,7 +3,7 @@ import requests
 from tailor.models import FileSetUpload, FileSet
 
 
-class S3Client(httpx.Client):
+class FileClient(httpx.Client):
 
     def upload_files(self, fileset_upload: FileSetUpload, fileset: FileSet):
 
