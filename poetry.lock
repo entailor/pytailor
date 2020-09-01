@@ -45,6 +45,17 @@ docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
 tests = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.interface"]
 
 [[package]]
+category = "main"
+description = "Internationalization utilities"
+name = "babel"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "2.8.0"
+
+[package.dependencies]
+pytz = ">=2015.7"
+
+[[package]]
 category = "dev"
 description = "The uncompromising code formatter."
 name = "black"
@@ -491,6 +502,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 version = "0.8.0"
 
 [[package]]
+category = "main"
+description = "Python Build Reasonableness"
+name = "pbr"
+optional = false
+python-versions = "*"
+version = "5.4.5"
+
+[[package]]
 category = "dev"
 description = "plugin and hook calling mechanisms for python"
 name = "pluggy"
@@ -505,6 +524,14 @@ version = ">=0.12"
 
 [package.extras]
 dev = ["pre-commit", "tox"]
+
+[[package]]
+category = "main"
+description = "Python Lex & Yacc"
+name = "ply"
+optional = false
+python-versions = "*"
+version = "3.11"
 
 [[package]]
 category = "dev"
@@ -657,6 +684,25 @@ pytest = ">=6.0.0,<7.0.0"
 testing = ["pytest-asyncio (>=0.14.0,<0.15.0)", "pytest-cov (>=2.0.0,<3.0.0)"]
 
 [[package]]
+category = "main"
+description = "Extensions to the standard Python datetime module"
+name = "python-dateutil"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+version = "2.8.1"
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
+category = "main"
+description = "World timezone definitions, modern and historical"
+name = "pytz"
+optional = false
+python-versions = "*"
+version = "2020.1"
+
+[[package]]
 category = "dev"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
@@ -715,7 +761,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "2.10.2"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
@@ -780,6 +826,21 @@ secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
 [[package]]
+category = "main"
+description = "YAQL - Yet Another Query Language"
+name = "yaql"
+optional = false
+python-versions = "*"
+version = "1.1.3"
+
+[package.dependencies]
+Babel = ">=1.3"
+pbr = ">=1.8"
+ply = "*"
+python-dateutil = ">=2.4.2"
+six = ">=1.9.0"
+
+[[package]]
 category = "dev"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 marker = "python_version < \"3.8\""
@@ -793,7 +854,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "5435b93d48e3a82d054083c3b54fee56548be431fc8fce43d903d11c7c783898"
+content-hash = "a13dc426ec6e0466abad39284695f4cbb6c47c4fbbe014c6295cc6ab7da19de0"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -813,6 +874,10 @@ atomicwrites = [
 attrs = [
     {file = "attrs-20.1.0-py2.py3-none-any.whl", hash = "sha256:2867b7b9f8326499ab5b0e2d12801fa5c98842d2cbd22b35112ae04bf85b4dff"},
     {file = "attrs-20.1.0.tar.gz", hash = "sha256:0ef97238856430dcf9228e07f316aefc17e8939fc8507e18c6501b761ef1a42a"},
+]
+babel = [
+    {file = "Babel-2.8.0-py2.py3-none-any.whl", hash = "sha256:d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4"},
+    {file = "Babel-2.8.0.tar.gz", hash = "sha256:1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38"},
 ]
 black = [
     {file = "black-19.10b0-py36-none-any.whl", hash = "sha256:1b30e59be925fafc1ee4565e5e08abef6b03fe455102883820fe5ee2e4734e0b"},
@@ -1005,9 +1070,17 @@ pathspec = [
     {file = "pathspec-0.8.0-py2.py3-none-any.whl", hash = "sha256:7d91249d21749788d07a2d0f94147accd8f845507400749ea19c1ec9054a12b0"},
     {file = "pathspec-0.8.0.tar.gz", hash = "sha256:da45173eb3a6f2a5a487efba21f050af2b41948be6ab52b6a1e3ff22bb8b7061"},
 ]
+pbr = [
+    {file = "pbr-5.4.5-py2.py3-none-any.whl", hash = "sha256:579170e23f8e0c2f24b0de612f71f648eccb79fb1322c814ae6b3c07b5ba23e8"},
+    {file = "pbr-5.4.5.tar.gz", hash = "sha256:07f558fece33b05caf857474a366dfcc00562bca13dd8b47b2b3e22d9f9bf55c"},
+]
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
+]
+ply = [
+    {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
+    {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
 ]
 prance = [
     {file = "prance-0.19.0-py2.py3-none-any.whl", hash = "sha256:b87504dffb40c1e29aca0ca01f5f3dbb1941f29fd32c3a5e0fbd90ae37f749a3"},
@@ -1066,6 +1139,14 @@ pytest-cov = [
 pytest-httpx = [
     {file = "pytest_httpx-0.8.0-py3-none-any.whl", hash = "sha256:55f9d89bab9985721b5cc77d16b8bb24fd044d23d17635f0b2d892a017fd6b7d"},
     {file = "pytest_httpx-0.8.0.tar.gz", hash = "sha256:61fd82885ce7655f1ee9b32ebced87af869f19d035956300f0016ec63057e747"},
+]
+python-dateutil = [
+    {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
+    {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
+]
+pytz = [
+    {file = "pytz-2020.1-py2.py3-none-any.whl", hash = "sha256:a494d53b6d39c3c6e44c3bec237336e14305e4f29bbf800b599253057fbb79ed"},
+    {file = "pytz-2020.1.tar.gz", hash = "sha256:c35965d010ce31b23eeb663ed3cc8c906275d6be1a34393a1d73a41febf4a048"},
 ]
 pyyaml = [
     {file = "PyYAML-5.3.1-cp27-cp27m-win32.whl", hash = "sha256:74809a57b329d6cc0fdccee6318f44b9b8649961fa73144a98735b0aaf029f1f"},
@@ -1168,6 +1249,10 @@ typed-ast = [
 urllib3 = [
     {file = "urllib3-1.25.10-py2.py3-none-any.whl", hash = "sha256:e7983572181f5e1522d9c98453462384ee92a0be7fac5f1413a1e35c56cc0461"},
     {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
+]
+yaql = [
+    {file = "yaql-1.1.3-py2-none-any.whl", hash = "sha256:de6748ff75370180cdbe81ea586e4215de25cb13543899445decc7d47d8144af"},
+    {file = "yaql-1.1.3.tar.gz", hash = "sha256:1134d9e9a8b61c97ac03f80d27fa60439397a6ff7aac3c3180c0a6908c05d209"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
