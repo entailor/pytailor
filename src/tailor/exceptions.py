@@ -1,2 +1,2 @@
-class ApiResponseError(Exception):
+class BackendResponseError(Exception):
     pass

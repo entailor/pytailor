@@ -3,6 +3,7 @@ import pytest
 
 from tailor import FileSet
 from tailor.models import FileSet as FileSetModel
+from tailor.exceptions import BackendResponseError
 
 from ..data import data_empty_fileset
 
@@ -24,8 +25,7 @@ def test_get_existing_fileset(mocked_method):
     mocked_method.assert_called_once()
 
 
-@patch('tailor.clients.RestClient.get_download_urls', return_value=None)
-def test_get_non_existing_fileset(mocked_method):
-    with pytest.raises(ValueError):
+def test_get_non_existing_fileset(httpx_mock):
+    httpx_mock.add_response(status_code=404)
+    with pytest.raises(BackendResponseError):
         FileSet(project=Mock(), fileset_id=model_obj.id)
-    mocked_method.assert_called_once()

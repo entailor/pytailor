@@ -21,14 +21,6 @@ def test_get_project(httpx_mock):
         assert model == Project(**data_project)
 
 
-def test_get_project_bad_id(httpx_mock):
-    # backend currently gives a 403 on unknown/unauthorized project_id
-    httpx_mock.add_response(status_code=403)
-    with RestClient() as client:
-        model = client.get_project("a_non_existing_id")
-    assert model is None
-
-
 def test_new_fileset(httpx_mock):
     project_id = 'a_project_id'
     httpx_mock.add_response(json=data_empty_fileset)
@@ -36,14 +28,6 @@ def test_new_fileset(httpx_mock):
         model = client.new_fileset(project_id)
     assert isinstance(model, FileSet)
     assert model == FileSet(**data_empty_fileset)
-
-
-def test_new_fileset_bad_project(httpx_mock):
-    project_id = 'a_project_id'
-    httpx_mock.add_response(status_code=403)
-    with RestClient() as client:
-        model = client.new_fileset(project_id)
-    assert model is None
 
 
 def test_get_download_urls_empty_payload(httpx_mock):
@@ -57,18 +41,6 @@ def test_get_download_urls_empty_payload(httpx_mock):
     assert model == FileSet(**data_empty_fileset)
 
 
-def test_get_download_urls_empty_payload_bad_fileset_id(httpx_mock):
-    project_id = 'a_project_id'
-    fileset_id = 'a_filset_id'
-    fileset_download = FileSetDownload()
-    httpx_mock.add_response(status_code=404)
-    with RestClient() as client:
-        model = client.get_download_urls(project_id, fileset_id, fileset_download)
-    assert model is None
-
-
 # TODO:
 #   test_get_upload_urls
-#   test_get_upload_urls_bad_fileset_id
 #   test_get_download_urls
-#   test_get_download_urls_bad_fileset_id

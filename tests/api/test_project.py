@@ -3,7 +3,7 @@ import pytest
 
 from tailor import Project
 from tailor.models import Project as ProjectModel
-
+from tailor.exceptions import BackendResponseError
 from ..data import *
 
 # an empty FileSet model to use in tests
@@ -19,11 +19,10 @@ def test_get_project_from_id(mocked_method):
     mocked_method.assert_called_once()
 
 
-@patch('tailor.clients.RestClient.get_project', return_value=None)
-def test_get_project_from_bad_id(mocked_method):
-    with pytest.raises(ValueError):
+def test_get_project_from_bad_id(httpx_mock):
+    httpx_mock.add_response(status_code=403)
+    with pytest.raises(BackendResponseError):
         Project(model_obj.id)
-    mocked_method.assert_called_once()
 
 
 @patch('tailor.clients.RestClient.get_projects', return_value=model_objs)
@@ -36,8 +35,14 @@ def test_get_project_from_name(mocked_method1, mocked_method2):
     mocked_method2.assert_called_once()
 
 
+def test_get_project_from_bad_name(httpx_mock):
+    httpx_mock.add_response(json=data_projects)
+    with pytest.raises(ValueError):
+        Project.from_name('Non-existing')
+
+
 @patch('tailor.clients.RestClient.get_projects', return_value=model_objs)
-def test_get_project_from_bad_name(mocked_method):
+def test_get_project_from_bad_name_alt_mocking(mocked_method):
     with pytest.raises(ValueError):
         Project.from_name('Non-existing')
     mocked_method.assert_called_once()

@@ -1,12 +1,13 @@
 from typing import Dict, Union, List
 from pathlib import Path
 
+from .base import APIBase
 from .project import Project
 from tailor.clients import RestClient, S3Client
 from tailor.models import FileSetDownload, FileSetUpload
 
 
-class FileSet:
+class FileSet(APIBase):
     """
     Get a new or existing fileset.
     """
@@ -14,32 +15,44 @@ class FileSet:
     def __init__(self, project: Project, fileset_id: str = None):
         if fileset_id is None:
             with RestClient() as client:
-                fileset_model = client.new_fileset(project.id)
+                fileset_model = self._handle_rest_client_call(
+                    client.new_fileset,
+                    project.id,
+                    error_msg='An error occurred during fileset creation.'
+                )
         else:
             fileset_download = FileSetDownload()
             with RestClient() as client:
-                fileset_model = client.get_download_urls(project.id, fileset_id,
-                                                         fileset_download)
-        if fileset_model:
-            self.id = fileset_model.id
-        else:
-            raise ValueError(f'Fileset with id "{fileset_id}" not found for project '
-                             f'"{project.name}"')
+                fileset_model = self._handle_rest_client_call(
+                    client.get_download_urls,
+                    project.id,
+                    fileset_id,
+                    fileset_download,
+                    error_msg=f'Could not retrieve fileset with id {fileset_id}'
+                )
+        self.id = fileset_model.id
         self.project = project
 
     def upload(self, tag: str, files: Union[str, List[str]]):
-
+        """Upload one or more files under the given *tag*"""
         if isinstance(files, str):
             files = [files]
 
         for file in files:
             if not Path(file).exists():
-                FileNotFoundError(f'Could not find file: {file}')
+                raise FileNotFoundError(f'Could not find local file: {file}.'
+                                        f'Upload aborted.')
 
         fileset_upload = FileSetUpload(tags={tag: files})
+
         with RestClient() as client:
-            fileset_model = client.get_upload_urls(
-                self.project.id, self.id, fileset_upload)
+            fileset_model = self._handle_rest_client_call(
+                client.get_upload_urls,
+                self.project.id,
+                self.id,
+                fileset_upload,
+                error_msg='Error while getting upload urls from the backend.'
+            )
 
         with S3Client() as client:
             client.upload_files(fileset_upload, fileset_model)

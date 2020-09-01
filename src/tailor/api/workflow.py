@@ -3,9 +3,10 @@ from __future__ import annotations
 from enum import Enum
 from typing import Optional
 
-from tailor.models import Workflow as WorkflowModel
+from tailor.models import Workflow as WorkflowModel, WorkflowCreate
 from tailor.clients import RestClient
-from tailor.utils import dict_keys_str_to_int
+from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
+from .base import APIBase
 from .project import Project
 from .fileset import FileSet
 from .dag import DAG
@@ -23,7 +24,7 @@ class WorkflowState(Enum):
     COMPLETED = 5
 
 
-class Workflow:
+class Workflow(APIBase):
     """
     The Workflow class is used to create new workflows or operate on existing workflows.
 
@@ -69,6 +70,7 @@ class Workflow:
         self.__inputs = inputs or {}
         self.__state = WorkflowState.PRE
         self.__fileset = fileset or FileSet(self.__project)
+        self.__outputs = {}
 
     # use @property to make attributes read-only
 
@@ -90,7 +92,11 @@ class Workflow:
 
     @property
     def state(self):
-        return self.__state
+        return self.__state.name
+
+    @property
+    def outputs(self):
+        return self.__outputs
 
     def _update_from_backend(self, wf_model: WorkflowModel):
         # used to set a references to the backend database record for the
@@ -98,13 +104,17 @@ class Workflow:
         self.__state = WorkflowState[wf_model.state]
         self.__outputs = wf_model.outputs
 
-
     @classmethod
     def from_project_and_id(cls, project: Project, wf_id: int) -> Workflow:
 
         # get workflow model
         with RestClient() as client:
-            wf_model = client.get_workflow(project.id, wf_id)
+            wf_model = cls._handle_rest_client_call(
+                client.get_workflow,
+                project.id,
+                wf_id,
+                error_msg='Could not retrieve workflow.'
+            )
 
         wf = Workflow(
             project=Project(wf_model.project_id),
@@ -118,17 +128,35 @@ class Workflow:
 
         return wf
 
-    def run(self, mode: str = 'direct', worker_name: Optional[str] = None) -> None:
+    def run(self, mode: str = 'here_and_now', worker_name: Optional[str] = None) -> None:
         """
         Start the workflow.
 
         """
 
-        if self.state != WorkflowState.PRE:
-            pass
-            # dont allow run
+        if self.__state != WorkflowState.PRE:
+            # don't allow run, warn or raise
+            return
 
-        if mode == 'direct':
+        # create data model
+        create_data = WorkflowCreate(
+            dag=dict_keys_int_to_str(self.dag.to_dict()),
+            name=self.name,
+            inputs=self.inputs,
+            fileset_id=self.__fileset.id
+        )
+
+        # add workflow to backend
+        with RestClient() as client:
+            wf_model = self._handle_rest_client_call(
+                client.create_workflow,
+                self.__project.id,
+                create_data,
+                error_msg='Could not create workflow.'
+            )
+            self._update_from_backend(wf_model)
+
+        if mode == 'here_and_now':
             # starts the DirectRunner
             # blocks until complete
             pass
