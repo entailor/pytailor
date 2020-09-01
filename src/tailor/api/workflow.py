@@ -1,27 +1,16 @@
 from __future__ import annotations
 
-from enum import Enum
 from typing import Optional
+import uuid
 
 from tailor.models import Workflow as WorkflowModel, WorkflowCreate
 from tailor.clients import RestClient
 from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
+from tailor.common.state import State
 from .base import APIBase
 from .project import Project
 from .fileset import FileSet
 from .dag import DAG
-
-
-class WorkflowState(Enum):
-    PRE = -3
-    ARCHIVED = -2
-    FAILED = -1
-    STOPPED = 0
-    WAITING = 1
-    READY = 2
-    RESERVED = 3
-    RUNNING = 4
-    COMPLETED = 5
 
 
 class Workflow(APIBase):
@@ -68,7 +57,7 @@ class Workflow(APIBase):
         self.__dag = dag
         self.__name = name or 'Unnamed workflow'
         self.__inputs = inputs or {}
-        self.__state = WorkflowState.PRE
+        self.__state = State.PRE
         self.__fileset = fileset or FileSet(self.__project)
         self.__outputs = {}
 
@@ -101,7 +90,7 @@ class Workflow(APIBase):
     def _update_from_backend(self, wf_model: WorkflowModel):
         # used to set a references to the backend database record for the
         # workflow
-        self.__state = WorkflowState[wf_model.state]
+        self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
 
     @classmethod
@@ -132,18 +121,33 @@ class Workflow(APIBase):
         """
         Start the workflow.
 
+        **Parameters**
+
+        - **mode** (str, Optional)
+            If 'here_and_now' (default) the workflow is executed immediately in the
+            current python process. Useful for development and debugging.
+            If 'distributed' the workflow will be launched to the database, and tasks
+            will be executed in parallel on one or more workers.
+        - **worker_name** (str, Optional)
+            A worker name can be provided to control which worker(s) will execute the
+            workflow's tasks. This parameter is ignored for *mode='here_and_now'*
+
         """
 
-        if self.__state != WorkflowState.PRE:
+        if self.__state != State.PRE:
             # don't allow run, warn or raise
             return
+
+        if mode == 'here_and_now':
+            worker_name = uuid.uuid4()
 
         # create data model
         create_data = WorkflowCreate(
             dag=dict_keys_int_to_str(self.dag.to_dict()),
             name=self.name,
             inputs=self.inputs,
-            fileset_id=self.__fileset.id
+            fileset_id=self.__fileset.id,
+            worker_name=worker_name
         )
 
         # add workflow to backend
