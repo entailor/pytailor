@@ -21,7 +21,7 @@ class APIBase:
             error_msg += f' The response from the backend was: {exc}'
             raise BackendResponseError(error_msg)
         except RequestError as exc:
-            error_msg += f' The response from the backend was: {exc}'
+            error_msg += f' {exc}'
             raise BackendResponseError(error_msg)
         except Exception:
             raise
