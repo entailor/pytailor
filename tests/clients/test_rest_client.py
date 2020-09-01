@@ -1,6 +1,6 @@
 from tailor.clients import RestClient
 
-from .data import *
+from ..data import *
 from tailor.models import *
 
 
@@ -65,3 +65,10 @@ def test_get_download_urls_empty_payload_bad_fileset_id(httpx_mock):
     with RestClient() as client:
         model = client.get_download_urls(project_id, fileset_id, fileset_download)
     assert model is None
+
+
+# TODO:
+#   test_get_upload_urls
+#   test_get_upload_urls_bad_fileset_id
+#   test_get_download_urls
+#   test_get_download_urls_bad_fileset_id
