@@ -61,6 +61,7 @@ class Workflow(APIBase):
         self.__state = State.PRE
         self.__fileset = fileset or FileSet(self.__project)
         self.__outputs = {}
+        self.__id = None
 
     # use @property to make attributes read-only
 
@@ -88,11 +89,16 @@ class Workflow(APIBase):
     def outputs(self):
         return self.__outputs
 
+    @property
+    def id(self):
+        return self.__id
+
     def _update_from_backend(self, wf_model: WorkflowModel):
         # used to set a references to the backend database record for the
         # workflow
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
+        self.__id = wf_model.id
 
     @classmethod
     def from_project_and_id(cls, project: Project, wf_id: int) -> Workflow:
@@ -171,3 +177,58 @@ class Workflow(APIBase):
             # launches to backend and returns
             # no actions needed here
             pass
+
+    # def __pretty_print(self, wf):
+    #     lines = []
+    #     # columns
+    #     tf = '{:^6.6}'  # task id
+    #     n1 = '{:<21.20}'  # name
+    #     p1 = '{:^22.21}'  # parents
+    #     n2 = '{:<19.19}..'  # name
+    #     p2 = '{:^20.20}..'  # parents
+    #     typ = '{:^12.12}'  # type
+    #     s = '{:^12.12}'  # state
+    #
+    #     row = '|' + tf + '|' + n1 + '|' + p1 + '|' + typ + '|' + s + '|\n'
+    #     top = '+' + '-' * 77 + '+' + '\n'
+    #     vsep = '+' + '-' * 6 + '+' + '-' * 21 + '+' + '-' * 22 + '+' + '-' * 12 + '+' + '-' * 12 + '+\n'
+    #     header = f'| Workflow {self.id}: {wf.name}'
+    #     header = header + ' ' * (78 - len(header)) + '|\n'
+    #     colheader = row.format('id', ' Task name', 'Parents', 'Type', 'State')
+    #     lines.append(top)
+    #     lines.append(header)
+    #     lines.append(vsep)
+    #     lines.append(colheader)
+    #     lines.append(vsep)
+    #
+    #     added_tasks = set()
+    #     rows_dict = {}
+    #
+    #     def add_row(tid):
+    #         if not tid in added_tasks:
+    #             added_tasks.add(tid)
+    #             t = self.single_task_service.find_by_id(tid)
+    #             task_name = ' ' + t.task_def['name']
+    #             n = n1 if len(task_name) < 21 else n2
+    #             parents = str(wf.parent_links[tid])[
+    #                       1:-1] if tid in wf.parent_links else '-'
+    #             p = p1 if len(parents) < 22 else p2
+    #             row = '|' + tf + '|' + n + '|' + p + '|' + typ + '|' + s + '|\n'
+    #             rows_dict[tid] = row.format(
+    #                 str(tid),
+    #                 task_name,
+    #                 parents,
+    #                 t.task_def['type'].upper(),
+    #                 t.state.name
+    #             )
+    #
+    #             for cid in wf.links[tid]:
+    #                 add_row(cid)
+    #
+    #     for rtid in wf.root_task_ids:
+    #         add_row(rtid)
+    #
+    #     lines.extend([v for k, v in sorted(rows_dict.items())])
+    #     lines.append(vsep)
+    #
+    #     return ''.join(lines)
