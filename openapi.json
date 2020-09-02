@@ -281,7 +281,7 @@
     "/projects/{project_id}/workflows/{wf_id}/tasks": {
       "get": {
         "tags": [
-          "workflow"
+          "task"
         ],
         "summary": "Lists the tasks for the specified workflow",
         "operationId": "task_list_projects__project_id__workflows__wf_id__tasks_get",
@@ -345,7 +345,7 @@
     "/projects/{project_id}/workflows/{wf_id}/tasks/{task_id}": {
       "get": {
         "tags": [
-          "workflow"
+          "task"
         ],
         "summary": "Details about the specified task",
         "operationId": "task_details_projects__project_id__workflows__wf_id__tasks__task_id__get",
@@ -391,6 +391,98 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/tasks/checkouts": {
+      "post": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Checks out a task matching the specified filter",
+        "operationId": "task_checkouts_tasks_checkouts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCheckout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskExecutionData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/tasks/checkins": {
+      "post": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Updates a task's state",
+        "operationId": "task_checkins_tasks_checkins_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskExecutionData"
                 }
               }
             }
@@ -1284,6 +1376,24 @@
           }
         }
       },
+      "Context": {
+        "title": "Context",
+        "type": "object",
+        "properties": {
+          "inputs": {
+            "title": "Scoped inputs",
+            "type": "object"
+          },
+          "outputs": {
+            "title": "Scoped outputs",
+            "type": "object"
+          },
+          "files": {
+            "title": "File list by tag",
+            "type": "object"
+          }
+        }
+      },
       "FileSet": {
         "title": "FileSet",
         "type": "object",
@@ -1310,7 +1420,7 @@
             "type": "string"
           },
           "tags": {
-            "title": "list of tags to download files for",
+            "title": "List of tags to download files for",
             "type": "array",
             "items": {
               "type": "string"
@@ -1365,7 +1475,7 @@
             "type": "string"
           },
           "tags": {
-            "title": "list of tags, each containing a list of file names",
+            "title": "List of tags, each containing a list of file names",
             "type": "object",
             "additionalProperties": {
               "type": "array",
@@ -1452,8 +1562,7 @@
             "type": "string"
           },
           "state": {
-            "title": "current state of the task",
-            "type": "string"
+            "$ref": "#/components/schemas/TaskState"
           },
           "created_utc": {
             "title": "timestamp of when the task was created, in ISO-8601 datetime format",
@@ -1472,13 +1581,84 @@
           }
         }
       },
+      "TaskCheckout": {
+        "title": "TaskCheckout",
+        "type": "object",
+        "properties": {
+          "worker_capabilities": {
+            "title": "The worker's task capabilities",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "worker_id": {
+            "title": "The unique id of the worker",
+            "type": "string"
+          },
+          "worker_name": {
+            "title": "A human-friendly name describing the worker",
+            "type": "string"
+          },
+          "projects": {
+            "title": "(Optional) limit tasks to these projects, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "task_definitions": {
+            "title": "(Optional) limit tasks to these task definitions, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "workflows": {
+            "title": "(Optional) limit tasks to these workflows, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TaskExecutionData": {
+        "title": "TaskExecutionData",
+        "type": "object",
+        "properties": {
+          "run_id": {
+            "title": "The current Task Run id, if it is running",
+            "type": "string"
+          },
+          "task": {
+            "title": "The task",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Task"
+              }
+            ]
+          },
+          "context": {
+            "title": "The task's context",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Context"
+              }
+            ]
+          },
+          "fileset_id": {
+            "title": "Reference to the Workflow's fileset object",
+            "type": "string"
+          }
+        }
+      },
       "TaskRun": {
         "title": "TaskRun",
         "type": "object",
         "properties": {
           "state": {
-            "title": "state of the task run",
-            "type": "string"
+            "$ref": "#/components/schemas/TaskState"
           },
           "ended_utc": {
             "title": "timestamp of when the workflow ended, in ISO-8601 datetime format",
@@ -1498,6 +1678,21 @@
           }
         }
       },
+      "TaskState": {
+        "title": "TaskState",
+        "enum": [
+          "ARCHIVED",
+          "FAILED",
+          "STOPPED",
+          "WAITING",
+          "READY",
+          "RESERVED",
+          "RUNNING",
+          "COMPLETED"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
       "TaskSummary": {
         "title": "TaskSummary",
         "type": "object",
@@ -1515,7 +1710,39 @@
             "type": "string"
           },
           "state": {
-            "title": "current state of the task",
+            "$ref": "#/components/schemas/TaskState"
+          }
+        }
+      },
+      "TaskUpdate": {
+        "title": "TaskUpdate",
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "title": "The identifier of the task",
+            "type": "string"
+          },
+          "run_id": {
+            "title": "The identifier of the task run",
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/TaskState"
+          },
+          "outputs": {
+            "title": "The updated outputs of the task run",
+            "type": "object"
+          },
+          "failure_summary": {
+            "title": "A summary of the failure",
+            "type": "string"
+          },
+          "failure_detail": {
+            "title": "Detailed information about the failure",
+            "type": "string"
+          },
+          "run_dir": {
+            "title": "The location on the Worker's filesystem for the current task run. Mandatory on first check in.",
             "type": "string"
           }
         }
@@ -1665,10 +1892,6 @@
             "title": "current state of each task",
             "type": "object"
           },
-          "context_id": {
-            "title": "reference to the Workflow's context object",
-            "type": "string"
-          },
           "fileset_id": {
             "title": "reference to the Workflow's fileset object",
             "type": "string"
@@ -1706,6 +1929,10 @@
           "inputs": {
             "title": "(Optional) the inputs to the Workflow",
             "type": "object"
+          },
+          "worker_name_restriction": {
+            "title": "(Optional) the name of the one Worker who should run this workflow",
+            "type": "string"
           },
           "fileset_id": {
             "title": "(Optional) use input files from the specified FileSet. If not specified, a new, initially empty, FileSet will be created",
