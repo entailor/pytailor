@@ -77,3 +77,21 @@ class RestClient(httpx.Client):
             return Workflow.parse_obj(response.json())
         else:
             response.raise_for_status()
+
+    # task checkout/checkin
+
+    def checkout_task(self, checkout_query: TaskCheckout) -> TaskExecutionData:
+        url = f'tasks/checkouts'
+        response = self.post(url, data=checkout_query.json())
+        if response.status_code == httpx.codes.OK:
+            return TaskExecutionData.parse_obj(response.json())
+        else:
+            response.raise_for_status()
+
+    def checkin_task(self, task_update: TaskUpdate) -> TaskExecutionData:
+        url = f'tasks/checkins'
+        response = self.post(url, data=task_update.json())
+        if response.status_code == httpx.codes.OK:
+            return TaskExecutionData.parse_obj(response.json())
+        else:
+            response.raise_for_status()

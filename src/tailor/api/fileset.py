@@ -37,7 +37,6 @@ class FileSet(APIBase):
         """Upload one or more files under the given *tag*"""
         if isinstance(files, str):
             files = [files]
-
         file_basenames = []
         for file in files:
             p = Path(file)
@@ -45,7 +44,6 @@ class FileSet(APIBase):
                 raise FileNotFoundError(f'Could not find local file: {file}.'
                                         f'Upload aborted.')
             file_basenames.append(p.name)
-
         fileset_upload = FileSetUpload(tags={tag: file_basenames})
 
         with RestClient() as client:
