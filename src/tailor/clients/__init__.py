@@ -1,2 +1,2 @@
 from .rest_client import RestClient
-from .s3_client import FileClient
+from .file_client import FileClient
