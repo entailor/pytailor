@@ -83,7 +83,7 @@ class TaskRunner:
             state = State.FAILED
 
             failure_detail = ''.join(format_traceback(e))
-            failure_summary = ''
+            failure_summary = f'Error when executing task {self.__task.id}'
             if hasattr(e, 'message'):
                 failure_summary: str = e.message
 
@@ -93,7 +93,7 @@ class TaskRunner:
                 task_id=self.__task.id,
                 state=state.name,
                 failure_detail=failure_detail,
-                error_summary=failure_summary
+                failure_summary=failure_summary
             )
             with RestClient() as client:
                 exec_data = client.checkin_task(task_update)
@@ -221,9 +221,9 @@ class TaskRunner:
         #       Look into RestrictedPython: https://github.com/zopefoundation/RestrictedPython
 
         # run callable
-        action_name = task_def['action']
+        action_name = task_def['function']
         action = _resolve_callable(action_name)
-        self.logger.info(f'Running action: {action_name}')
+        self.logger.info(f'Calling: {action_name}')
         action_output = action(*args, **kwargs)
         return action_output
 
