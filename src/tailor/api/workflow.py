@@ -7,6 +7,7 @@ from tailor.models import Workflow as WorkflowModel, WorkflowCreate
 from tailor.clients import RestClient
 from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 from tailor.common.state import State
+from tailor.execution import SerialRunner
 from .base import APIBase
 from .project import Project
 from .fileset import FileSet
@@ -139,7 +140,7 @@ class Workflow(APIBase):
             return
 
         if mode == 'here_and_now':
-            worker_name = uuid.uuid4()
+            worker_name = str(uuid.uuid4())
 
         # create data model
         create_data = WorkflowCreate(
@@ -147,7 +148,7 @@ class Workflow(APIBase):
             name=self.name,
             inputs=self.inputs,
             fileset_id=self.__fileset.id,
-            worker_name=worker_name
+            worker_name_restriction=worker_name
         )
 
         # add workflow to backend
@@ -161,10 +162,12 @@ class Workflow(APIBase):
             self._update_from_backend(wf_model)
 
         if mode == 'here_and_now':
-            # starts the DirectRunner
+            # starts the SerialRunner
             # blocks until complete
-            pass
+            runner = SerialRunner(self.project.id, worker_name, wf_model.id)
+            runner.run()
 
         elif mode == 'distributed':
             # launches to backend and returns
+            # no actions needed here
             pass
