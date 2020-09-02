@@ -38,12 +38,15 @@ class FileSet(APIBase):
         if isinstance(files, str):
             files = [files]
 
+        file_basenames = []
         for file in files:
-            if not Path(file).exists():
+            p = Path(file)
+            if not p.exists():
                 raise FileNotFoundError(f'Could not find local file: {file}.'
                                         f'Upload aborted.')
+            file_basenames.append(p.name)
 
-        fileset_upload = FileSetUpload(tags={tag: files})
+        fileset_upload = FileSetUpload(tags={tag: file_basenames})
 
         with RestClient() as client:
             fileset_model = self._handle_rest_client_call(
