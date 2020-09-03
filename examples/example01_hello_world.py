@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Backend Example 1
+Pytailor Example 1
 
-This is the Hello world example for tailor.
+This is the Hello world example for pytailor.
 
 This example introduces the following NEW concepts:
     - Create PythonTasks and DAGs
