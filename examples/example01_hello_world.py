@@ -24,8 +24,8 @@ from tailor import PythonTask, DAG, Project, Workflow
 ### dag definition ###
 
 t1 = PythonTask(
-    # function='builtins.print',
-    function='builtins.abs',  # will raise type error
+    function='builtins.print',
+    # function='builtins.abs',  # will raise type error
     name='job 1',
     args='\nHello, world!\n',  # equivalent to ['\nHello, world!\n']
 )
