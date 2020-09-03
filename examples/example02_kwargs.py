@@ -28,7 +28,7 @@ dag = DAG(tasks=[t1, t2], name='dag')
 
 ### workflow run ###
 
-# Open a project.
+# open a project
 project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
 prj = Project(project_uuid)
 
@@ -39,4 +39,5 @@ wf = Workflow(project=prj, dag=dag, name='kwarg workflow')
 wf.run()
 
 # check the status of the workflow run
+print('The workflow finished with state:')
 print(wf.state)

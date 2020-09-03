@@ -24,8 +24,8 @@ from tailor import PythonTask, DAG, Project, Workflow
 ### dag definition ###
 
 t1 = PythonTask(
-    function='builtins.print',
-    # function='builtins.abs',  # will raise type error
+    # function='builtins.print',
+    function='builtins.abs',  # will raise type error
     name='job 1',
     args='\nHello, world!\n',  # equivalent to ['\nHello, world!\n']
 )
@@ -38,6 +38,7 @@ t2 = PythonTask(
 
 dag = DAG(tasks=[t1, t2], name='dag')
 
+# open a project
 # prj = Project.from_name('Test')
 prj = Project('702d688e-972d-4580-afa2-fc616533ccba')
 
@@ -54,6 +55,7 @@ wf = Workflow(
 wf.run(mode='here_and_now')
 
 # check the status of the workflow run
+print('The workflow finished with state:')
 print(wf.state)
 
 
