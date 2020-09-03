@@ -144,7 +144,7 @@ class Workflow(APIBase):
             # don't allow run, warn or raise
             return
 
-        if distributed == 'here_and_now':
+        if not distributed:
             worker_name = str(uuid.uuid4())
 
         # create data model
@@ -166,7 +166,7 @@ class Workflow(APIBase):
             )
             self._update_from_backend(wf_model)
 
-        if distributed is False:
+        if not distributed:
             # starts the SerialRunner
             # blocks until complete
             runner = SerialRunner(self.project.id, worker_name, wf_model.id)
