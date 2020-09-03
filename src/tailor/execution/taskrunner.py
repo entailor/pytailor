@@ -52,7 +52,7 @@ class TaskRunner:
         self.engine = yaql.factory.YaqlFactory().create()
 
     def __set_exec_data(self, exec_data: TaskExecutionData):
-        self.__context = exec_data.context
+        self.__context = exec_data.context.dict()
         self.__task = exec_data.task
         self.__fileset_id = exec_data.fileset_id
         self.__run_id = exec_data.run_id
