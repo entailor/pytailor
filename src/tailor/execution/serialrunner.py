@@ -29,7 +29,7 @@ class SerialRunner:
         checkout_query = TaskCheckout(
             worker_capabilities=['python'],
             worker_name=self.worker_name,
-            # workflows=[self.workflow_id]
+            workflows=[self.workflow_id]
         )
 
         checkout = self.do_checkout(checkout_query)
