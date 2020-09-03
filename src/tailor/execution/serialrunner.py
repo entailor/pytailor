@@ -4,10 +4,11 @@ import httpx
 from tailor.utils import get_logger
 from tailor.models import TaskCheckout, TaskExecutionData
 from tailor.clients import RestClient
+from tailor.common.base import APIBase
 from .taskrunner import run_task
 
 
-class SerialRunner:
+class SerialRunner(APIBase):
 
     def __init__(self,
                  project_id: str,
@@ -45,12 +46,9 @@ class SerialRunner:
     def do_checkout(self, checkout_query: TaskCheckout
                     ) -> Optional[TaskExecutionData]:
         with RestClient() as client:
-            # return client.checkout_task(checkout_query)
-
-            try:
-                return client.checkout_task(checkout_query)
-            except httpx.HTTPStatusError as exc:
-                if exc.response.status_code == httpx.codes.NOT_FOUND:
-                    return None  # expected, no more tasks to run
-                else:
-                    raise
+            return self._handle_rest_client_call(
+                client.checkout_task,
+                checkout_query,
+                error_msg='Error during task checkout.',
+                return_none_on=[httpx.codes.NOT_FOUND]
+            )

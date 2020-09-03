@@ -1,7 +1,7 @@
-from typing import Dict, Union, List
+from typing import Union, List
 from pathlib import Path
 
-from .base import APIBase
+from tailor.common.base import APIBase
 from .project import Project
 from tailor.clients import RestClient, FileClient
 from tailor.models import FileSetDownload, FileSetUpload

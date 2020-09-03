@@ -8,7 +8,7 @@ from tailor.clients import RestClient
 from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 from tailor.common.state import State
 from tailor.execution import SerialRunner
-from .base import APIBase
+from tailor.common.base import APIBase
 from .project import Project
 from .fileset import FileSet
 from .dag import DAG

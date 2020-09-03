@@ -1,5 +1,5 @@
 from __future__ import annotations
-from .base import APIBase
+from tailor.common.base import APIBase
 from tailor.clients import RestClient
 
 

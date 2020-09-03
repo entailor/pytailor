@@ -1,26 +1,33 @@
-from typing import Callable, Any, Union, List
-from httpx import RequestError, HTTPStatusError
+from typing import Callable, Any, Union, List, Optional
 from pydantic import BaseModel
+import httpx
 
 from tailor.exceptions import BackendResponseError
 
 
 class APIBase:
-    """Base class for all tailor.api classes that interact with backend"""
+    """Base class for classes that interact with backend (makes rest calls)"""
 
     @staticmethod
     def _handle_rest_client_call(client_method: Callable[..., Union[BaseModel,
                                                                     List[BaseModel]]],
                                  *args,
                                  error_msg: str = 'Error.',
+                                 return_none_on: Optional[List[httpx.codes]] = None
                                  ) -> Any:
+        if return_none_on is None:
+            return_none_on = []
         try:
             return client_method(*args)
-        except HTTPStatusError as exc:
-            # TODO handle a 401
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code in return_none_on:
+                return
+            # TODO handle a 401:
+            if exc.response.status_code == httpx.codes.UNAUTHORIZED:
+                pass
             error_msg += f' The response from the backend was: {exc}'
             raise BackendResponseError(error_msg)
-        except RequestError as exc:
+        except httpx.RequestError as exc:
             error_msg += f' {exc}'
             raise BackendResponseError(error_msg)
         except Exception:
