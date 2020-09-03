@@ -218,7 +218,8 @@ class TaskRunner:
         # TODO: use 'sandbox' environment for user provided code?
         #       need to have restrictions on what can run and the python
         #       environment for which functions are executed!
-        #       Look into RestrictedPython: https://github.com/zopefoundation/RestrictedPython
+        #       Look into RestrictedPython:
+        #       https://github.com/zopefoundation/RestrictedPython
 
         # run callable
         action_name = task_def['function']
@@ -291,7 +292,7 @@ class TaskRunner:
 
         raise NotImplementedError
         # CHECKIN: tell the backend to perform duplication/branching
-        # Backend call: self.workflow_service.perform_duplication(self.wf.id, self.task.id)
+        # Backend: self.workflow_service.perform_duplication(self.wf.id, self.task.id)
 
     def __eval_query(self, expression, data):
         # TODO: use a try/except and give a simpler error than what comes from yaql?
