@@ -98,7 +98,7 @@ class Workflow(APIBase):
         # workflow
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
-        self.__id = wf_model.id
+        self.__id = int(wf_model.id)
 
     @classmethod
     def from_project_and_id(cls, project: Project, wf_id: int) -> Workflow:
@@ -172,6 +172,16 @@ class Workflow(APIBase):
             # blocks until complete
             runner = SerialRunner(self.project.id, worker_name, wf_model.id)
             runner.run()
+
+            # get the updated workflow and update self
+            wf_model = self._handle_rest_client_call(
+                client.get_workflow,
+                self.__project.id,
+                self.__id,
+                error_msg='Could not fetch workflow.'
+            )
+            self._update_from_backend(wf_model)
+
 
         elif mode == 'distributed':
             # launches to backend and returns
