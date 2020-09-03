@@ -123,9 +123,9 @@ class TaskRunner:
     def __execute_task(self):
         # call job-type specific code
         task_def = self.__task.definition
-        if task_def['type'] == TaskType.PYTHON.name:
+        if TaskType(task_def['type']) == TaskType.PYTHON:
             self.__run_python_task(task_def)
-        elif task_def['type'] == TaskType.BRANCH.name:
+        elif TaskType(task_def['type']) == TaskType.BRANCH:
             self.__run_branch_task()
 
     def __run_python_task(self, task_def):
