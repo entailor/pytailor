@@ -124,20 +124,19 @@ class Workflow(APIBase):
 
         return wf
 
-    def run(self, mode: str = 'here_and_now', worker_name: Optional[str] = None) -> None:
+    def run(self, distributed: bool = False, worker_name: Optional[str] = None) -> None:
         """
         Start the workflow.
 
         **Parameters**
 
-        - **mode** (str, Optional)
-            If 'here_and_now' (default) the workflow is executed immediately in the
-            current python process. Useful for development and debugging.
-            If 'distributed' the workflow will be launched to the database, and tasks
-            will be executed in parallel on one or more workers.
-        - **worker_name** (str, Optional)
-            A worker name can be provided to control which worker(s) will execute the
-            workflow's tasks. This parameter is ignored for *mode='here_and_now'*
+        - **distributed** (bool, Optional) If False (default) the workflow is executed
+        immediately in the current python process one task at a time. Useful for
+        development and debugging. If True the workflow will be launched to
+        the database, and tasks will be executed in parallel on one or more workers.
+        - **worker_name** (str, Optional) A worker name can be provided to control which
+        worker(s) will execute the workflow's tasks. This parameter is ignored for
+        *mode='here_and_now'*
 
         """
 
@@ -145,7 +144,7 @@ class Workflow(APIBase):
             # don't allow run, warn or raise
             return
 
-        if mode == 'here_and_now':
+        if distributed == 'here_and_now':
             worker_name = str(uuid.uuid4())
 
         # create data model
@@ -167,7 +166,7 @@ class Workflow(APIBase):
             )
             self._update_from_backend(wf_model)
 
-        if mode == 'here_and_now':
+        if distributed is False:
             # starts the SerialRunner
             # blocks until complete
             runner = SerialRunner(self.project.id, worker_name, wf_model.id)
@@ -182,11 +181,10 @@ class Workflow(APIBase):
             )
             self._update_from_backend(wf_model)
 
-
-        elif mode == 'distributed':
+        else:
             # launches to backend and returns
             # no actions needed here
-            pass
+            raise NotImplementedError
 
     # def __pretty_print(self, wf):
     #     lines = []

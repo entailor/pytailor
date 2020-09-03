@@ -52,7 +52,7 @@ wf = Workflow(
 )
 
 # run the workflow
-wf.run(mode='here_and_now')
+wf.run()
 
 # check the status of the workflow run
 print('The workflow finished with state:')
