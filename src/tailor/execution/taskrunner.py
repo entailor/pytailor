@@ -24,12 +24,12 @@ def _get_expression(arg):
         return False
 
 
-def _resolve_callable(action_name):
-    parts = action_name.split('.')
+def _resolve_callable(function_name):
+    parts = function_name.split('.')
     func_name = parts[-1]
     module_name = '.'.join(parts[:-1])
-    action = getattr(importlib.import_module(module_name), func_name)
-    return action
+    function = getattr(importlib.import_module(module_name), func_name)
+    return function
 
 
 class TaskRunner(APIBase):
@@ -139,15 +139,15 @@ class TaskRunner(APIBase):
         parsed_args = self.__determine_args(task_def)
         parsed_kwargs = self.__determine_kwargs(task_def)
         self.__maybe_download_files(task_def)
-        action_output = self.__run_action(task_def, parsed_args, parsed_kwargs)
-        self.__store_output(task_def, action_output)
-        self.__maybe_upload_files(task_def, action_output)
+        function_output = self.__run_function(task_def, parsed_args, parsed_kwargs)
+        self.__store_output(task_def, function_output)
+        self.__maybe_upload_files(task_def, function_output)
 
-    def __maybe_upload_files(self, task_def, action_output):
+    def __maybe_upload_files(self, task_def, function_output):
         upload = task_def.get('upload')
         # upload must be dict of (tag: val), where val can be:
         #   1:  one or more query expressions(str og list of str) which is applied
-        #       to action_output. The query result is searched for file names
+        #       to function_output. The query result is searched for file names
         #       pointing to existing files, these files are then uploaded to storage
         #       under the given tag.
         #   2:  one or more glob-style strings (str og list of str) which is applied
@@ -162,7 +162,7 @@ class TaskRunner(APIBase):
                 for vi in v:
                     if _get_expression(vi):  # alt 1
                         file_names_i = self.__eval_query(_get_expression(vi),
-                                                         action_output)
+                                                         function_output)
                         file_names_i = extract_real_filenames(file_names_i) or []
                     else:  # alt 2
                         file_names_i = [str(p) for p in list_files(pattern=vi)]
@@ -181,23 +181,23 @@ class TaskRunner(APIBase):
                 # with FileClient() as client:
                 #     client.upload_files()
 
-    def __store_output(self, task_def, action_output):
-        # TODO: walk action_output and pickle non-JSON objects.
+    def __store_output(self, task_def, function_output):
+        # TODO: walk function_output and pickle non-JSON objects.
         #       Need a mechanism to persist non-JSON objects on
         #       the storage resource
         outputs = {}
         output_to = task_def.get('output_to')
         if output_to:
-            # The entire action_output is put on $.outputs.<output>
-            outputs[output_to] = action_output
+            # The entire function_output is put on $.outputs.<output>
+            outputs[output_to] = function_output
 
         output_extraction = task_def.get('output_extraction')
         if output_extraction:
-            # For each (tag: query), the query is applied to action_output
+            # For each (tag: query), the query is applied to function_output
             # and the result is put on $.outputs.<tag>
             for k, v in output_extraction.items():
                 if _get_expression(v):
-                    val = self.__eval_query(_get_expression(v), action_output)
+                    val = self.__eval_query(_get_expression(v), function_output)
                 else:
                     raise ValueError('Bad values for *output_extraction* parameter...')
                 outputs[k] = val
@@ -220,7 +220,7 @@ class TaskRunner(APIBase):
             )
         self.__set_exec_data(exec_data)
 
-    def __run_action(self, task_def, args, kwargs):
+    def __run_function(self, task_def, args, kwargs):
 
         # do this so that python modules that have been downloaded are discovered:
         sys.path.append('.')
@@ -233,11 +233,11 @@ class TaskRunner(APIBase):
         #       https://github.com/zopefoundation/RestrictedPython
 
         # run callable
-        action_name = task_def['function']
-        action = _resolve_callable(action_name)
-        self.logger.info(f'Calling: {action_name}')
-        action_output = action(*args, **kwargs)
-        return action_output
+        function_name = task_def['function']
+        function = _resolve_callable(function_name)
+        self.logger.info(f'Calling: {function_name}')
+        function_output = function(*args, **kwargs)
+        return function_output
 
     def __determine_kwargs(self, task_def):
         kwargs = task_def.get('kwargs', {})
