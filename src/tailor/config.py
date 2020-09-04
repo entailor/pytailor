@@ -17,7 +17,7 @@ def check_config_names(config_dict):
     config_names = set(config_dict.keys())
     if not config_names.issubset(allowed_config_names):
         bad_names = config_names.difference(allowed_config_names)
-        error_msg = 'Unknown configuration names found when loading config: '
+        error_msg = 'Unknown configuration names found when loading config:'
         for bad_name in bad_names:
             error_msg += f' {bad_name}'
         raise ValueError(error_msg)
