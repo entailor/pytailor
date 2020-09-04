@@ -11,8 +11,8 @@ import yaql
 from tailor.common.state import State
 from tailor.api.dag import TaskType
 from tailor.utils import create_rundir, extract_real_filenames, get_logger, list_files
-from tailor.utils import format_traceback
-from tailor.models import TaskExecutionData, TaskUpdate
+from tailor.utils import format_traceback, get_basenames
+from tailor.models import *
 from tailor.clients import RestClient, FileClient
 from tailor.common.base import APIBase
 
@@ -37,6 +37,7 @@ class TaskRunner(APIBase):
     def __init__(self, exec_data: TaskExecutionData, project_id: str):
 
         self.__set_exec_data(exec_data)
+        self.__project_id = project_id
 
         # get logger
         self.logger = get_logger('JobRunner')
@@ -60,7 +61,7 @@ class TaskRunner(APIBase):
         current_dir = Path.cwd()
         os.chdir(self.run_dir)
 
-        # CHECKIN
+        # check in state RUNNING
         task_update = TaskUpdate(
             task_id=self.__task.id,
             state=State.RUNNING.name,
@@ -86,7 +87,7 @@ class TaskRunner(APIBase):
             if hasattr(e, 'message'):
                 failure_summary: str = e.message
 
-            # CHECKIN
+            # check in state FAILED
             task_update = TaskUpdate(
                 run_id=self.__run_id,
                 task_id=self.__task.id,
@@ -106,7 +107,7 @@ class TaskRunner(APIBase):
         else:
             state = State.COMPLETED
 
-            # CHECKIN
+            # check in state COMPLETED
             task_update = TaskUpdate(
                 run_id=self.__run_id,
                 task_id=self.__task.id,
@@ -167,19 +168,28 @@ class TaskRunner(APIBase):
                     else:  # alt 2
                         file_names_i = [str(p) for p in list_files(pattern=vi)]
                     file_names.extend(file_names_i)
-                if len(file_names) == 1:
-                    file_names = file_names[0]
+                # if len(file_names) == 1:
+                #     file_names = file_names[0]
                 files_to_upload[tag] = file_names
 
                 # DO UPLOAD
 
+                fileset_upload = FileSetUpload(
+                    task_id=self.__task.id,
+                    tags=get_basenames(files_to_upload)
+                )
                 # get upload links
-                # with RestClient() as client:
-                #     fileset = client.get_upload_urls(files_to_upload, task_id)
-
+                with RestClient() as client:
+                    fileset = self._handle_rest_client_call(
+                        client.get_upload_urls,
+                        self.__project_id,
+                        self.__fileset_id,
+                        fileset_upload,
+                        error_msg='Could not get upload urls.'
+                    )
                 # do uploads
-                # with FileClient() as client:
-                #     client.upload_files()
+                with FileClient() as client:
+                    client.upload_files(files_to_upload, fileset)
 
     def __store_output(self, task_def, function_output):
         # TODO: walk function_output and pickle non-JSON objects.
@@ -202,11 +212,7 @@ class TaskRunner(APIBase):
                     raise ValueError('Bad values for *output_extraction* parameter...')
                 outputs[k] = val
 
-        # CHECKIN: outputs
-        # Backend call: self.context_service.add_output(self.wf.context_id,
-        #                                               self.task.id,
-        #                                               outputs)
-        # CHECKIN
+        # check in updated outputs
         task_update = TaskUpdate(
             run_id=self.__run_id,
             task_id=self.__task.id,
@@ -251,19 +257,26 @@ class TaskRunner(APIBase):
 
     def __maybe_download_files(self, task_def):
         download = task_def.get('download', [])
-        file_tags = []
         download = [download] if isinstance(download, str) else download
 
         # DO DOWNLOAD
-        # download is list of tags
-
-        # get upload links
-        # with RestClient() as client:
-        #     fileset = client.get_download_urls(download, task_id)
-
-        # do downloads
-        # with FileClient() as client:
-        #     client.download_files(fileset, task_id)
+        if download:
+            fileset_download = FileSetDownload(
+                task_id=self.__task.id,
+                tags=download
+            )
+            # get download links
+            with RestClient() as client:
+                fileset = self._handle_rest_client_call(
+                    client.get_download_urls,
+                    self.__project_id,
+                    self.__fileset_id,
+                    fileset_download,
+                    error_msg='Could not get download urls.'
+                )
+            # do downloads
+            with FileClient() as client:
+                client.download_files(fileset)
 
     def __handle_args(self, args):
         if isinstance(args, str) and _get_expression(args):

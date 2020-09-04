@@ -1,10 +1,11 @@
-from typing import Union, List
+from typing import Union, List, Dict
 from pathlib import Path
 
 from tailor.common.base import APIBase
 from .project import Project
 from tailor.clients import RestClient, FileClient
 from tailor.models import FileSetDownload, FileSetUpload
+from tailor.utils import check_local_files_exist, get_basenames
 
 
 class FileSet(APIBase):
@@ -33,18 +34,18 @@ class FileSet(APIBase):
         self.id = fileset_model.id
         self.project = project
 
-    def upload(self, tag: str, files: Union[str, List[str]]):
-        """Upload one or more files under the given *tag*"""
-        if isinstance(files, str):
-            files = [files]
-        file_basenames = []
-        for file in files:
-            p = Path(file)
-            if not p.exists():
-                raise FileNotFoundError(f'Could not find local file: {file}.'
-                                        f'Upload aborted.')
-            file_basenames.append(p.name)
-        fileset_upload = FileSetUpload(tags={tag: file_basenames})
+    def upload(self, **kwargs: Union[str, List[str]]):
+        """Upload files by specifying keyword arguments."""
+
+        # kwargs is now a dict on the format {tag: filename(s)}
+        # ensure values are lists
+        for k in kwargs:
+            if isinstance(kwargs[k], str):
+                kwargs[k] = [kwargs[k]]
+
+        check_local_files_exist(kwargs)
+        file_basenames = get_basenames(kwargs)
+        fileset_upload = FileSetUpload(tags=file_basenames)
 
         with RestClient() as client:
             fileset_model = self._handle_rest_client_call(
@@ -56,4 +57,4 @@ class FileSet(APIBase):
             )
 
         with FileClient() as client:
-            client.upload_files({tag: files}, fileset_model)
+            client.upload_files(kwargs, fileset_model)

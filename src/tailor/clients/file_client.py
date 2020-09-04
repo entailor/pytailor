@@ -1,8 +1,9 @@
 from typing import Dict, List, Union
-from pathlib import Path
+from pathlib import Path, PurePath
 import httpx
 import requests
 from tailor.models import FileSetUpload, FileSet
+import shutil
 
 
 class FileClient(httpx.Client):
@@ -27,5 +28,33 @@ class FileClient(httpx.Client):
                     # fallback to requests due to missing support for put-upload in httpx
                     response = requests.put(fileset_link.url, data=f)
 
-    def download_files(self):
-        pass
+    def download_files(self, fileset: FileSet):
+
+        for fileset_links in fileset.tags:
+            for fileset_link in fileset_links.links:
+                local_filename = fileset_link.filename
+                with requests.get(fileset_link.url, stream=True) as r:
+                    with open(local_filename, 'wb') as f:
+                        shutil.copyfileobj(r.raw, f)
+
+    @staticmethod
+    def _get_filename_prefix(scope_prefix, scope_indices):
+        p = PurePath(scope_prefix)
+        indices = [int(i) for i in p.parts[1:]]
+
+        if len(indices) <= len(scope_indices):
+            # downloading from a lower dup level
+            return ''
+        else:
+            # downloading from a higher dup level
+            target_indices = indices.copy()
+            for i in range(len(scope_indices)):
+                if indices[i] == scope_indices[i]:
+                    target_indices.pop(0)
+                else:
+                    break
+
+            filename_prefix = ''
+            for index in target_indices:
+                filename_prefix += str(index) + '_'
+            return filename_prefix

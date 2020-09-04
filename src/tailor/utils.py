@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from datetime import datetime
 from glob import glob
 from pathlib import Path
-from typing import List
+from typing import List, Dict, Union
 from tailor.config import RUNDIR_TIME_FORMAT, LOGGING_FORMAT
 
 
@@ -241,3 +241,19 @@ class Singleton:
 
     def __instancecheck__(self, inst):
         return isinstance(inst, self._cls)
+
+
+def check_local_files_exist(tag_filename_mapping: Dict[str, List[Union[str, Path]]]):
+    for filenames in tag_filename_mapping.values():
+        for filename in filenames:
+            p = Path(filename)
+            if not p.exists():
+                raise FileNotFoundError(f'Could not find local file: {filename}.')
+
+
+def get_basenames(tag_filename_mapping: Dict[str, List[Union[str, Path]]]
+                  ) -> Dict[str, List[Union[str, Path]]]:
+    tag_basename_mapping = {}
+    for tag, filenames in tag_filename_mapping.items():
+        tag_basename_mapping[tag] = [Path(fn).name for fn in filenames]
+    return tag_basename_mapping
