@@ -7,8 +7,20 @@ config = {
     'RUNDIR_TIME_FORMAT': '%Y-%m-%d-%H-%M-%S-%f',
     'LOGGING_FORMAT': '%(asctime)s %(levelname)s %(message)s',
     'API_BASE_URL': 'http://localhost:8000/',
-    'AUTH_KEY': None
+    'AUTH_KEY': ''
 }
+
+allowed_config_names = list(config.keys())
+
+
+def check_config_names(config_dict):
+    config_names = set(config_dict.keys())
+    if not config_names.issubset(allowed_config_names):
+        bad_names = config_names.difference(allowed_config_names)
+        error_msg = 'Unknown configuration names found when loading config: '
+        for bad_name in bad_names:
+            error_msg += f' {bad_name}'
+        raise ValueError(error_msg)
 
 
 def load_config_from_file() -> dict:
@@ -34,6 +46,8 @@ env_config = load_config_from_env()
 
 config.update(file_config)
 config.update(env_config)
+
+check_config_names(config)
 
 # put all config names directly under current namespace (tailor.config)
 for k, v in config.items():
