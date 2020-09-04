@@ -14,6 +14,7 @@ from tailor.utils import create_rundir, extract_real_filenames, get_logger, list
 from tailor.utils import format_traceback
 from tailor.models import TaskExecutionData, TaskUpdate
 from tailor.clients import RestClient, FileClient
+from tailor.common.base import APIBase
 
 
 def _get_expression(arg):
@@ -31,15 +32,9 @@ def _resolve_callable(action_name):
     return action
 
 
-class TaskRunner:
+class TaskRunner(APIBase):
 
     def __init__(self, exec_data: TaskExecutionData, project_id: str):
-
-        # exec_data contains:
-        #   context (inputs, outputs og files)
-        #   fileset_id
-        #   task
-        #   run_id
 
         self.__set_exec_data(exec_data)
 
@@ -72,7 +67,11 @@ class TaskRunner:
             run_dir=str(self.run_dir)
         )
         with RestClient() as client:
-            exec_data = client.checkin_task(task_update)
+            exec_data = self._handle_rest_client_call(
+                client.checkin_task,
+                task_update,
+                error_msg='Could not check in task.'
+            )
         self.__set_exec_data(exec_data)
 
         # run job in try/except:
@@ -96,7 +95,11 @@ class TaskRunner:
                 failure_summary=failure_summary
             )
             with RestClient() as client:
-                exec_data = client.checkin_task(task_update)
+                exec_data = self._handle_rest_client_call(
+                    client.checkin_task,
+                    task_update,
+                    error_msg='Could not check in task.'
+                )
             self.__set_exec_data(exec_data)
 
             self.logger.error(f'Task {self.__task.id} FAILED', exc_info=True)
@@ -110,7 +113,11 @@ class TaskRunner:
                 state=state.name,
             )
             with RestClient() as client:
-                exec_data = client.checkin_task(task_update)
+                exec_data = self._handle_rest_client_call(
+                    client.checkin_task,
+                    task_update,
+                    error_msg='Could not check in task.'
+                )
             self.__set_exec_data(exec_data)
 
             self.logger.info(f'Task {self.__task.id} COMPLETED successfully')
@@ -206,7 +213,11 @@ class TaskRunner:
             outputs=outputs
         )
         with RestClient() as client:
-            exec_data = client.checkin_task(task_update)
+            exec_data = self._handle_rest_client_call(
+                client.checkin_task,
+                task_update,
+                error_msg='Could not check in task.'
+            )
         self.__set_exec_data(exec_data)
 
     def __run_action(self, task_def, args, kwargs):
