@@ -24,3 +24,12 @@ Pytailor uses [pytest](https://docs.pytest.org/en/stable/) for unit testing. To 
 with coverage report run:
  
 `pytest --cov=tailor tests`
+
+### Install into existing environment
+To install pytailor into an existing environment with pip, first build a wheel file with:
+
+`poetry build -f wheel`
+
+Then install into the desired environment with:
+
+`pip install -U path/to/pytailor/dist/tailor-x.y.z-py3-none-any.wheel`
