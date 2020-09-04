@@ -1,3 +1,5 @@
+from typing import Dict, List, Union
+from pathlib import Path
 import httpx
 import requests
 from tailor.models import FileSetUpload, FileSet
@@ -5,13 +7,15 @@ from tailor.models import FileSetUpload, FileSet
 
 class FileClient(httpx.Client):
 
-    def upload_files(self, fileset_upload: FileSetUpload, fileset: FileSet):
+    def upload_files(self,
+                     file_paths: Dict[str, List[Union[str, Path]]],
+                     fileset: FileSet):
 
-        for local_files, fileset_links in zip(fileset_upload.tags.values(),
-                                              fileset.tags):
-            for local_file, fileset_link in zip(local_files, fileset_links.links):
+        for file_paths, fileset_links in zip(file_paths.values(),
+                                             fileset.tags):
+            for file_path, fileset_link in zip(file_paths, fileset_links.links):
 
-                with open(local_file, 'rb') as f:
+                with open(file_path, 'rb') as f:
                     # alt 1 not working:
                     # response = self.put(fileset_link.url, data=f)
 
@@ -22,3 +26,6 @@ class FileClient(httpx.Client):
 
                     # fallback to requests due to missing support for put-upload in httpx
                     response = requests.put(fileset_link.url, data=f)
+
+    def download_files(self):
+        pass

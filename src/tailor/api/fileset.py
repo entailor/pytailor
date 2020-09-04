@@ -56,4 +56,4 @@ class FileSet(APIBase):
             )
 
         with FileClient() as client:
-            client.upload_files(fileset_upload, fileset_model)
+            client.upload_files({tag: files}, fileset_model)
