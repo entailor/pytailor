@@ -166,7 +166,7 @@ class PythonTask(BaseTask):
     def to_dict(self) -> dict:
         """Serialize task definition."""
         d = _object_to_dict(self, exclude_varnames=['parents'])
-        d['type'] = self.TYPE
+        d['type'] = self.TYPE.value
         return d
 
     @classmethod
@@ -261,7 +261,7 @@ class BranchTask(BaseTask):
 
     def to_dict(self) -> dict:
         d = _object_to_dict(self, exclude_varnames=['parents'])
-        d['type'] = self.TYPE
+        d['type'] = self.TYPE.value
         return d
 
     @classmethod
@@ -379,7 +379,7 @@ class DAG(BaseTask):
         d = _object_to_dict(self, exclude_varnames=[
             'tasks', 'task_links', 'parents'])
         d['tasks'] = [task.to_dict() for task in self.tasks]
-        d['type'] = self.TYPE
+        d['type'] = self.TYPE.value
         if not any(self.links.values()):  # no links exist, explicitly write empty dict
             d['links'] = {}
         return d
