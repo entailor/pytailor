@@ -591,6 +591,36 @@
         ]
       }
     },
+    "/accounts": {
+      "get": {
+        "tags": [
+          "current_user"
+        ],
+        "summary": "All accounts accessible by the current user",
+        "operationId": "projects_accounts_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Projects Accounts Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/projects/{project_id}/filesets": {
       "post": {
         "tags": [
@@ -984,7 +1014,7 @@
           "workflow_definition"
         ],
         "summary": "Lists the workflow_definitions in the given project",
-        "operationId": "workflow_list_projects__project_id__workflow_definitions_get",
+        "operationId": "workflow_definition_list_projects__project_id__workflow_definitions_get",
         "parameters": [
           {
             "description": "Project id",
@@ -1004,7 +1034,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Workflow List Projects  Project Id  Workflow Definitions Get",
+                  "title": "Response Workflow Definition List Projects  Project Id  Workflow Definitions Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/WorkflowDefinitionSummary"
@@ -1037,7 +1067,7 @@
           "workflow_definition"
         ],
         "summary": "Details about the specified workflow definition",
-        "operationId": "workflow_details_projects__project_id__workflow_definitions__wf_def_id__get",
+        "operationId": "workflow_definition_details_projects__project_id__workflow_definitions__wf_def_id__get",
         "parameters": [
           {
             "description": "Project id",
@@ -1062,6 +1092,65 @@
             "in": "path"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowDefinition"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/accounts/{account_id}/workflow_definitions": {
+      "post": {
+        "tags": [
+          "workflow_definition"
+        ],
+        "summary": "Create a new workflow definition",
+        "operationId": "create_workflow_definition_accounts__account_id__workflow_definitions_post",
+        "parameters": [
+          {
+            "description": "Account id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string",
+              "description": "Account id"
+            },
+            "name": "account_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowDefinitionCreate"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1486,6 +1575,20 @@
             "items": {
               "type": "string"
             }
+          },
+          "workflow_definitions_owned": {
+            "title": "the workflow definitions owned by this account, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "workflow_definitions_subscriptions": {
+            "title": "the workflow definitions subscribed to by this account, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1860,6 +1963,11 @@
           "run_dir": {
             "title": "The location on the Worker's filesystem for the current task run. Mandatory on first check in.",
             "type": "string"
+          },
+          "perform_branching": {
+            "title": "Signal to the backend to perform branching",
+            "type": "boolean",
+            "default": false
           }
         }
       },
@@ -2068,17 +2176,29 @@
             "title": "non-unique name of the workflow definition",
             "type": "string"
           },
-          "version": {
-            "title": "the version of this workflow definition",
-            "type": "integer"
+          "description": {
+            "title": "description of the workflow",
+            "type": "string"
           },
-          "json_definition": {
-            "title": "the definition as json",
+          "dag": {
+            "title": "the dag as json",
             "type": "object"
           },
-          "account_id": {
+          "inputs_schema": {
+            "title": "the inputs schema as json",
+            "type": "object"
+          },
+          "outputs_schema": {
+            "title": "the outputs schema as json",
+            "type": "object"
+          },
+          "files_schema": {
+            "title": "the files schema as json",
+            "type": "object"
+          },
+          "owner_id": {
             "title": "the account that owns this workflow definition, by id",
-            "type": "integer"
+            "type": "string"
           },
           "subscribers": {
             "title": "the accounts that subscribes to this workflow definition, by id",
@@ -2086,6 +2206,44 @@
             "items": {
               "type": "string"
             }
+          },
+          "created_by_user": {
+            "title": "the uuid of the creating user",
+            "type": "string"
+          },
+          "created_on": {
+            "title": "the date and time this workflow definition was created",
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowDefinitionCreate": {
+        "title": "WorkflowDefinitionCreate",
+        "type": "object",
+        "properties": {
+          "dag": {
+            "title": "The DAG definition as JSON",
+            "type": "object"
+          },
+          "inputs_schema": {
+            "title": "(Optional) The inputs schema specification as JSON",
+            "type": "object"
+          },
+          "outputs_schema": {
+            "title": "(Optional) The outputs schema specification as JSON",
+            "type": "object"
+          },
+          "files_schema": {
+            "title": "(Optional) The files schema specification as JSON",
+            "type": "object"
+          },
+          "name": {
+            "title": "The name selected for this Workflow",
+            "type": "string"
+          },
+          "description": {
+            "title": "The description of this workflow definition, in Markdown format or plain text",
+            "type": "string"
           }
         }
       },
@@ -2101,9 +2259,9 @@
             "title": "non-unique name of the workflow definition",
             "type": "string"
           },
-          "version": {
-            "title": "the version of this workflow definition",
-            "type": "integer"
+          "description": {
+            "title": "description of the workflow",
+            "type": "string"
           }
         }
       },

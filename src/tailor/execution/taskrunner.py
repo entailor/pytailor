@@ -314,9 +314,19 @@ class TaskRunner(APIBase):
 
     def __run_branch_task(self):
 
-        raise NotImplementedError
-        # CHECKIN: tell the backend to perform duplication/branching
-        # Backend: self.workflow_service.perform_duplication(self.wf.id, self.task.id)
+        # check in updated outputs
+        task_update = TaskUpdate(
+            run_id=self.__run_id,
+            task_id=self.__task.id,
+            perform_branching=True
+        )
+        with RestClient() as client:
+            exec_data = self._handle_rest_client_call(
+                client.checkin_task,
+                task_update,
+                error_msg='Could not perform branching.'
+            )
+        self.__set_exec_data(exec_data)
 
     def __eval_query(self, expression, data):
         # TODO: use a try/except and give a simpler error than what comes from yaql?
