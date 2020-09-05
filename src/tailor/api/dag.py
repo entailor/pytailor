@@ -251,7 +251,7 @@ class BranchTask(BaseTask):
                  parents: Union[List[BaseTask], BaseTask] = None,
                  download: Union[list, str] = None,
                  args: Union[list, str] = None,
-                 kwargs: Union[dict, str] = None
+                 kwargs: Union[list, str] = None
                  ):
         super().__init__(name=name, parents=parents)
         self.task = task
