@@ -1823,8 +1823,8 @@
               "type": "string"
             }
           },
-          "task_definitions": {
-            "title": "(Optional) limit tasks to these task definitions, by id",
+          "workflow_definitions": {
+            "title": "(Optional) limit tasks to those origination from these workflow definitions, by id",
             "type": "array",
             "items": {
               "type": "string"
@@ -2109,7 +2109,7 @@
             "title": "root task(s) of the workflow",
             "type": "array",
             "items": {
-              "type": "integer"
+              "type": "string"
             }
           },
           "task_states": {
@@ -2131,6 +2131,17 @@
           "outputs": {
             "title": "The Workflow's output",
             "type": "object"
+          },
+          "from_definition_id": {
+            "title": "The workflow definition this Workflow is based on",
+            "type": "string"
+          },
+          "tasks": {
+            "title": "The Workflow's output",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowTask"
+            }
           }
         }
       },
@@ -2138,7 +2149,7 @@
         "title": "WorkflowCreate",
         "type": "object",
         "properties": {
-          "wf_def_id": {
+          "from_definition_id": {
             "title": "(Optional) the workflow definition to base this Workflow on",
             "type": "string"
           },
@@ -2291,6 +2302,20 @@
           },
           "state": {
             "title": "current aggregated state of the workflow's tasks",
+            "type": "string"
+          }
+        }
+      },
+      "WorkflowTask": {
+        "title": "WorkflowTask",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "The name selected for this Workflow",
+            "type": "string"
+          },
+          "name": {
+            "title": "The name selected for this Workflow",
             "type": "string"
           }
         }
