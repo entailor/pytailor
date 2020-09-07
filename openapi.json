@@ -2311,11 +2311,15 @@
         "type": "object",
         "properties": {
           "id": {
-            "title": "The name selected for this Workflow",
+            "title": "Task id",
             "type": "string"
           },
           "name": {
-            "title": "The name selected for this Workflow",
+            "title": "Task name",
+            "type": "string"
+          },
+          "type": {
+            "title": "Task type",
             "type": "string"
           }
         }
