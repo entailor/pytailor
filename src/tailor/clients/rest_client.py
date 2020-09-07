@@ -9,6 +9,14 @@ class RestClient(httpx.Client):
     def __init__(self):
         super().__init__(base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY))
 
+    # accounts
+
+    def get_accounts(self) -> List[Account]:
+        url = 'accounts'
+        response = self.get(url)
+        accounts = [Account.parse_obj(obj) for obj in response.json()]
+        return accounts
+
     # projects
 
     def get_projects(self) -> List[Project]:
@@ -69,9 +77,37 @@ class RestClient(httpx.Client):
         else:
             response.raise_for_status()
 
-    def create_workflow(self, project_id: str,
-                        create_data: WorkflowCreate) -> Workflow:
+    def new_workflow(self, project_id: str,
+                     create_data: WorkflowCreate) -> Workflow:
         url = f'projects/{project_id}/workflows'
+        response = self.post(url, data=create_data.json())
+        if response.status_code == httpx.codes.OK:
+            return Workflow.parse_obj(response.json())
+        else:
+            response.raise_for_status()
+
+    # workflow definitions
+
+    def get_workflow_definition_project(self, project_id: str, wf_def_id: int
+                                        ) -> WorkflowDefinition:
+        url = f'projects/{project_id}/workflow_definitions/{wf_def_id}'
+        response = self.get(url)
+        if response.status_code == httpx.codes.OK:
+            return WorkflowDefinition.parse_obj(response.json())
+        else:
+            response.raise_for_status()
+
+    def get_workflow_definition_summaries_project(
+            self, project_id: str) -> List[WorkflowDefinitionSummary]:
+        url = f'projects/{project_id}/workflow_definitions'
+        response = self.get(url)
+        if response.status_code == httpx.codes.OK:
+            return [WorkflowDefinitionSummary.parse_obj(obj) for obj in response.json()]
+        else:
+            response.raise_for_status()
+
+    def new_workflow_definition(self, account_id, create_data: WorkflowDefinitionCreate):
+        url = f'accounts/{account_id}/workflow_definitions'
         response = self.post(url, data=create_data.json())
         if response.status_code == httpx.codes.OK:
             return Workflow.parse_obj(response.json())

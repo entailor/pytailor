@@ -9,6 +9,7 @@ from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 from tailor.common.state import State
 from tailor.execution import SerialRunner
 from tailor.common.base import APIBase
+from tailor.exceptions import ExistsBackendError
 from .project import Project
 from .fileset import FileSet
 from .dag import DAG
@@ -18,9 +19,9 @@ class Workflow(APIBase):
     """
     The Workflow class is used to create new workflows or operate on existing workflows.
 
-    Instantiation patterns:
+    **Instantiation patterns:**
     - To create a new workflow use the default constructor
-    - To retrieve a workflow from the backend use the class methods
+    - To retrieve a workflow from the backend use *Workflow.from_project_and_id()*
 
     """
 
@@ -63,8 +64,6 @@ class Workflow(APIBase):
         self.__outputs = {}
         self.__id = None
 
-    # use @property to make attributes read-only
-
     @property
     def project(self):
         return self.__project
@@ -93,7 +92,7 @@ class Workflow(APIBase):
     def id(self):
         return self.__id
 
-    def _update_from_backend(self, wf_model: WorkflowModel):
+    def __update_from_backend(self, wf_model: WorkflowModel):
         # used to set a references to the backend database record for the
         # workflow
         self.__state = State[wf_model.state]
@@ -102,6 +101,9 @@ class Workflow(APIBase):
 
     @classmethod
     def from_project_and_id(cls, project: Project, wf_id: int) -> Workflow:
+        """
+        Retrieve a workflow from the backend.
+        """
 
         # get workflow model
         with RestClient() as client:
@@ -120,7 +122,7 @@ class Workflow(APIBase):
             fileset=wf_model.fileset_id
         )
 
-        wf._update_from_backend(wf_model)
+        wf.__update_from_backend(wf_model)
 
         return wf
 
@@ -141,8 +143,7 @@ class Workflow(APIBase):
         """
 
         if self.__state != State.PRE:
-            # don't allow run, warn or raise
-            return
+            raise ExistsBackendError('Cannot run an existing workflow.')
 
         if not distributed:
             worker_name = str(uuid.uuid4())
@@ -159,12 +160,12 @@ class Workflow(APIBase):
         # add workflow to backend
         with RestClient() as client:
             wf_model = self._handle_rest_client_call(
-                client.create_workflow,
+                client.new_workflow,
                 self.__project.id,
                 create_data,
                 error_msg='Could not create workflow.'
             )
-            self._update_from_backend(wf_model)
+            self.__update_from_backend(wf_model)
 
         if not distributed:
             # starts the SerialRunner
@@ -179,7 +180,7 @@ class Workflow(APIBase):
                 self.__id,
                 error_msg='Could not fetch workflow.'
             )
-            self._update_from_backend(wf_model)
+            self.__update_from_backend(wf_model)
 
         else:
             # launches to backend and returns

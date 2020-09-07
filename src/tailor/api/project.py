@@ -1,16 +1,17 @@
 from __future__ import annotations
+
 from tailor.common.base import APIBase
 from tailor.clients import RestClient
 
 
 class Project(APIBase):
     """
-    Represents a Tailor.wf project.
+    Represents a Tailor project.
 
     Parameters
     ----------
     project_id : str
-        Must be the id of an existing Tailor.wf project
+        Must be the id of an existing Tailor project
     """
 
     def __init__(self, project_id: str):
