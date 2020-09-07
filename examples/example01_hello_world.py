@@ -64,3 +64,6 @@ print(wf.state)
 wf2 = Workflow.from_project_and_id(prj, wf.id)
 
 assert wf.id == wf2.id
+
+# pretty print the workflow
+print(wf)

@@ -98,3 +98,6 @@ wf.run()
 # check the status of the workflow
 print('The workflow finished with state:')
 print(wf.state)
+
+# pretty print
+print(wf)

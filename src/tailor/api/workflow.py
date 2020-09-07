@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 import uuid
+from collections import defaultdict
 
 from tailor.models import Workflow as WorkflowModel, WorkflowCreate
 from tailor.clients import RestClient
@@ -63,6 +64,7 @@ class Workflow(APIBase):
         self.__fileset = fileset or FileSet(self.__project)
         self.__outputs = {}
         self.__id = None
+        self.__model = None
 
     @property
     def project(self):
@@ -92,12 +94,16 @@ class Workflow(APIBase):
     def id(self):
         return self.__id
 
+    def __str__(self):
+        return self.__pretty_printed()
+
     def __update_from_backend(self, wf_model: WorkflowModel):
         # used to set a references to the backend database record for the
         # workflow
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
         self.__id = int(wf_model.id)
+        self.__model = wf_model
 
     @classmethod
     def from_project_and_id(cls, project: Project, wf_id: int) -> Workflow:
@@ -187,57 +193,62 @@ class Workflow(APIBase):
             # no actions needed here
             raise NotImplementedError
 
-    # def __pretty_print(self, wf):
-    #     lines = []
-    #     # columns
-    #     tf = '{:^6.6}'  # task id
-    #     n1 = '{:<21.20}'  # name
-    #     p1 = '{:^22.21}'  # parents
-    #     n2 = '{:<19.19}..'  # name
-    #     p2 = '{:^20.20}..'  # parents
-    #     typ = '{:^12.12}'  # type
-    #     s = '{:^12.12}'  # state
-    #
-    #     row = '|' + tf + '|' + n1 + '|' + p1 + '|' + typ + '|' + s + '|\n'
-    #     top = '+' + '-' * 77 + '+' + '\n'
-    #     vsep = '+' + '-' * 6 + '+' + '-' * 21 + '+' + '-' * 22 + '+' + '-' * 12 + '+' + '-' * 12 + '+\n'
-    #     header = f'| Workflow {self.id}: {wf.name}'
-    #     header = header + ' ' * (78 - len(header)) + '|\n'
-    #     colheader = row.format('id', ' Task name', 'Parents', 'Type', 'State')
-    #     lines.append(top)
-    #     lines.append(header)
-    #     lines.append(vsep)
-    #     lines.append(colheader)
-    #     lines.append(vsep)
-    #
-    #     added_tasks = set()
-    #     rows_dict = {}
-    #
-    #     def add_row(tid):
-    #         if not tid in added_tasks:
-    #             added_tasks.add(tid)
-    #             t = self.single_task_service.find_by_id(tid)
-    #             task_name = ' ' + t.task_def['name']
-    #             n = n1 if len(task_name) < 21 else n2
-    #             parents = str(wf.parent_links[tid])[
-    #                       1:-1] if tid in wf.parent_links else '-'
-    #             p = p1 if len(parents) < 22 else p2
-    #             row = '|' + tf + '|' + n + '|' + p + '|' + typ + '|' + s + '|\n'
-    #             rows_dict[tid] = row.format(
-    #                 str(tid),
-    #                 task_name,
-    #                 parents,
-    #                 t.task_def['type'].upper(),
-    #                 t.state.name
-    #             )
-    #
-    #             for cid in wf.links[tid]:
-    #                 add_row(cid)
-    #
-    #     for rtid in wf.root_task_ids:
-    #         add_row(rtid)
-    #
-    #     lines.extend([v for k, v in sorted(rows_dict.items())])
-    #     lines.append(vsep)
-    #
-    #     return ''.join(lines)
+    def __pretty_printed(self):
+        lines = []
+        # columns
+        tf = '{:^6.6}'  # task id
+        n1 = '{:<21.20}'  # name
+        p1 = '{:^22.21}'  # parents
+        n2 = '{:<19.19}..'  # name
+        p2 = '{:^20.20}..'  # parents
+        typ = '{:^12.12}'  # type
+        s = '{:^12.12}'  # state
+
+        row = '|' + tf + '|' + n1 + '|' + p1 + '|' + typ + '|' + s + '|\n'
+        top = '+' + '-' * 77 + '+' + '\n'
+        vsep = '+' + '-' * 6 + '+' + '-' * 21 + '+' + '-' * 22 + '+' + '-' * 12 + '+' + '-' * 12 + '+\n'
+        header = f'| Workflow {self.id}: {self.name}'
+        header = header + ' ' * (78 - len(header)) + '|\n'
+        colheader = row.format('id', ' Task name', 'Parents', 'Type', 'State')
+        lines.append(top)
+        lines.append(header)
+        lines.append(vsep)
+        lines.append(colheader)
+        lines.append(vsep)
+
+        added_tasks = set()
+        rows_dict = {}
+        id_task_mapping = {t.id: t for t in self.__model.tasks}
+        parent_links = defaultdict(list)
+        for p, c in self.__model.task_links.items():
+            for ci in c:
+                parent_links[str(ci)].append(int(p))
+
+        def add_row(tid):
+            if not tid in added_tasks:
+                added_tasks.add(tid)
+                t = id_task_mapping[tid]
+                task_name = ' ' + t.name
+                n = n1 if len(task_name) < 21 else n2
+                parents = str(parent_links[tid])[
+                          1:-1] if tid in parent_links else '-'
+                p = p1 if len(parents) < 22 else p2
+                row = '|' + tf + '|' + n + '|' + p + '|' + typ + '|' + s + '|\n'
+                rows_dict[tid] = row.format(
+                    str(tid),
+                    task_name,
+                    parents,
+                    t.type.upper(),
+                    self.__model.task_states[tid]
+                )
+
+                for cid in self.__model.task_links[tid]:
+                    add_row(str(cid))
+
+        for rt_id in self.__model.root_tasks:
+            add_row(rt_id)
+
+        lines.extend([v for k, v in sorted(rows_dict.items())])
+        lines.append(vsep)
+
+        return ''.join(lines)
