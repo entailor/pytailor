@@ -152,29 +152,6 @@ def flatten_dictvals_or_list(container):
             yield i
 
 
-def filename_filter(files, pattern):
-    """Function for glob/fnmatch-style filtering of list of file names
-
-    Args:
-        *files* (list): List of strings to be filtered. Also accepts
-        pattern string. In this case, glob.glob is used on the string before
-        applying the filter on the glob.glob result.
-
-        *pattern* (str,list,tuple): The filter pattern(s). See fnmatch.filter
-        function for more information.
-    """
-    if isinstance(files, str):
-        return filename_filter(glob(files), pattern)
-
-    if isinstance(pattern, (list, tuple)):
-        res = []
-        for pat in pattern:
-            res.extend(filename_filter(files, pat))
-        return res
-    else:
-        return fnmatch.filter(files, pattern)
-
-
 def extract_real_filenames(data):
     """Get a list of existing filenames contained in *data* where
     *data* is a str or json-compatible data structure
@@ -209,38 +186,10 @@ def get_logger(name, stream_level='DEBUG', formatter=None):
     return logger
 
 
-def update_nested_dict(d, u):
-    for k, v in u.items():
-        if isinstance(v, Mapping):
-            d[k] = update_nested_dict(d.get(k, {}), v)
-        else:
-            d[k] = v
-    return d
-
-
 def format_traceback(exc: Exception) -> List[str]:
     return traceback.format_exception(etype=type(exc),
                                       value=exc,
                                       tb=exc.__traceback__)
-
-
-class Singleton:
-
-    def __init__(self, cls):
-        self._cls = cls
-
-    def Instance(self):
-        try:
-            return self._instance
-        except AttributeError:
-            self._instance = self._cls()
-            return self._instance
-
-    def __call__(self):
-        raise TypeError('Singletons must be accessed through `Instance()`.')
-
-    def __instancecheck__(self, inst):
-        return isinstance(inst, self._cls)
 
 
 def check_local_files_exist(tag_filename_mapping: Dict[str, List[Union[str, Path]]]):
