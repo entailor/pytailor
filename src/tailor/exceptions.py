@@ -6,5 +6,5 @@ class BackendResponseError(PytailorBaseError):
     pass
 
 
-class ExistsBackendError(PytailorBaseError):
+class BackendResourceError(PytailorBaseError):
     pass

@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from tailor.clients import RestClient
 from tailor.common.base import APIBase
-from tailor.exceptions import ExistsBackendError
+from tailor.exceptions import BackendResourceError
 from tailor.models import WorkflowDefinition as WorkflowDefinitionModel
 from tailor.models import WorkflowDefinitionCreate
 from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
@@ -63,7 +63,7 @@ class WorkflowDefinition(APIBase):
 
         # check not existing
         if self.__id is not None:
-            raise ExistsBackendError('Cannot add workflow definition to account. The '
+            raise BackendResourceError('Cannot add workflow definition to account. The '
                                      'workflow definition already exist backend.')
 
         # make request model

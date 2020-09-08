@@ -10,7 +10,7 @@ from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 from tailor.common.state import State
 from tailor.execution import SerialRunner
 from tailor.common.base import APIBase
-from tailor.exceptions import ExistsBackendError
+from tailor.exceptions import BackendResourceError
 from .project import Project
 from .fileset import FileSet
 from .dag import DAG
@@ -95,6 +95,7 @@ class Workflow(APIBase):
         return self.__id
 
     def __str__(self):
+        self.refresh()
         return self.__pretty_printed()
 
     def __update_from_backend(self, wf_model: WorkflowModel):
@@ -105,21 +106,30 @@ class Workflow(APIBase):
         self.__id = wf_model.id
         self.__model = wf_model
 
+    def refresh(self) -> None:
+        """Update with latest data from backend."""
+        if self.__state == State.PRE:
+            raise BackendResourceError('This workflow has not been run yet and can '
+                                       'therefore not be refreshed.')
+        wf_model = self.__fetch_model(self.project.id, self.id)
+        self.__update_from_backend(wf_model)
+
+    @classmethod
+    def __fetch_model(cls, project_id: str, wf_id: str) -> WorkflowModel:
+        with RestClient() as client:
+            return cls._handle_rest_client_call(
+                client.get_workflow,
+                project_id,
+                wf_id,
+                error_msg='Could not retrieve workflow.'
+            )
+
     @classmethod
     def from_project_and_id(cls, project: Project, wf_id: int) -> Workflow:
         """
         Retrieve a workflow from the backend.
         """
-
-        # get workflow model
-        with RestClient() as client:
-            wf_model = cls._handle_rest_client_call(
-                client.get_workflow,
-                project.id,
-                str(wf_id),
-                error_msg='Could not retrieve workflow.'
-            )
-
+        wf_model = cls.__fetch_model(project.id, str(wf_id))
         wf = Workflow(
             project=Project(wf_model.project_id),
             dag=DAG.from_dict(dict_keys_str_to_int(wf_model.dag)),
@@ -127,9 +137,7 @@ class Workflow(APIBase):
             inputs=wf_model.inputs,
             fileset=wf_model.fileset_id
         )
-
         wf.__update_from_backend(wf_model)
-
         return wf
 
     def run(self, distributed: bool = False, worker_name: Optional[str] = None) -> None:
@@ -149,7 +157,7 @@ class Workflow(APIBase):
         """
 
         if self.__state != State.PRE:
-            raise ExistsBackendError('Cannot run an existing workflow.')
+            raise BackendResourceError('Cannot run an existing workflow.')
 
         if not distributed:
             worker_name = str(uuid.uuid4())
