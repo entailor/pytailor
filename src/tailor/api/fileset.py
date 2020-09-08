@@ -34,17 +34,11 @@ class FileSet(APIBase):
         self.id = fileset_model.id
         self.project = project
 
-    def upload(self, **kwargs: Union[str, List[str]]):
-        """Upload files by specifying keyword arguments."""
+    def upload(self, **files: List[str]):
+        """Upload files by specifying keyword arguments: tag=[path1, path2, ...]"""
 
-        # kwargs is now a dict on the format {tag: filename(s)}
-        # ensure values are lists
-        for k in kwargs:
-            if isinstance(kwargs[k], str):
-                kwargs[k] = [kwargs[k]]
-
-        check_local_files_exist(kwargs)
-        file_basenames = get_basenames(kwargs)
+        check_local_files_exist(files)
+        file_basenames = get_basenames(files)
         fileset_upload = FileSetUpload(tags=file_basenames)
 
         with RestClient() as client:
@@ -57,4 +51,4 @@ class FileSet(APIBase):
             )
 
         with FileClient() as client:
-            client.upload_files(kwargs, fileset_model)
+            client.upload_files(files, fileset_model)

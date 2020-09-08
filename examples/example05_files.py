@@ -71,7 +71,7 @@ prj = Project(project_uuid)
 # create a fileset and upload files
 fileset = FileSet(prj)
 fileset.upload(testfiles=['testfiles/testfile_01.txt', 'testfiles/testfile_02.txt'],
-               inpfile='testfiles/testfile_03.txt'
+               inpfile=['testfiles/testfile_03.txt']
                )
 
 
