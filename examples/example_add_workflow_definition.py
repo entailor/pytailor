@@ -6,7 +6,7 @@ from tailor import PythonTask, DAG, Account, WorkflowDefinition
 t1 = PythonTask(
     function='builtins.print',
     name='job 1',
-    args='\nHello, world!\n',
+    args=['\nHello, world!\n'],
 )
 t2 = PythonTask(
     function='builtins.print',

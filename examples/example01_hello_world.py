@@ -27,7 +27,7 @@ t1 = PythonTask(
     function='builtins.print',
     # function='builtins.abs',  # will raise type error
     name='job 1',
-    args='\nHello, world!\n',  # equivalent to ['\nHello, world!\n']
+    args=['\nHello, world!\n'],
 )
 t2 = PythonTask(
     function='builtins.print',

@@ -10,18 +10,12 @@ import yaql
 
 from tailor.common.state import State
 from tailor.api.dag import TaskType
-from tailor.utils import create_rundir, extract_real_filenames, get_logger, list_files
+from tailor.utils import create_rundir, extract_real_filenames, get_logger, list_files, \
+    as_query
 from tailor.utils import format_traceback, get_basenames
 from tailor.models import *
 from tailor.clients import RestClient, FileClient
 from tailor.common.base import APIBase
-
-
-def _get_expression(arg):
-    if isinstance(arg, str) and arg.startswith('<%') and arg.endswith('%>'):
-        return arg[2:-2].strip()
-    else:
-        return False
 
 
 def _resolve_callable(function_name):
@@ -161,8 +155,8 @@ class TaskRunner(APIBase):
                     v = [v]
                 file_names = []
                 for vi in v:
-                    if _get_expression(vi):  # alt 1
-                        file_names_i = self.__eval_query(_get_expression(vi),
+                    if as_query(vi):  # alt 1
+                        file_names_i = self.__eval_query(as_query(vi),
                                                          function_output)
                         file_names_i = extract_real_filenames(file_names_i) or []
                     else:  # alt 2
@@ -206,8 +200,8 @@ class TaskRunner(APIBase):
             # For each (tag: query), the query is applied to function_output
             # and the result is put on $.outputs.<tag>
             for k, v in output_extraction.items():
-                if _get_expression(v):
-                    val = self.__eval_query(_get_expression(v), function_output)
+                if as_query(v):
+                    val = self.__eval_query(as_query(v), function_output)
                 else:
                     raise ValueError('Bad values for *output_extraction* parameter...')
                 outputs[k] = val
@@ -279,33 +273,37 @@ class TaskRunner(APIBase):
                 client.download_files(fileset)
 
     def __handle_args(self, args):
-        if isinstance(args, str) and _get_expression(args):
-            parsed_args = self.__eval_query(_get_expression(args), self.__context)
+        if as_query(args):
+            parsed_args = self.__eval_query(as_query(args), self.__context)
             if not isinstance(parsed_args, list):
-                parsed_args = [parsed_args]
-            return parsed_args
+                raise TypeError(f'Query expression must evaluate to list. Got '
+                                f'{type(parsed_args)}')
         elif not isinstance(args, list):
-            args = [args]
-        parsed_args = []
-        for arg in args:
-            if _get_expression(arg):
-                parsed_arg = self.__eval_query(_get_expression(arg),
-                                               self.__context)
-                parsed_args.append(parsed_arg)
-            else:
-                parsed_args.append(arg)
+            raise TypeError(f'*args* must be list or query-expression.. Got {type(args)}')
+        else:
+            parsed_args = []
+            for arg in args:
+                if as_query(arg):
+                    parsed_arg = self.__eval_query(as_query(arg), self.__context)
+                    parsed_args.append(parsed_arg)
+                else:
+                    parsed_args.append(arg)
         return parsed_args
 
     def __handle_kwargs(self, kwargs):
-        if isinstance(kwargs, str) and _get_expression(kwargs):
-            parsed_kwargs = self.__eval_query(_get_expression(kwargs),
-                                              self.__context)
-
+        if as_query(kwargs):
+            parsed_kwargs = self.__eval_query(as_query(kwargs), self.__context)
+            if not isinstance(parsed_kwargs, list):
+                raise TypeError(f'Query expression must evaluate to dict. Got '
+                                f'{type(parsed_kwargs)}')
+        elif not isinstance(kwargs, dict):
+            raise TypeError(f'*kwargs* must be dict or query-expression.. Got '
+                            f'{type(kwargs)}')
         else:
             parsed_kwargs = {}
             for kw, arg in kwargs.items():
-                if _get_expression(arg):
-                    parsed_arg = self.__eval_query(_get_expression(arg),
+                if as_query(arg):
+                    parsed_arg = self.__eval_query(as_query(arg),
                                                    self.__context)
                     parsed_kwargs[kw] = parsed_arg
                 else:

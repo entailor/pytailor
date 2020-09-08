@@ -14,7 +14,7 @@ from tailor import PythonTask, DAG, Workflow, Project
 t1 = PythonTask(
     function='time.sleep',
     name='task 1',
-    args=1
+    args=[1]
 )
 t2 = PythonTask(
     function='builtins.print',

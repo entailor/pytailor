@@ -29,7 +29,7 @@ from tailor import PythonTask, DAG, Workflow, Project
 t1 = PythonTask(
     function='time.sleep',
     name='task 1',
-    args='<% $.inputs.sleep_time %>'
+    args=['<% $.inputs.sleep_time %>']
 )
 t2 = PythonTask(
     function='builtins.print',

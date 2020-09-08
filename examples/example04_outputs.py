@@ -30,7 +30,7 @@ from tailor import PythonTask, DAG, Workflow, Project
 t1 = PythonTask(
     function='glob.glob',
     name='task 1',
-    args='../*.py',
+    args=['../*.py'],
     output_to='parentdir_content'  # form 1: single string
 )
 t2 = PythonTask(

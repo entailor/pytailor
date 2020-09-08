@@ -71,7 +71,7 @@ t2 = PythonTask(
 t3 = PythonTask(
     function='builtins.print',
     name='task 3',
-    args='Hello from task 3 which got no kwargs from duplicate...',
+    args=['Hello from task 3 which got no kwargs from duplicate...'],
     parents=[t1, t2]
 )
 

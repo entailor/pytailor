@@ -39,7 +39,7 @@ from tailor import PythonTask, DAG, Workflow, Project, FileSet
 t1 = PythonTask(
     function='glob.glob',
     name='task 1',
-    args='*',
+    args=['*'],
     download='testfiles',  # refers to a file tag
     output_to='downloaded_files'
 )

@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import copy
 from abc import ABC, abstractmethod
-from typing import Optional, List, Union, Any
+from typing import Optional, List, Union, Any, Dict
 from enum import Enum
+
+from tailor.utils import as_query
 
 
 class TaskType(Enum):
@@ -116,12 +118,12 @@ class PythonTask(BaseTask):
             applied in the job working dir. matching files are uploaded
             under the given tag.
 
-    - **args** (list or Any, optional)
-        Arguments to be passed as positional arguments to *callable*. Arguments
+    - **args** (list or str, optional)
+        Arguments to be passed as positional arguments to *function*. Arguments
         can be given as ordinary python values or as query expressions. See
         the examples for how query expressions are used.
     - **kwargs** (dict or str, optional)
-        Arguments to be passed as keyword arguments to *callable*. Arguments
+        Arguments to be passed as keyword arguments to *function*. Arguments
         can be given as ordinary python values or as query expressions. See
         the examples for how query expressions are used.
     - **output_to** (str, optional)
@@ -139,10 +141,10 @@ class PythonTask(BaseTask):
                  function: str,
                  name: Optional[str] = None,
                  parents: Optional[Union[List[BaseTask], BaseTask]] = None,
-                 download: Optional[Union[list, str]] = None,
+                 download: Optional[Union[List[str], str]] = None,
                  upload: Optional[dict] = None,
-                 args: Optional[Union[list, Any]] = None,
-                 kwargs: Optional[Union[dict, str]] = None,
+                 args: Optional[Union[list, str]] = None,
+                 kwargs: Optional[Union[Dict[str, Any], str]] = None,
                  output_to: Optional[str] = None,
                  output_extraction: Optional[dict] = None
                  ):
@@ -154,6 +156,12 @@ class PythonTask(BaseTask):
         self.upload = upload or {}
         self.output_to = output_to
         self.output_extraction = output_extraction
+
+        # check arguments here to avoid downstream errors
+        if not (isinstance(self.args, list) or as_query(self.args)):
+            raise TypeError('*args* must be list or query-expression.')
+        if not (isinstance(self.kwargs, dict) or as_query(self.kwargs)):
+            raise TypeError('*kwargs* must be dict or query-expression.')
 
     @property
     def function(self):
