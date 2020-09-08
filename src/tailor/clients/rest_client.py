@@ -69,7 +69,7 @@ class RestClient(httpx.Client):
 
     # workflows
 
-    def get_workflow(self, project_id: str, wf_id: int) -> Workflow:
+    def get_workflow(self, project_id: str, wf_id: str) -> Workflow:
         url = f'projects/{project_id}/workflows/{wf_id}'
         response = self.get(url)
         if response.status_code == httpx.codes.OK:

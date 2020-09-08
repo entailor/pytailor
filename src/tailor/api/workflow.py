@@ -102,7 +102,7 @@ class Workflow(APIBase):
         # workflow
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
-        self.__id = int(wf_model.id)
+        self.__id = wf_model.id
         self.__model = wf_model
 
     @classmethod
@@ -116,7 +116,7 @@ class Workflow(APIBase):
             wf_model = cls._handle_rest_client_call(
                 client.get_workflow,
                 project.id,
-                wf_id,
+                str(wf_id),
                 error_msg='Could not retrieve workflow.'
             )
 
@@ -206,7 +206,8 @@ class Workflow(APIBase):
 
         row = '|' + tf + '|' + n1 + '|' + p1 + '|' + typ + '|' + s + '|\n'
         top = '+' + '-' * 77 + '+' + '\n'
-        vsep = '+' + '-' * 6 + '+' + '-' * 21 + '+' + '-' * 22 + '+' + '-' * 12 + '+' + '-' * 12 + '+\n'
+        vsep = '+' + '-' * 6 + '+' + '-' * 21 + '+' + '-' * 22 + '+' + '-' * 12 + \
+               '+' + '-' * 12 + '+\n'
         header = f'| Workflow {self.id}: {self.name}'
         header = header + ' ' * (78 - len(header)) + '|\n'
         colheader = row.format('id', ' Task name', 'Parents', 'Type', 'State')
