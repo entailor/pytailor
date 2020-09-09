@@ -47,7 +47,7 @@ t2 = PythonTask(
     function='shutil.copyfile',
     # function='builtins.print',
     name='task 2',
-    args=['<% $.files.inpfile %>', 'newfile.txt'],  # inpfile is a tag
+    args=['<% $.files.inpfile[0] %>', 'newfile.txt'],  # inpfile is a tag
     download='inpfile',
     upload={'outfile': 'newfile.txt'}
 )
