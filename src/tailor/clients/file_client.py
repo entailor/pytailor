@@ -33,6 +33,7 @@ class FileClient(httpx.Client):
         for fileset_links in fileset.tags:
             for fileset_link in fileset_links.links:
                 local_filename = fileset_link.filename
+                Path(local_filename).parent.mkdir(parents=True, exist_ok=True)
                 with requests.get(fileset_link.url, stream=True) as r:
                     with open(local_filename, 'wb') as f:
                         shutil.copyfileobj(r.raw, f)
