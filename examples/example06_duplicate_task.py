@@ -36,9 +36,14 @@ from tailor import PythonTask, BranchTask, DAG, Workflow, Project
 t1 = PythonTask(
     function='builtins.print',
     name='task 1',
+    args=['<% $.inputs.data %>', '<% $.inputs.other %>']
 )
-branch = BranchTask(task=t1, name='duplicate',
-                    args=['Duplicated 1', 'Duplicated 2'])
+
+branch = BranchTask(
+    task=t1,
+    name='duplicate',
+    branch_data=['<% $.inputs.data %>']
+)
 
 dag = DAG(tasks=branch, name='dag')
 
@@ -48,8 +53,17 @@ dag = DAG(tasks=branch, name='dag')
 project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
 prj = Project(project_uuid)
 
+inputs = {
+    'data': [1, 2, 3]
+}
+
 # create a workflow:
-wf = Workflow(project=prj, dag=dag, name='duplicate workflow')
+wf = Workflow(
+    project=prj,
+    dag=dag,
+    name='branch workflow',
+    inputs=inputs
+)
 
 # run the workflow
 wf.run()

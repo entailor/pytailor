@@ -242,30 +242,32 @@ class BranchTask(BaseTask):
     parents : BaseTask or List[BaseTask], optional
         Specify one or more upstream tasks that this task
         depends on.
-    download : str or list, optional
-        Specify one or more file tags to be used as basis for duplication.
-    args : str or list, optional
-        Specify data to be used for *args* input in duplicated tasks Can be a single
-        query expression or .
-    kwargs : str or dict, optional
-        Specify data to be used for *kwargs* input in duplicated tasks
+    branch_data : ...
+        Data to be used as basis for branching. Accepts a query-expression or a list of
+        query-expressions. The queries must evaluate to a list or a dict. If the query
+        evaluates to a dict, that dict must have integer keys to represent the index of
+        the branch.
+    branch_files : ...
+        Files to be used as basis for branching. Accepts a file tag or a list of
+        file tags.
 
     """
 
     TYPE = TaskType.BRANCH
 
     def __init__(self,
-                 task: BaseTask, name: str = None,
+                 task: BaseTask,
+                 name: str = None,
                  parents: Union[List[BaseTask], BaseTask] = None,
-                 download: Union[list, str] = None,
-                 args: Union[list, str] = None,
-                 kwargs: Union[list, str] = None
+                 branch_data: Union[list, str] = None,
+                 branch_files: Union[list, str] = None,
                  ):
         super().__init__(name=name, parents=parents)
         self.task = task
-        self.download = download or []
-        self.args = args
-        self.kwargs = kwargs
+
+        # either branch_data of branch_files must be not None
+        self.branch_data = branch_data
+        self.branch_files = branch_files
 
     def to_dict(self) -> dict:
         d = _object_to_dict(self, exclude_varnames=['parents'])
