@@ -54,7 +54,8 @@ project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
 prj = Project(project_uuid)
 
 inputs = {
-    'data': [1, 2, 3]
+    'data': [1, 2, 3],
+    'other': 'asdf'
 }
 
 # create a workflow:
