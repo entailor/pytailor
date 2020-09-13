@@ -28,24 +28,24 @@ Duplicated tasks always become children of the BranchTask that created them.
 
 """
 
-from tailor import PythonTask, BranchTask, DAG, Workflow, Project
+from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###
 
-# task to duplicate (note that no args are specified)
-t1 = PythonTask(
+t2 = PythonTask(
     function='builtins.print',
-    name='task 1',
-    args=['<% $.inputs.data %>', '<% $.inputs.other %>']
+    name='task 2',
+    args=['<% $.files.testfiles %>']
 )
 
 branch = BranchTask(
-    task=t1,
-    name='duplicate',
-    branch_data=['<% $.inputs.data %>']
+    task=t2,
+    name='branch',
+    branch_data=['<% $.files.testfiles %>'],
 )
 
-dag = DAG(tasks=branch, name='dag')
+
+dag = DAG(tasks=[branch], name='dag')
 
 ### workflow run ###
 
@@ -53,18 +53,24 @@ dag = DAG(tasks=branch, name='dag')
 project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
 prj = Project(project_uuid)
 
+# create a fileset and upload files
+fileset = FileSet(prj)
+fileset.upload(testfiles=['testfiles/testfile_01.txt', 'testfiles/testfile_02.txt'])
+
 inputs = {
     # 'data': [1, 2, 3],
     'data': {0: 'a', 1: 'b', 2: 'c'},
-    'other': 'asdf'
+    'other': 'asdf',
+    'values': [1, 2, 3]
 }
 
 # create a workflow:
 wf = Workflow(
     project=prj,
     dag=dag,
-    name='branch workflow',
-    inputs=inputs
+    name='branch workflow 2',
+    inputs=inputs,
+    fileset=fileset
 )
 
 # run the workflow

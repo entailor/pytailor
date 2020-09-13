@@ -53,7 +53,7 @@ the DuplicateTask, the args already present will be overwritten.
 
 """
 
-from tailor import PythonTask, BranchTask, DAG, Workflow, Project
+from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###
 
@@ -68,7 +68,8 @@ t2 = PythonTask(
     function='builtins.print',
     name='task 2',
     args=['This is a regular argument'],
-    parents=t1
+    parents=t1,
+    download='testfiles'
 )
 t3 = PythonTask(
     function='builtins.print',
@@ -79,8 +80,11 @@ t3 = PythonTask(
 
 sub_dag = DAG(tasks=[t1, t2, t3], name='sub-dag')
 
-dup = BranchTask(task=sub_dag, name='duplicate',
-                 branch_data=['<% $.inputs.data1 %>', '<% $.inputs.data2 %>'])
+dup = BranchTask(
+    task=sub_dag, name='duplicate',
+    branch_data=['<% $.inputs.data1 %>', '<% $.inputs.data2 %>'],
+    branch_files=['testfiles']
+)
 
 # outer workflow
 dag = DAG(tasks=dup, name='dag')
@@ -98,8 +102,22 @@ inputs = {
     'other': 'a string',
 }
 
+# create a fileset and upload files
+fileset = FileSet(prj)
+fileset.upload(testfiles=[
+    'testfiles/testfile_01.txt',
+    'testfiles/testfile_02.txt',
+    'testfiles/testfile_03.txt'
+])
+
 # create a workflow:
-wf = Workflow(project=prj, dag=dag, name='duplicate workflow', inputs=inputs)
+wf = Workflow(
+    project=prj,
+    dag=dag,
+    name='branch workflow with dag',
+    inputs=inputs,
+    fileset=fileset
+)
 
 # run the workflow
 wf.run()
