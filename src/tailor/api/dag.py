@@ -141,12 +141,12 @@ class PythonTask(BaseTask):
     - **name** (str, optional)
         A default name is used if not provided.
     - **parents** (BaseTask or List[BaseTask], optional)
-        Specify one or more upstream tasks that this job depends on.
+        Specify one or more upstream tasks that this task depends on.
     - **download** (str or list, optional)
         Provide one or more file tags. These file tags refer to files in
         the storage object associated with the workflow run.
     - **upload** (dict, optional)
-        Specify files to send back to the storage object after a job has
+        Specify files to send back to the storage object after a task has
         been run. Dict format is {tag1: val1, tag2: val2, ...} where val
         can be:
 
@@ -155,7 +155,7 @@ class PythonTask(BaseTask):
             from the query are then uploaded to storage under the given
             tag.
         -   one or more glob-style strings (str og list) which is
-            applied in the job working dir. matching files are uploaded
+            applied in the task working dir. matching files are uploaded
             under the given tag.
 
     - **args** (list or str, optional)
@@ -227,7 +227,7 @@ class PythonTask(BaseTask):
 
     def copy(self):
         """
-        Get a copy of this job definition without parent refs
+        Get a copy of this task definition without parent refs
         """
         return PythonTask.from_dict(self.to_dict())
 
@@ -288,8 +288,8 @@ class BranchTask(OwnerTask):
     @classmethod
     def from_dict(cls, d) -> BranchTask:
         d = copy.deepcopy(d)
-        td = d.pop('job')
-        d['job'] = _object_from_dict(td)
+        td = d.pop('task')
+        d['task'] = _object_from_dict(td)
         d.pop('type', None)
         return cls(**d)
 
@@ -323,7 +323,7 @@ class DAG(OwnerTask):
         Parent/children relationships can be specified with the dict on the form
         {parent_def: [child_def1, child_def2], ...}. Definition references may either
         be indices (ints) into *tasks* or BaseTask instances. Note that links
-        may also be defined on job  objects with the *parents* argument instead of
+        may also be defined on task  objects with the *parents* argument instead of
         using links: (parents=[parent_def1, parent_def2])
     """
 
@@ -376,7 +376,7 @@ class DAG(OwnerTask):
             td.parents = self.__get_parents(td)
 
     def __get_parents(self, task):
-        parents = set()  # fill with job definitions
+        parents = set()  # fill with task definitions
         for p, cs in self.task_links.items():
             if task in cs:
                 parents.add(p)
