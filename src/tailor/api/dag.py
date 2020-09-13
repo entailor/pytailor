@@ -9,6 +9,9 @@ from tailor.utils import as_query
 from tailor.exceptions import DAGError
 
 
+_CONTEXT_MANAGER_OWNER = None
+
+
 class TaskType(Enum):
     PYTHON = 'python'
     BRANCH = 'branch'
@@ -67,8 +70,10 @@ class BaseTask(ABC):
         self.name: str = name or 'Unnamed'
         parents = [parents] if isinstance(parents, (BaseTask, int)) else parents
         self.parents: list = parents if parents else []
-        self.owner = owner or None
-        if self.owner:
+        if not owner and _CONTEXT_MANAGER_OWNER:
+            owner = _CONTEXT_MANAGER_OWNER
+        if owner:
+            self.owner = owner
             self.owner.register(self)
 
     @property
@@ -91,9 +96,27 @@ class OwnerTask(BaseTask):
     """
     A task that own other tasks (DAG, BranchTask).
     """
+    def __init__(self,
+                 name: Optional[str] = None,
+                 parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+                 owner: Optional[BaseTask] = None,
+                 ):
+        super().__init__(name=name, parents=parents, owner=owner)
+        self._old_context_manager_owners = []
+
     @abstractmethod
-    def register(self, task: BaseTask) -> None:
+    def register(self, task: BaseTask):
         return NotImplemented
+
+    def __enter__(self):
+        global _CONTEXT_MANAGER_OWNER
+        self._old_context_manager_owners.append(_CONTEXT_MANAGER_OWNER)
+        _CONTEXT_MANAGER_OWNER = self
+        return self
+
+    def __exit__(self, _type, _value, _tb):
+        global _CONTEXT_MANAGER_OWNER
+        _CONTEXT_MANAGER_OWNER = self._old_context_manager_owners.pop()
 
 
 class PythonTask(BaseTask):
@@ -283,7 +306,7 @@ class BranchTask(OwnerTask):
         self.task = task
 
 
-class DAG(BaseTask):
+class DAG(OwnerTask):
     """
     Represents a Directed Acyclic Graph, i.e. a DAG.
 
