@@ -7,35 +7,39 @@ import logging
 import platform
 import uuid
 from multiprocessing import cpu_count
+from typing import Optional
 
 from tailor.config import LOGGING_FORMAT
 from tailor.execution.taskrunner import run_task
-from tailor.models import TaskCheckout
+from tailor.models import TaskCheckout, TaskExecutionData
 from tailor.utils import get_logger
+from tailor.clients import AsyncRestClient
 
 
-def do_checkout():
+async def do_checkout(checkout_query: TaskCheckout
+                      ) -> Optional[TaskExecutionData]:
+    async with AsyncRestClient() as client:
+        exec_data = await client.checkout_task(checkout_query)
+    return exec_data
 
 
-async def async_run_task(pool, project_uuid: str, task):
+async def async_run_task(pool, task_execution_data: TaskExecutionData):
     loop = asyncio.get_running_loop()
-    result = await loop.run_in_executor(pool, run_task, project_uuid, task)
+    result = await loop.run_in_executor(pool, run_task, task_execution_data)
     return result
 
 
 # job run-manager
-async def run_manager(project_uuid: str, worker, ncores, sleep):
+async def run_manager(checkout_query: TaskCheckout, worker, n_cores, sleep):
     # use default project if not provided
 
     # set up logging
-    core_report_format = LOGGING_FORMAT + f' (%(n)s/{ncores} cores in use, ' + 'prj: %(prj)s)'
+    core_report_format = LOGGING_FORMAT + f' (%(n)s/{n_cores} cores in use)'
     formatter = logging.Formatter(core_report_format)
-    logger = get_logger(f'{project_uuid}', formatter=formatter)
-    nrunning = 0
-    extra = {'n': nrunning, 'prj': project_uuid}
+    logger = get_logger('Worker', formatter=formatter)
+    n_running = 0
+    extra = {'n': n_running}
     logger = logging.LoggerAdapter(logger, extra)
-
-    single_task_service = SingleTaskService()
 
     # helper to handle finished asyncio_tasks
     def handle_finished(aio_tasks):
@@ -45,20 +49,21 @@ async def run_manager(project_uuid: str, worker, ncores, sleep):
                 print('Task finished', aio_task.result())
 
     # go into loop with process pool
-    with concurrent.futures.ProcessPoolExecutor(max_workers=ncores) as pool:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=n_cores) as pool:
         try:
             asyncio_tasks = set()
             while True:
-                nrunning = len(asyncio_tasks)
-                extra['n'] = nrunning  # update running for logging
-                if nrunning < ncores:
+                n_running = len(asyncio_tasks)
+                extra['n'] = n_running  # update running for logging
+                if n_running < n_cores:
                     # look for READY job
-                    single_task = single_task_service.checkout_ready_task(worker=worker)
-                    if single_task:
+                    task_exec_data = await do_checkout(checkout_query)
+                    if task_exec_data:
                         logger.info(
-                            f'Job available, starting run for job {single_task.id}')
+                            f'Task available, starting run for task'
+                            f'{task_exec_data.task.id}')
                         asyncio_task = asyncio.create_task(async_run_task(
-                            pool, project_uuid, single_task))
+                            pool, task_exec_data))
                         asyncio_tasks.add(asyncio_task)
                         # use a shorter fixed sleep time here in order to start
                         # jobs faster when many are available
@@ -78,8 +83,7 @@ async def run_manager(project_uuid: str, worker, ncores, sleep):
             # print('\excepted CanceledError\n')
 
 
-def run_worker(sleep, ncores, worker_name, project):
-
+def run_worker(sleep, n_cores, worker_name):
     checkout_query = TaskCheckout(
         worker_capabilities=['python'],
         worker_name=worker_name,
@@ -87,7 +91,7 @@ def run_worker(sleep, ncores, worker_name, project):
 
     try:
         asyncio.run(
-            run_manager(project, worker_name, int(ncores), int(sleep))
+            run_manager(checkout_query, worker_name, int(n_cores), int(sleep))
         )
     except KeyboardInterrupt:
         print("CTRL-C pressed, exiting...")

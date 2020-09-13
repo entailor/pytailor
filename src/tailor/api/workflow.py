@@ -196,10 +196,13 @@ class Workflow(APIBase):
             )
             self.__update_from_backend(wf_model)
 
-        else:
-            # launches to backend and returns
-            # no actions needed here
-            raise NotImplementedError
+        # else:
+        #     # launches to backend and returns
+        #     # no actions needed here
+        #     raise NotImplementedError
+
+    def __add_to_backend(self):
+        pass
 
     def __pretty_printed(self):
         lines = []
