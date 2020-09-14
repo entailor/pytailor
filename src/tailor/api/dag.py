@@ -8,7 +8,7 @@ from enum import Enum
 from tailor.utils import as_query
 from tailor.exceptions import DAGError
 
-
+# Not thread safe, but this is considered ok
 _CONTEXT_MANAGER_OWNER = None
 
 
