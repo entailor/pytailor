@@ -38,7 +38,7 @@ class SerialRunner(APIBase):
         # self.task_service.checkout_ready_task(worker=worker_id, wf_id=wf.id)
 
         while checkout:
-            run_task(checkout, self.project_id)
+            run_task(checkout)
             checkout = self.do_checkout(checkout_query)
 
         logger.info(f'Workflow with id {self.workflow_id} finished')

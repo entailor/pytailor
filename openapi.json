@@ -1542,6 +1542,28 @@
           }
         ]
       }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Lists all accounts",
+        "operationId": "account_list_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Account List Health Get",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1624,6 +1646,10 @@
             "items": {
               "$ref": "#/components/schemas/FileSetLinks"
             }
+          },
+          "size": {
+            "title": "Total size of files in fileset",
+            "type": "string"
           }
         }
       },
@@ -1659,6 +1685,10 @@
           "url": {
             "title": "Url",
             "type": "string"
+          },
+          "size": {
+            "title": "Size",
+            "type": "string"
           }
         }
       },
@@ -1691,7 +1721,7 @@
             "type": "string"
           },
           "tags": {
-            "title": "List of tags, each containing a list of file names",
+            "title": "Dict of tags, each containing a list of file names",
             "type": "object",
             "additionalProperties": {
               "type": "array",
@@ -1794,6 +1824,18 @@
           "definition": {
             "title": "definition of the task",
             "type": "object"
+          },
+          "inputs": {
+            "title": "Contextualized inputs for task",
+            "type": "object"
+          },
+          "outputs": {
+            "title": "Contextualized outputs for task",
+            "type": "object"
+          },
+          "files": {
+            "title": "Contextualized files for task",
+            "type": "object"
           }
         }
       },
@@ -1865,6 +1907,10 @@
           },
           "fileset_id": {
             "title": "Reference to the Workflow's fileset object",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Reference to the Workflow's project",
             "type": "string"
           }
         }
@@ -2130,6 +2176,10 @@
           },
           "outputs": {
             "title": "The Workflow's output",
+            "type": "object"
+          },
+          "files": {
+            "title": "The Workflow's files",
             "type": "object"
           },
           "from_definition_id": {

@@ -28,10 +28,9 @@ def _resolve_callable(function_name):
 
 class TaskRunner(APIBase):
 
-    def __init__(self, exec_data: TaskExecutionData, project_id: str):
+    def __init__(self, exec_data: TaskExecutionData):
 
         self.__set_exec_data(exec_data)
-        self.__project_id = project_id
 
         # get logger
         self.logger = get_logger('JobRunner')
@@ -46,6 +45,7 @@ class TaskRunner(APIBase):
         self.__task = exec_data.task
         self.__fileset_id = exec_data.fileset_id
         self.__run_id = exec_data.run_id
+        self.__project_id = exec_data.project_id
 
     def run(self):
 
@@ -353,6 +353,6 @@ class TaskRunner(APIBase):
                 pass
 
 
-def run_task(checkout: TaskExecutionData, project_id: str):
-    runner = TaskRunner(checkout, project_id)
+def run_task(checkout: TaskExecutionData):
+    runner = TaskRunner(checkout)
     return runner.run()
