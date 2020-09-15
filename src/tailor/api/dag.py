@@ -302,7 +302,7 @@ class BranchTask(OwnerTask):
 
     def register(self, task: BaseTask) -> None:
         if self.task:
-            raise DAGError('Cannot register task with BrachTask.'
+            raise DAGError('Cannot register task with BrachTask. '
                            'A task is already registered.')
         self.task = task
 
