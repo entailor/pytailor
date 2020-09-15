@@ -32,20 +32,24 @@ from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###
 
-t2 = PythonTask(
-    function='builtins.print',
-    name='task 2',
-    args=['<% $.files.testfiles %>']
-)
-
-branch = BranchTask(
-    task=t2,
-    name='branch',
-    branch_data=['<% $.files.testfiles %>'],
-)
-
-
-dag = DAG(tasks=[branch], name='dag')
+with DAG(name='dag') as dag:
+    with BranchTask(
+            name='branch',
+            branch_data=['<% $.files.testfiles %>'],
+            branch_files=['testfiles']):
+        with DAG(name='sub-dag') as sub_dag:
+            t1 = PythonTask(
+                function='glob.glob',
+                name='task 2',
+                args=['**/*.txt'],
+                kwargs={'recursive': True},
+                download='testfiles',
+                output_to='glob_res')
+            PythonTask(
+                function='builtins.print',
+                name='task 3',
+                args=['<% $.files.testfiles %>', '<% $.outputs.glob_res %>'],
+                parents=t1)
 
 ### workflow run ###
 
@@ -57,12 +61,7 @@ prj = Project(project_uuid)
 fileset = FileSet(prj)
 fileset.upload(testfiles=['testfiles/testfile_01.txt', 'testfiles/testfile_02.txt'])
 
-inputs = {
-    # 'data': [1, 2, 3],
-    'data': {0: 'a', 1: 'b', 2: 'c'},
-    'other': 'asdf',
-    'values': [1, 2, 3]
-}
+inputs = {}
 
 # create a workflow:
 wf = Workflow(

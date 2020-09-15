@@ -32,20 +32,15 @@ from tailor import PythonTask, BranchTask, DAG, Workflow, Project
 
 ### workflow definition ###
 
-# task to duplicate (note that no args are specified)
-t1 = PythonTask(
-    function='builtins.print',
-    name='task 1',
-    args=['<% $.inputs.data %>', '<% $.inputs.other %>']
-)
-
-branch = BranchTask(
-    task=t1,
-    name='duplicate',
-    branch_data=['<% $.inputs.data %>']
-)
-
-dag = DAG(tasks=branch, name='dag')
+with DAG(name='dag') as dag:
+    with BranchTask(
+            name='duplicate',
+            branch_data=['<% $.inputs.data %>']):
+        PythonTask(
+            function='builtins.print',
+            name='task 1',
+            args=['<% $.inputs.data %>', '<% $.inputs.other %>']
+        )
 
 ### workflow run ###
 
@@ -54,8 +49,7 @@ project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
 prj = Project(project_uuid)
 
 inputs = {
-    # 'data': [1, 2, 3],
-    'data': {0: 'a', 1: 'b', 2: 'c'},
+    'data': [1, 2, 3],
     'other': 'asdf'
 }
 
