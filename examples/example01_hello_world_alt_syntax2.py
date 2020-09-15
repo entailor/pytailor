@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Pytailor Example 1, alternative syntax 2
+pyTailor Example 1, alternative syntax 2
 
 Here is the Hello world example with alternative syntax using context managers.
 """

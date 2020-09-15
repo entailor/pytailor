@@ -255,7 +255,7 @@ class BranchTask(OwnerTask):
         Data to be used as basis for branching. Accepts a query-expression or a list of
         query-expressions. The queries must evaluate to a list or a dict. If the query
         evaluates to a dict, that dict must have integer keys to represent the index of
-        the branch.
+        each branch.
     branch_files : ...
         Files to be used as basis for branching. Accepts a file tag or a list of
         file tags.

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Pytailor Example 1, alternative syntax 1
+pyTailor Example 1, alternative syntax 1
 
 Here is the Hello world example with alternative syntax allowing for definition of the
 DAG in "reversed" order by using the *owner* parameter.
