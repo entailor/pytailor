@@ -234,13 +234,11 @@ class PythonTask(BaseTask):
 
 class BranchTask(OwnerTask):
     """
-    Dynamically duplicate a task during a workflow run.
+    Dynamically *branch* a task or DAG during workflow execution.
 
-    Provides parallelization or "fan-out" functionality. The *task* object
-    is duplicated based on the data provided with *args*, *kwargs*
-    and *download*. At least one of these must be specified. Different
-    formats of these arguments are allowed. See the examples/*duplicate*.py
-    example scripts for different variations.
+    BranchTask Provides parallelization or "fan-out" functionality. The *task*
+    is duplicated based on *branch_data* or *branch_files*. At least one of these must be
+    specified.
 
     Parameters
     ----------
@@ -251,15 +249,14 @@ class BranchTask(OwnerTask):
     parents : BaseTask or List[BaseTask], optional
         Specify one or more upstream tasks that this task
         depends on.
-    branch_data : ...
+    branch_data : list or str, optional
         Data to be used as basis for branching. Accepts a query-expression or a list of
         query-expressions. The queries must evaluate to a list or a dict. If the query
         evaluates to a dict, that dict must have integer keys to represent the index of
         each branch.
-    branch_files : ...
+    branch_files : list or str, optional
         Files to be used as basis for branching. Accepts a file tag or a list of
         file tags.
-
     """
 
     TYPE = TaskType.BRANCH
