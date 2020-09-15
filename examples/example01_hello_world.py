@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Pytailor Example 1
+pyTailor Example 1
 
-This is the Hello world example for pytailor.
+This is the Hello world example for pyTailor.
 
 This example introduces the following NEW concepts:
     - Create PythonTasks and DAGs
     - For PythonTasks:
         - Specifying the function to run (must be an importable python function)
-        - Specifying a name for the job
+        - Specifying a name for the task
         - Specifying positional arguments (*args) to the function
         - Specifying relationships between tasks
     - For DAGs:
