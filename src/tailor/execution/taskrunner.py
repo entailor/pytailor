@@ -293,7 +293,7 @@ class TaskRunner(APIBase):
     def __handle_kwargs(self, kwargs):
         if as_query(kwargs):
             parsed_kwargs = self.__eval_query(as_query(kwargs), self.__context)
-            if not isinstance(parsed_kwargs, list):
+            if not isinstance(parsed_kwargs, dict):
                 raise TypeError(f'Query expression must evaluate to dict. Got '
                                 f'{type(parsed_kwargs)}')
         elif not isinstance(kwargs, dict):
