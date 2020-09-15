@@ -7,7 +7,8 @@ from .auth import TailorAuth
 class RestClient(httpx.Client):
 
     def __init__(self):
-        super().__init__(base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY))
+        super().__init__(base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY),
+                         timeout=15.0)
 
     # accounts
 
