@@ -222,11 +222,13 @@ class TaskRunner(APIBase):
 
     def __run_function(self, task_def, args, kwargs):
 
-        # do this so that python modules that have been downloaded are discovered:
-        sys.path.append('.')
-        # NOTE: this is potentially risky as users can execute arbitrary code by
-        #       uploading python modules and calling functions in these modules
-        # TODO: use 'sandbox' environment for user provided code?
+        # DONT do this:
+        # sys.path.append('.')
+        # this has the effect that python modules that have been downloaded are
+        # discovered this is potentially risky as users can execute arbitrary code by
+        # uploading python modules and calling functions in these modules
+
+        # TODO: use 'sandbox' environment?
         #       need to have restrictions on what can run and the python
         #       environment for which functions are executed!
         #       Look into RestrictedPython:
