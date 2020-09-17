@@ -275,8 +275,14 @@ class BranchTask(OwnerTask):
             task.owner = self
 
         # either branch_data of branch_files must be not None
-        self.branch_data = branch_data
-        self.branch_files = branch_files
+        if branch_data is None and branch_files is None:
+            raise ValueError('Either *branch_data* or *branch_files* must be specified')
+        if branch_data is not None:
+            self.branch_data = [branch_data] if isinstance(branch_data, str)\
+                else branch_data
+        if branch_files is not None:
+            self.branch_files = [branch_files] if isinstance(branch_files, str)\
+                else branch_files
 
     def to_dict(self) -> dict:
         d = _object_to_dict(self, exclude_varnames=['parents', 'owner'])
