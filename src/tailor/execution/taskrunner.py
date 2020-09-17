@@ -49,7 +49,7 @@ class TaskRunner(APIBase):
 
     def run(self):
 
-        self.logger.info(f'Starting task {self.__task.id}')
+        self.logger.info(f'Starting task {self.__task.id}: {self.__task.name}')
 
         # step into run dir
         current_dir = Path.cwd()
