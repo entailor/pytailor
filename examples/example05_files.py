@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Backend Example 5
+pyTailor Example 5
 
 This example introduces the following NEW concepts:
     - For task definitions:
@@ -36,31 +36,30 @@ from tailor import PythonTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###
 
-t1 = PythonTask(
-    function='glob.glob',
-    name='task 1',
-    args=['*'],
-    download='testfiles',  # refers to a file tag
-    output_to='downloaded_files'
-)
-t2 = PythonTask(
-    function='shutil.copyfile',
-    # function='builtins.print',
-    name='task 2',
-    args=['<% $.files.inpfile[0] %>', 'newfile.txt'],  # inpfile is a tag
-    download='inpfile',
-    upload={'outfile': 'newfile.txt'}
-)
-t3 = PythonTask(
-    function='builtins.print',
-    name='task 3',
-    args=['Downloaded', '<% $.files.outfile %>'],
-    download='outfile',
-    parents=t2
-)
+with DAG(name='dag') as dag:
 
-dag = DAG(tasks=[t1, t2, t3], name='dag')
-# dag = DAG(tasks=[t1, t2], name='dag')
+    t1 = PythonTask(
+        function='glob.glob',
+        name='task 1',
+        args=['**/*.txt'],
+        kwargs={'recursive': True},
+        download='testfiles',  # refers to a file tag
+        output_to='downloaded_files'  # put function's return value on $.outputs.downloaded_files
+    )
+    t2 = PythonTask(
+        function='shutil.copyfile',
+        name='task 2',
+        args=['<% $.files.inpfile[0] %>', 'newfile.txt'],  # inpfile is a tag
+        download='inpfile',
+        upload={'outfile': 'newfile.txt'}
+    )
+    t3 = PythonTask(
+        function='builtins.print',
+        name='task 3',
+        args=['Downloaded', '<% $.files.outfile %>'],
+        download='outfile',
+        parents=t2
+    )
 
 ### workflow run ###
 

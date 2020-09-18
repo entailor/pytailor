@@ -208,8 +208,10 @@ def get_basenames(tag_filename_mapping: Dict[str, List[Union[str, Path]]]
     return tag_basename_mapping
 
 
-def as_query(arg):
+def as_query(arg, accept_no_escape=False):
     if isinstance(arg, str) and arg.startswith('<%') and arg.endswith('%>'):
         return arg[2:-2].strip()
+    elif accept_no_escape and arg.startswith('$.'):
+        return arg.strip()
     else:
         return False

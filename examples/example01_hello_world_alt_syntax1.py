@@ -1,42 +1,32 @@
 # -*- coding: utf-8 -*-
 """
-pyTailor Example 1
+pyTailor Example 1, alternative syntax 1
 
-This is the Hello world example for pyTailor.
-
-This example introduces the following NEW concepts:
-    - Create PythonTasks and DAGs
-    - For PythonTasks:
-        - Specifying the function to run (must be an importable python function)
-        - Specifying a name for the task
-        - Specifying positional arguments (*args) to the function
-        - Specifying relationships between tasks
-    - For DAGs:
-        - Specifying which tasks are part of the DAG
-        - Specifying a name for the DAG
-    - Create a Workflow and run it in 'here_and_now' mode
-    - Check status of the resulting Workflow after execution
-    - Retrieve a workflow from the backend into a new Workflow object
+Here is the Hello world example with alternative syntax allowing for definition of the
+DAG in "reversed" order by using the *owner* parameter.
 """
 
 from tailor import PythonTask, DAG, Project, Workflow
 
 ### dag definition ###
 
+dag = DAG(name='dag')
+
 t1 = PythonTask(
     function='builtins.print',
     # function='builtins.abs',  # will raise type error
     name='job 1',
     args=['\nHello, world!\n'],
+    owner=dag
 )
 t2 = PythonTask(
     function='builtins.print',
     name='job 2',
     args=['\nHello again,', 'world!\n'],
-    parents=t1
+    parents=t1,
+    owner=dag
 )
 
-dag = DAG(tasks=[t1, t2], name='dag')
 
 # open a project
 # prj = Project.from_name('Test')

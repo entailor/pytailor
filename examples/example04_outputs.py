@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Backend Example 4
+pyTailor Example 4
 
 This example introduces the following NEW concepts:
     - For PythonTask definitions:
@@ -27,31 +27,31 @@ from tailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###
 
-t1 = PythonTask(
-    function='glob.glob',
-    name='task 1',
-    args=['../*.py'],
-    output_to='parentdir_content'  # form 1: single string
-)
-t2 = PythonTask(
-    function='os.getcwd',
-    name='task 2',
-    output_extraction={'curdir': '<% $ %>'}  # form 2: (tag: query) dict
-)
-t3 = PythonTask(
-    function='builtins.print',
-    name='task 3',
-    args=[
-        'Python files in parent dir (as list):',
-        '<% $.outputs.parentdir_content %>',
-        'Current working dir:',
-        '<% $.outputs.curdir %>'
-    ],
-    kwargs={'sep': '\n\n', 'end': '\n\n'},
-    parents=[t1, t2]
-)
+with DAG(name='dag') as dag:
 
-dag = DAG(tasks=[t1, t2, t3], name='dag')
+    t1 = PythonTask(
+        function='glob.glob',
+        name='task 1',
+        args=['../*.py'],
+        output_to='parentdir_content'  # form 1: single string
+    )
+    t2 = PythonTask(
+        function='os.getcwd',
+        name='task 2',
+        output_extraction={'curdir': '<% $ %>'}  # form 2: (tag: query) dict
+    )
+    t3 = PythonTask(
+        function='builtins.print',
+        name='task 3',
+        args=[
+            'Python files in parent dir (as list):',
+            '<% $.outputs.parentdir_content %>',
+            'Current working dir:',
+            '<% $.outputs.curdir %>'
+        ],
+        kwargs={'sep': '\n\n', 'end': '\n\n'},
+        parents=[t1, t2]
+    )
 
 ### run workflow ###
 

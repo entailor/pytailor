@@ -1,30 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-Tailor Example 6
+pyTailor Example 6
 
 This example introduces the following NEW concepts:
-    - Use BranchTask to duplicate a single PythonTask
+    - Use BranchTask to "branch out" a single PythonTask
     - For BranchTask definitions:
-        - Usage of the *args* argument
+        - Use *branch_data* to specify which data to use for branching
 
-The principle for duplication using the *args* argument can be illustrated by
-the following schematics:
+*branch_data* is given as one or more query-expressions. When branching is performed
+the query-expressions must evaluate to to a list or a dict. If the queries evaluates to a
+dict, that dict must have integer keys to represent the index of each branch.
 
-                +-----------+
-                | Duplicate |
-                |           |
-                | task=t1   |
-                | args=[1,2]|
-                +-----------+
-                      |
-            +------------------+
-            |                  |
-      +-----v-----+      +-----v-----+
-      | Task (t1) |      | Task (t1) |
-      |  args=[1] |      |  args=[2] |
-      +-----------+      +-----------+
-
-Duplicated tasks always become children of the BranchTask that created them.
+Branched tasks always become children of the BranchTask that created them.
 
 """
 
@@ -32,15 +19,15 @@ from tailor import PythonTask, BranchTask, DAG, Workflow, Project
 
 ### workflow definition ###
 
-# task to duplicate (note that no args are specified)
-t1 = PythonTask(
-    function='builtins.print',
-    name='task 1',
-)
-branch = BranchTask(task=t1, name='duplicate',
-                    args=['Duplicated 1', 'Duplicated 2'])
-
-dag = DAG(tasks=branch, name='dag')
+with DAG(name='dag') as dag:
+    with BranchTask(
+            name='duplicate',
+            branch_data=['<% $.inputs.data %>']):
+        PythonTask(
+            function='builtins.print',
+            name='task 1',
+            args=['<% $.inputs.data %>', '<% $.inputs.other %>']
+        )
 
 ### workflow run ###
 
@@ -48,8 +35,19 @@ dag = DAG(tasks=branch, name='dag')
 project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
 prj = Project(project_uuid)
 
+inputs = {
+    # 'data': [1, 2],
+    'data': {0: 1, 1: 2},  # alternatively use a dict with int keys
+    'other': 'this is not used for branching'
+}
+
 # create a workflow:
-wf = Workflow(project=prj, dag=dag, name='duplicate workflow')
+wf = Workflow(
+    project=prj,
+    dag=dag,
+    name='branch workflow',
+    inputs=inputs
+)
 
 # run the workflow
 wf.run()

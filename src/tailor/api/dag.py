@@ -6,6 +6,10 @@ from typing import Optional, List, Union, Any, Dict
 from enum import Enum
 
 from tailor.utils import as_query
+from tailor.exceptions import DAGError
+
+# Not thread safe, but this is considered ok
+_CONTEXT_MANAGER_OWNER = None
 
 
 class TaskType(Enum):
@@ -58,10 +62,19 @@ class BaseTask(ABC):
     Base class for tasks.
     """
 
-    def __init__(self, name: str = None, parents: any = None):
+    def __init__(self,
+                 name: str = None,
+                 parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+                 owner: Optional[OwnerTask] = None
+                 ):
+        self.name: str = name or 'Unnamed'
         parents = [parents] if isinstance(parents, (BaseTask, int)) else parents
         self.parents: list = parents if parents else []
-        self.name: str = name or 'Unnamed'
+        if not owner and _CONTEXT_MANAGER_OWNER:
+            owner = _CONTEXT_MANAGER_OWNER
+        if owner:
+            self.owner = owner
+            self.owner.register(self)
 
     @property
     @classmethod
@@ -77,6 +90,33 @@ class BaseTask(ABC):
     @abstractmethod
     def from_dict(cls, d: dict) -> BaseTask:
         return NotImplemented
+
+
+class OwnerTask(BaseTask):
+    """
+    A task that own other tasks (DAG, BranchTask).
+    """
+    def __init__(self,
+                 name: Optional[str] = None,
+                 parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+                 owner: Optional[BaseTask] = None,
+                 ):
+        super().__init__(name=name, parents=parents, owner=owner)
+        self._old_context_manager_owners = []
+
+    @abstractmethod
+    def register(self, task: BaseTask):
+        return NotImplemented
+
+    def __enter__(self):
+        global _CONTEXT_MANAGER_OWNER
+        self._old_context_manager_owners.append(_CONTEXT_MANAGER_OWNER)
+        _CONTEXT_MANAGER_OWNER = self
+        return self
+
+    def __exit__(self, _type, _value, _tb):
+        global _CONTEXT_MANAGER_OWNER
+        _CONTEXT_MANAGER_OWNER = self._old_context_manager_owners.pop()
 
 
 class PythonTask(BaseTask):
@@ -101,12 +141,12 @@ class PythonTask(BaseTask):
     - **name** (str, optional)
         A default name is used if not provided.
     - **parents** (BaseTask or List[BaseTask], optional)
-        Specify one or more upstream tasks that this job depends on.
+        Specify one or more upstream tasks that this task depends on.
     - **download** (str or list, optional)
         Provide one or more file tags. These file tags refer to files in
         the storage object associated with the workflow run.
     - **upload** (dict, optional)
-        Specify files to send back to the storage object after a job has
+        Specify files to send back to the storage object after a task has
         been run. Dict format is {tag1: val1, tag2: val2, ...} where val
         can be:
 
@@ -115,7 +155,7 @@ class PythonTask(BaseTask):
             from the query are then uploaded to storage under the given
             tag.
         -   one or more glob-style strings (str og list) which is
-            applied in the job working dir. matching files are uploaded
+            applied in the task working dir. matching files are uploaded
             under the given tag.
 
     - **args** (list or str, optional)
@@ -141,6 +181,7 @@ class PythonTask(BaseTask):
                  function: str,
                  name: Optional[str] = None,
                  parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+                 owner: Optional[BaseTask] = None,
                  download: Optional[Union[List[str], str]] = None,
                  upload: Optional[dict] = None,
                  args: Optional[Union[list, str]] = None,
@@ -148,7 +189,7 @@ class PythonTask(BaseTask):
                  output_to: Optional[str] = None,
                  output_extraction: Optional[dict] = None
                  ):
-        super().__init__(name=name, parents=parents)
+        super().__init__(name=name, parents=parents, owner=owner)
         self.function = function
         self.kwargs = kwargs or {}
         self.args = args or []
@@ -173,7 +214,7 @@ class PythonTask(BaseTask):
 
     def to_dict(self) -> dict:
         """Serialize task definition."""
-        d = _object_to_dict(self, exclude_varnames=['parents'])
+        d = _object_to_dict(self, exclude_varnames=['parents', 'owner'])
         d['type'] = self.TYPE.value
         return d
 
@@ -186,52 +227,18 @@ class PythonTask(BaseTask):
 
     def copy(self):
         """
-        Get a copy of this job definition without parent refs
+        Get a copy of this task definition without parent refs
         """
         return PythonTask.from_dict(self.to_dict())
 
 
-# class NewBranchTask(BaseTask):
-#     """
-#     Parameters
-#     ----------
-#     task : BaseTask
-#         Task to be duplicated (PythonTask, BranchTask or DAG).
-#     name : str, optional
-#         A default name is used if not provided.
-#     parents : BaseTask or List[BaseTask], optional
-#         Specify one or more upstream job definitions that this job definition
-#         depends on.
-#     branch_data : ...
-#         Data to be used as basis for branching. Accepts a query-expression or a list of
-#         query-expressions. An axis parameter may also be specified along with the
-#         query-expression, then as a tuples: (query-expr, axis). The axis parameter is
-#         relevant the data are 2d or higher and will default to 0 if not provided.
-#     branch_files : ...
-#         Files to be used as basis for branching. Accepts a file tag or a list of
-#         file tags.
-#
-#     """
-#     def __init__(self,
-#                  task: BaseTask,
-#                  name: Optional[str] = None,
-#                  parents: Optional[Union[List[BaseTask], BaseTask]] = None,
-#                  branch_data=None,
-#                  branch_files=None
-#                  ):
-#         super().__init__(name=name, parents=parents)
-#         self.task = task
-
-
-class BranchTask(BaseTask):
+class BranchTask(OwnerTask):
     """
-    Dynamically duplicate a task during a workflow run.
+    Dynamically *branch* a task or DAG during workflow execution.
 
-    Provides parallelization or "fan-out" functionality. The *task* object
-    is duplicated based on the data provided with *args*, *kwargs*
-    and *download*. At least one of these must be specified. Different
-    formats of these arguments are allowed. See the examples/*duplicate*.py
-    example scripts for different variations.
+    BranchTask Provides parallelization or "fan-out" functionality. The *task*
+    is duplicated based on *branch_data* or *branch_files*. At least one of these must be
+    specified.
 
     Parameters
     ----------
@@ -242,41 +249,51 @@ class BranchTask(BaseTask):
     parents : BaseTask or List[BaseTask], optional
         Specify one or more upstream tasks that this task
         depends on.
-    download : str or list, optional
-        Specify one or more file tags to be used as basis for duplication.
-    args : str or list, optional
-        Specify data to be used for *args* input in duplicated tasks Can be a single
-        query expression or .
-    kwargs : str or dict, optional
-        Specify data to be used for *kwargs* input in duplicated tasks
-
+    branch_data : list or str, optional
+        Data to be used as basis for branching. Accepts a query-expression or a list of
+        query-expressions. The queries must evaluate to a list or a dict. If the query
+        evaluates to a dict, that dict must have integer keys to represent the index of
+        each branch.
+    branch_files : list or str, optional
+        Files to be used as basis for branching. Accepts a file tag or a list of
+        file tags.
     """
 
     TYPE = TaskType.BRANCH
 
     def __init__(self,
-                 task: BaseTask, name: str = None,
+                 task: BaseTask = None,
+                 name: str = None,
                  parents: Union[List[BaseTask], BaseTask] = None,
-                 download: Union[list, str] = None,
-                 args: Union[list, str] = None,
-                 kwargs: Union[list, str] = None
+                 owner: Optional[OwnerTask] = None,
+                 branch_data: Union[list, str] = None,
+                 branch_files: Union[list, str] = None,
                  ):
-        super().__init__(name=name, parents=parents)
+        super().__init__(name=name, parents=parents, owner=owner)
         self.task = task
-        self.download = download or []
-        self.args = args
-        self.kwargs = kwargs
+        if task:
+            task.owner = self
+
+        # either branch_data of branch_files must be not None
+        if branch_data is None and branch_files is None:
+            raise ValueError('Either *branch_data* or *branch_files* must be specified')
+        if branch_data is not None:
+            self.branch_data = [branch_data] if isinstance(branch_data, str)\
+                else branch_data
+        if branch_files is not None:
+            self.branch_files = [branch_files] if isinstance(branch_files, str)\
+                else branch_files
 
     def to_dict(self) -> dict:
-        d = _object_to_dict(self, exclude_varnames=['parents'])
+        d = _object_to_dict(self, exclude_varnames=['parents', 'owner'])
         d['type'] = self.TYPE.value
         return d
 
     @classmethod
     def from_dict(cls, d) -> BranchTask:
         d = copy.deepcopy(d)
-        td = d.pop('job')
-        d['job'] = _object_from_dict(td)
+        td = d.pop('task')
+        d['task'] = _object_from_dict(td)
         d.pop('type', None)
         return cls(**d)
 
@@ -286,8 +303,14 @@ class BranchTask(BaseTask):
         """
         return BranchTask.from_dict(self.to_dict())
 
+    def register(self, task: BaseTask) -> None:
+        if self.task:
+            raise DAGError('Cannot register task with BrachTask. '
+                           'A task is already registered.')
+        self.task = task
 
-class DAG(BaseTask):
+
+class DAG(OwnerTask):
     """
     Represents a Directed Acyclic Graph, i.e. a DAG.
 
@@ -304,23 +327,31 @@ class DAG(BaseTask):
         Parent/children relationships can be specified with the dict on the form
         {parent_def: [child_def1, child_def2], ...}. Definition references may either
         be indices (ints) into *tasks* or BaseTask instances. Note that links
-        may also be defined on job  objects with the *parents* argument instead of
+        may also be defined on task  objects with the *parents* argument instead of
         using links: (parents=[parent_def1, parent_def2])
     """
 
     TYPE = TaskType.DAG
 
     def __init__(self,
-                 tasks: Union[List[BaseTask], BaseTask],
+                 tasks: Union[List[BaseTask], BaseTask] = None,
                  name: Optional[str] = None,
                  parents: Union[List[BaseTask], BaseTask] = None,
+                 owner: Optional[OwnerTask] = None,
                  links: dict = None):
+        super().__init__(name=name, parents=parents, owner=owner)
+        if tasks:
+            self.tasks = tasks if isinstance(tasks, (list, tuple)) \
+                else [tasks]
+            for task in tasks:
+                task.owner = self
+        else:
+            self.tasks = []
+        self.links = links or {}
+        self.__refresh_links()
 
-        super().__init__(name=name, parents=parents)
-        self.tasks = tasks if isinstance(tasks, (list, tuple)) \
-            else [tasks]
-
-        links = links or {}
+    def __refresh_links(self):
+        links = self.links
         links = self._as_index_links(links)
         task_links = self._as_task_links(links)
 
@@ -349,7 +380,7 @@ class DAG(BaseTask):
             td.parents = self.__get_parents(td)
 
     def __get_parents(self, task):
-        parents = set()  # fill with job definitions
+        parents = set()  # fill with task definitions
         for p, cs in self.task_links.items():
             if task in cs:
                 parents.add(p)
@@ -385,7 +416,7 @@ class DAG(BaseTask):
 
     def to_dict(self):
         d = _object_to_dict(self, exclude_varnames=[
-            'tasks', 'task_links', 'parents'])
+            'tasks', 'task_links', 'parents', 'owner'])
         d['tasks'] = [task.to_dict() for task in self.tasks]
         d['type'] = self.TYPE.value
         if not any(self.links.values()):  # no links exist, explicitly write empty dict
@@ -404,3 +435,10 @@ class DAG(BaseTask):
             d['links'] = {int(k): v for k, v in link_dict.items()}
         d.pop('type', None)
         return cls(task_defs, **d)
+
+    def register(self, task: BaseTask) -> None:
+        if task in self.tasks:
+            raise DAGError('Cannot register task with DAG.'
+                           'Task is already registered.')
+        self.tasks.append(task)
+        self.__refresh_links()

@@ -8,3 +8,6 @@ class BackendResponseError(PytailorBaseError):
 
 class BackendResourceError(PytailorBaseError):
     pass
+
+class DAGError(PytailorBaseError):
+    pass

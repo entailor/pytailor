@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Backend Example 3
+pyTailor Example 3
 
 This example introduces the following NEW concepts:
     - For task definitions:
@@ -26,20 +26,20 @@ from tailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###
 
-t1 = PythonTask(
-    function='time.sleep',
-    name='task 1',
-    args=['<% $.inputs.sleep_time %>']
-)
-t2 = PythonTask(
-    function='builtins.print',
-    name='task 2',
-    args=['\nSlept for', '<% $.inputs.sleep_time %>', 'second'],
-    kwargs={'sep': '   ', 'end': '\n\n'},
-    parents=t1
-)
+with DAG(name='dag') as dag:
 
-dag = DAG(tasks=[t1, t2], name='dag')
+    t1 = PythonTask(
+        function='time.sleep',
+        name='task 1',
+        args=['<% $.inputs.sleep_time %>']
+    )
+    t2 = PythonTask(
+        function='builtins.print',
+        name='task 2',
+        args=['\nSlept for', '<% $.inputs.sleep_time %>', 'second'],
+        kwargs={'sep': '   ', 'end': '\n\n'},
+        parents=t1
+    )
 
 ### run workflow ###
 
