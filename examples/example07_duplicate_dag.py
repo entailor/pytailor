@@ -3,29 +3,11 @@
 pyTailor Example 7
 
 This example introduces the following NEW concepts:
-    - Use BranchTask to duplicate a single PythonTask
+    - Use BranchTask to "branch out" a DAG
     - For BranchTask definitions:
-        - Usage of the *args* argument
+        - Use *branch_files* to specify which files to use for branching
 
-The principle for duplication using the *args* argument can be illustrated by
-the following schematics:
-
-                +-----------+
-                | Duplicate |
-                |           |
-                | task=t1   |
-                | args=[1,2]|
-                +-----------+
-                      |
-            +------------------+
-            |                  |
-      +-----v-----+      +-----v-----+
-      | Task (t1) |      | Task (t1) |
-      |  args=[1] |      |  args=[2] |
-      +-----------+      +-----------+
-
-Duplicated tasks always become children of the BranchTask that created them.
-
+*branch_files* is given as one or more file tags.
 """
 
 from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
