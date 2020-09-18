@@ -4,6 +4,7 @@ import httpx
 import requests
 from tailor.models import FileSetUpload, FileSet
 import shutil
+import os
 
 
 class FileClient(httpx.Client):
@@ -15,18 +16,20 @@ class FileClient(httpx.Client):
         for file_paths, fileset_links in zip(file_paths.values(),
                                              fileset.tags):
             for file_path, fileset_link in zip(file_paths, fileset_links.links):
+                if os.stat(file_path).st_size == 0:
+                    response = requests.put(fileset_link.url, data=b'')
+                else:
+                    with open(file_path, 'rb') as f:
+                        # alt 1 not working:
+                        # response = self.put(fileset_link.url, data=f)
 
-                with open(file_path, 'rb') as f:
-                    # alt 1 not working:
-                    # response = self.put(fileset_link.url, data=f)
+                        # alt 2 not working:
+                        # request = self.build_request('PUT', fileset_link.url, data=f)
+                        # del request.headers['Transfer-Encoding']
+                        # response = self.send(request)
 
-                    # alt 2 not working:
-                    # request = self.build_request('PUT', fileset_link.url, data=f)
-                    # del request.headers['Transfer-Encoding']
-                    # response = self.send(request)
-
-                    # fallback to requests due to missing support for put-upload in httpx
-                    response = requests.put(fileset_link.url, data=f)
+                        # fallback to requests
+                        response = requests.put(fileset_link.url, data=f)
 
     def download_files(self, fileset: FileSet):
 
