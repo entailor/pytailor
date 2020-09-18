@@ -126,7 +126,7 @@ description = "Datamodel Code Generator"
 name = "datamodel-code-generator"
 optional = false
 python-versions = ">=3.6.1"
-version = "0.5.31"
+version = "0.5.33"
 
 [package.dependencies]
 PySnooper = ">=0.4.1,<1.0.0"
@@ -584,7 +584,7 @@ description = "Pygments is a syntax highlighting package written in Python."
 name = "pygments"
 optional = false
 python-versions = ">=3.5"
-version = "2.7.0"
+version = "2.7.1"
 
 [[package]]
 category = "dev"
@@ -852,7 +852,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "8085786551d43b0690503deea44b2c406281966b685da79073498446bf401ed8"
+content-hash = "984d41699c0638a1e5892a80a4e4f61196829f3063ec27f6e6184289f7b6c5b4"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -934,8 +934,8 @@ coverage = [
     {file = "coverage-5.3.tar.gz", hash = "sha256:280baa8ec489c4f542f8940f9c4c2181f0306a8ee1a54eceba071a449fb870a0"},
 ]
 datamodel-code-generator = [
-    {file = "datamodel-code-generator-0.5.31.tar.gz", hash = "sha256:17ce4abc4971c5437bbbee37c2bf28964c0283b17662040aae36cc6898940f5b"},
-    {file = "datamodel_code_generator-0.5.31-py3-none-any.whl", hash = "sha256:d12551f4226ceff4817331d6ad6cf22a1edddedfc7038bfb3d8aa552fc5f7a4a"},
+    {file = "datamodel-code-generator-0.5.33.tar.gz", hash = "sha256:12738d9b560818a7b4b8f1673e6a0d56b720c0e08145dbd5dc73d804dab21b24"},
+    {file = "datamodel_code_generator-0.5.33-py3-none-any.whl", hash = "sha256:78db0d61e723cdd65ec284e9794c9784815c99d40121fd4114ca6c81abd789d1"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
@@ -1108,8 +1108,8 @@ pydantic = [
     {file = "pydantic-1.6.1.tar.gz", hash = "sha256:54122a8ed6b75fe1dd80797f8251ad2063ea348a03b77218d73ea9fe19bd4e73"},
 ]
 pygments = [
-    {file = "Pygments-2.7.0-py3-none-any.whl", hash = "sha256:2df50d16b45b977217e02cba6c8422aaddb859f3d0570a88e09b00eafae89c6e"},
-    {file = "Pygments-2.7.0.tar.gz", hash = "sha256:2594e8fdb06fef91552f86f4fd3a244d148ab24b66042036e64f29a291515048"},
+    {file = "Pygments-2.7.1-py3-none-any.whl", hash = "sha256:307543fe65c0947b126e83dd5a61bd8acbd84abec11f43caebaf5534cbc17998"},
+    {file = "Pygments-2.7.1.tar.gz", hash = "sha256:926c3f319eda178d1bd90851e4317e6d8cdb5e292a3386aac9bd75eca29cf9c7"},
 ]
 pymdown-extensions = [
     {file = "pymdown-extensions-8.0.tar.gz", hash = "sha256:440b0db9823b89f9917482ce3ab3d32ac18e60f2e186770ac37836830d5e7256"},
