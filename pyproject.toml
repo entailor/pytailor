@@ -5,6 +5,9 @@ description = "pyTailor orchestrates your existing python code as *workflows*"
 authors = ["Audun Gravdal Johansen <audun@entail.no>"]
 license = "BSD-3-Clause"
 repository = "https://github.com/entailor/pytailor/"
+include = [
+    "LICENSE",
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -13,6 +16,7 @@ click = "^7.1.2"
 toml = "^0.10.1"
 pydantic = "^1.5.1"
 yaql = "^1.1.3"
+requests = "^2.24.0"
 
 [tool.poetry.dev-dependencies]
 datamodel-code-generator = "^0.5.33"

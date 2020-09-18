@@ -15,9 +15,7 @@ python-versions = "*"
 version = "1.12.0"
 
 [package.dependencies]
-[package.dependencies.importlib-metadata]
-python = ">=3.7,<3.8"
-version = ">=0.23,<2"
+importlib-metadata = {version = ">=0.23,<2", markers = "python_version == \"3.7\""}
 
 [package.extras]
 test = ["coverage", "flake8", "pexpect", "wheel"]
@@ -25,7 +23,6 @@ test = ["coverage", "flake8", "pexpect", "wheel"]
 [[package]]
 category = "dev"
 description = "Atomic file writes."
-marker = "sys_platform == \"win32\""
 name = "atomicwrites"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
@@ -103,7 +100,6 @@ version = "7.1.2"
 [[package]]
 category = "dev"
 description = "Cross-platform colored terminal text."
-marker = "sys_platform == \"win32\""
 name = "colorama"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
@@ -139,10 +135,7 @@ jinja2 = ">=2.10.1,<3.0"
 openapi-spec-validator = ">=0.2.8,<0.3"
 prance = ">=0.18.2,<1.0"
 toml = ">=0.10.0,<1.0.0"
-
-[package.dependencies.pydantic]
-extras = ["email"]
-version = ">=1.5.1,<2.0"
+pydantic = {version = ">=1.5.1,<2.0", extras = ["email"]}
 
 [package.extras]
 all = ["pytest-runner", "setuptools-scm", "pytest (>=4.6)", "pytest-benchmark", "pytest-cov", "pytest-mock", "mypy", "isort", "freezegun", "httpx", "mkdocs", "mkdocs-material", "wheel", "twine", "codecov"]
@@ -205,10 +198,7 @@ certifi = "*"
 chardet = ">=3.0.0,<4.0.0"
 httpcore = ">=0.10.0,<0.11.0"
 sniffio = "*"
-
-[package.dependencies.rfc3986]
-extras = ["idna2008"]
-version = ">=1.3,<2"
+rfc3986 = {version = ">=1.3,<2", extras = ["idna2008"]}
 
 [package.extras]
 brotli = ["brotlipy (>=0.7.0,<0.8.0)"]
@@ -225,7 +215,6 @@ version = "2.10"
 [[package]]
 category = "dev"
 description = "Read metadata from Python packages"
-marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
@@ -247,9 +236,7 @@ python-versions = ">=3.6"
 version = "4.1.0"
 
 [package.dependencies]
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = "*"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
@@ -294,7 +281,6 @@ i18n = ["Babel (>=0.8)"]
 [[package]]
 category = "dev"
 description = "Lightweight pipelining: using Python functions as pipeline jobs."
-marker = "python_version > \"2.7\""
 name = "joblib"
 optional = false
 python-versions = ">=3.6"
@@ -311,12 +297,8 @@ version = "3.2.0"
 [package.dependencies]
 attrs = ">=17.4.0"
 pyrsistent = ">=0.14.0"
-setuptools = "*"
 six = ">=1.11.0"
-
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = "*"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
 format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors"]
@@ -332,10 +314,7 @@ version = "2.6.3"
 
 [package.dependencies]
 six = "*"
-
-[package.dependencies.tornado]
-python = ">=2.8"
-version = "*"
+tornado = {version = "*", markers = "python_version > \"2.7\""}
 
 [[package]]
 category = "dev"
@@ -348,11 +327,7 @@ version = "0.5.8"
 [package.dependencies]
 future = ">=0.16.0"
 six = ">=1.11.0"
-
-[package.dependencies.nltk]
-optional = true
-python = ">=2.8"
-version = ">=3.2.5"
+nltk = {version = ">=3.2.5", optional = true, markers = "python_version > \"2.7\" and extra == \"languages\""}
 
 [package.extras]
 languages = ["nltk (>=3.2.5,<3.5)", "nltk (>=3.2.5)"]
@@ -366,9 +341,7 @@ python-versions = ">=3.5"
 version = "3.2.2"
 
 [package.dependencies]
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = "*"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
 
 [package.extras]
 testing = ["coverage", "pyyaml"]
@@ -404,10 +377,7 @@ PyYAML = ">=3.10"
 click = ">=3.3"
 livereload = ">=2.5.1"
 tornado = ">=5.0"
-
-[package.dependencies.lunr]
-extras = ["languages"]
-version = "0.5.8"
+lunr = {version = "0.5.8", extras = ["languages"]}
 
 [[package]]
 category = "dev"
@@ -446,7 +416,6 @@ version = "8.5.0"
 [[package]]
 category = "dev"
 description = "Natural Language Toolkit"
-marker = "python_version > \"2.7\""
 name = "nltk"
 optional = false
 python-versions = "*"
@@ -519,9 +488,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "0.13.1"
 
 [package.dependencies]
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = ">=0.12"
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 
 [package.extras]
 dev = ["pre-commit", "tox"]
@@ -542,20 +509,9 @@ optional = false
 python-versions = "*"
 version = "0.19.0"
 
-[package.dependencies]
-PyYAML = ">=5.3,<6.0"
-chardet = ">=3.0,<4.0"
-requests = ">=2.22,<3.0"
-semver = ">=2.9,<3.0"
-six = ">=1.14,<2.0"
-
 [package.extras]
-cli = ["click (>=7.0,<8.0)"]
 dev = ["tox (>=3.14)", "bumpversion (>=0.5)", "pytest (>=5.3,<5.3.4 || >5.3.4)", "pytest-cov (>=2.8)", "flake8 (>=3.7)", "pep8-naming (>=0.9)", "flake8-quotes (>=2.1)", "flake8-docstrings (>=1.5)", "sphinx (>=2.3)", "towncrier (>=19.2)"]
-flex = ["flex (>=6.13,<7.0)"]
-icu = ["PyICU (>=2.4,<3.0)"]
 osv = ["openapi-spec-validator (>=0.2.1)"]
-ssv = ["swagger-spec-validator (>=2.4,<3.0)"]
 
 [[package]]
 category = "dev"
@@ -633,19 +589,16 @@ python-versions = ">=3.5"
 version = "6.0.2"
 
 [package.dependencies]
-atomicwrites = ">=1.0"
 attrs = ">=17.4.0"
-colorama = "*"
 iniconfig = "*"
 more-itertools = ">=4.0.0"
 packaging = "*"
 pluggy = ">=0.12,<1.0"
 py = ">=1.8.2"
 toml = "*"
-
-[package.dependencies.importlib-metadata]
-python = "<3.8"
-version = ">=0.12"
+atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 
 [package.extras]
 checkqa_mypy = ["mypy (0.780)"]
@@ -717,7 +670,7 @@ python-versions = "*"
 version = "2020.7.14"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Python HTTP for Humans."
 name = "requests"
 optional = false
@@ -743,20 +696,10 @@ python-versions = "*"
 version = "1.4.0"
 
 [package.dependencies]
-[package.dependencies.idna]
-optional = true
-version = "*"
+idna = {version = "*", optional = true, markers = "extra == \"idna2008\""}
 
 [package.extras]
 idna2008 = ["idna"]
-
-[[package]]
-category = "dev"
-description = "Python helper for Semantic Versioning (http://semver.org/)"
-name = "semver"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.10.2"
 
 [[package]]
 category = "main"
@@ -793,7 +736,6 @@ version = "6.0.4"
 [[package]]
 category = "dev"
 description = "Fast, Extensible Progress Meter"
-marker = "python_version > \"2.7\""
 name = "tqdm"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*"
@@ -811,7 +753,7 @@ python-versions = "*"
 version = "1.4.1"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
 optional = false
@@ -841,7 +783,6 @@ six = ">=1.9.0"
 [[package]]
 category = "dev"
 description = "Backport of pathlib-compatible object wrapper for zip files"
-marker = "python_version < \"3.8\""
 name = "zipp"
 optional = false
 python-versions = ">=3.6"
@@ -852,8 +793,8 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "984d41699c0638a1e5892a80a4e4f61196829f3063ec27f6e6184289f7b6c5b4"
-lock-version = "1.0"
+content-hash = "abce72524e270bd019a77c8b6fe0a3987b4eb050acf40f1414fa71f81a6a1dbf"
+lock-version = "1.1"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1189,10 +1130,6 @@ requests = [
 rfc3986 = [
     {file = "rfc3986-1.4.0-py2.py3-none-any.whl", hash = "sha256:af9147e9aceda37c91a05f4deb128d4b4b49d6b199775fd2d2927768abdc8f50"},
     {file = "rfc3986-1.4.0.tar.gz", hash = "sha256:112398da31a3344dc25dbf477d8df6cb34f9278a94fee2625d89e4514be8bb9d"},
-]
-semver = [
-    {file = "semver-2.10.2-py2.py3-none-any.whl", hash = "sha256:21e80ca738975ed513cba859db0a0d2faca2380aef1962f48272ebf9a8a44bd4"},
-    {file = "semver-2.10.2.tar.gz", hash = "sha256:c0a4a9d1e45557297a722ee9bac3de2ec2ea79016b6ffcaca609b0bc62cf4276"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
