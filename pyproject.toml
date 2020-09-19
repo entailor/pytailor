@@ -34,4 +34,4 @@ requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry.scripts]
-tailor = 'tailor.cli.main:cli'
+tailor = 'pytailor.cli.main:cli'
