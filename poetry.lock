@@ -103,6 +103,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "colorlog"
+version = "4.2.1"
+description = "Log formatting with colors!"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+
+[[package]]
 name = "coverage"
 version = "5.3"
 description = "Code coverage measurement for Python"
@@ -144,6 +155,14 @@ test = ["pytest (>=4.6)", "pytest-benchmark", "pytest-cov", "pytest-mock", "mypy
 wheel = ["wheel", "twine"]
 
 [[package]]
+name = "distlib"
+version = "0.3.1"
+description = "Distribution utilities"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "dnspython"
 version = "2.0.0"
 description = "DNS toolkit"
@@ -169,6 +188,14 @@ python-versions = "*"
 [package.dependencies]
 dnspython = ">=1.15.0"
 idna = ">=2.0.0"
+
+[[package]]
+name = "filelock"
+version = "3.0.12"
+description = "A platform independent file lock."
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "future"
@@ -458,6 +485,24 @@ machine_learning = ["gensim", "numpy", "python-crfsuite", "scikit-learn", "scipy
 plot = ["matplotlib"]
 tgrep = ["pyparsing"]
 twitter = ["twython"]
+
+[[package]]
+name = "nox"
+version = "2020.8.22"
+description = "Flexible test automation."
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+argcomplete = ">=1.9.4,<2.0"
+colorlog = ">=2.6.1,<5.0.0"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
+py = ">=1.4.0,<2.0.0"
+virtualenv = ">=14.0.0"
+
+[package.extras]
+tox_to_nox = ["jinja2", "tox"]
 
 [[package]]
 name = "openapi-spec-validator"
@@ -812,6 +857,25 @@ secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
 [[package]]
+name = "virtualenv"
+version = "20.0.31"
+description = "Virtual Python Environment builder"
+category = "dev"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+
+[package.dependencies]
+appdirs = ">=1.4.3,<2"
+distlib = ">=0.3.1,<1"
+filelock = ">=3.0.0,<4"
+importlib-metadata = {version = ">=0.12,<2", markers = "python_version < \"3.8\""}
+six = ">=1.9.0,<2"
+
+[package.extras]
+docs = ["proselint (>=0.10.2)", "sphinx (>=3)", "sphinx-argparse (>=0.2.5)", "sphinx-rtd-theme (>=0.4.3)", "towncrier (>=19.9.0rc1)"]
+testing = ["coverage (>=5)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", "pytest (>=4)", "pytest-env (>=0.6.2)", "pytest-freezegun (>=0.4.1)", "pytest-mock (>=2)", "pytest-randomly (>=1)", "pytest-timeout (>=1)", "pytest-xdist (>=1.31.0)", "packaging (>=20.0)", "xonsh (>=0.9.16)"]
+
+[[package]]
 name = "yaql"
 version = "1.1.3"
 description = "YAQL - Yet Another Query Language"
@@ -841,7 +905,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "abce72524e270bd019a77c8b6fe0a3987b4eb050acf40f1414fa71f81a6a1dbf"
+content-hash = "4fa089f799a143e320741c8804920dca5600b8e786e83b139ae509a6ce4dd5d0"
 
 [metadata.files]
 appdirs = [
@@ -884,6 +948,10 @@ colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
 ]
+colorlog = [
+    {file = "colorlog-4.2.1-py2.py3-none-any.whl", hash = "sha256:43597fd822ce705190fc997519342fdaaf44b9b47f896ece7aa153ed4b909c74"},
+    {file = "colorlog-4.2.1.tar.gz", hash = "sha256:75e55822c3a3387d721579241e776de2cf089c9ef9528b1f09e8b04d403ad118"},
+]
 coverage = [
     {file = "coverage-5.3-cp27-cp27m-macosx_10_13_intel.whl", hash = "sha256:bd3166bb3b111e76a4f8e2980fa1addf2920a4ca9b2b8ca36a3bc3dedc618270"},
     {file = "coverage-5.3-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:9342dd70a1e151684727c9c91ea003b2fb33523bf19385d4554f7897ca0141d4"},
@@ -924,6 +992,10 @@ datamodel-code-generator = [
     {file = "datamodel-code-generator-0.5.34.tar.gz", hash = "sha256:cb94199ad3f7a96befbb9b131e184c41dee24cf46dbfec09cab8bd4c2b5c8f84"},
     {file = "datamodel_code_generator-0.5.34-py3-none-any.whl", hash = "sha256:e21845b213aac9dab67a74dd3e9b184ece4295a0806039255b2d302001949995"},
 ]
+distlib = [
+    {file = "distlib-0.3.1-py2.py3-none-any.whl", hash = "sha256:8c09de2c67b3e7deef7184574fc060ab8a793e7adbb183d942c389c8b13c52fb"},
+    {file = "distlib-0.3.1.zip", hash = "sha256:edf6116872c863e1aa9d5bb7cb5e05a022c519a4594dc703843343a9ddd9bff1"},
+]
 dnspython = [
     {file = "dnspython-2.0.0-py3-none-any.whl", hash = "sha256:40bb3c24b9d4ec12500f0124288a65df232a3aa749bb0c39734b782873a2544d"},
     {file = "dnspython-2.0.0.zip", hash = "sha256:044af09374469c3a39eeea1a146e8cac27daec951f1f1f157b1962fc7cb9d1b7"},
@@ -931,6 +1003,10 @@ dnspython = [
 email-validator = [
     {file = "email_validator-1.1.1-py2.py3-none-any.whl", hash = "sha256:5f246ae8d81ce3000eade06595b7bb55a4cf350d559e890182a1466a21f25067"},
     {file = "email_validator-1.1.1.tar.gz", hash = "sha256:63094045c3e802c3d3d575b18b004a531c36243ca8d1cec785ff6bfcb04185bb"},
+]
+filelock = [
+    {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
+    {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
@@ -1049,6 +1125,10 @@ more-itertools = [
 ]
 nltk = [
     {file = "nltk-3.5.zip", hash = "sha256:845365449cd8c5f9731f7cb9f8bd6fd0767553b9d53af9eb1b3abf7700936b35"},
+]
+nox = [
+    {file = "nox-2020.8.22-py3-none-any.whl", hash = "sha256:55f8cab16bcfaaea08b141c83bf2b7c779e943518d0de6cd9c38cd8da95d11ea"},
+    {file = "nox-2020.8.22.tar.gz", hash = "sha256:efa5adcf1134012f96bcd0a496ccebd4c9e9da53a831888a2a779462440eebcf"},
 ]
 openapi-spec-validator = [
     {file = "openapi-spec-validator-0.2.9.tar.gz", hash = "sha256:79381a69b33423ee400ae1624a461dae7725e450e2e306e32f2dd8d16a4d85cb"},
@@ -1242,6 +1322,10 @@ typed-ast = [
 urllib3 = [
     {file = "urllib3-1.25.10-py2.py3-none-any.whl", hash = "sha256:e7983572181f5e1522d9c98453462384ee92a0be7fac5f1413a1e35c56cc0461"},
     {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
+]
+virtualenv = [
+    {file = "virtualenv-20.0.31-py2.py3-none-any.whl", hash = "sha256:e0305af10299a7fb0d69393d8f04cb2965dda9351140d11ac8db4e5e3970451b"},
+    {file = "virtualenv-20.0.31.tar.gz", hash = "sha256:43add625c53c596d38f971a465553f6318decc39d98512bc100fa1b1e839c8dc"},
 ]
 yaql = [
     {file = "yaql-1.1.3-py2-none-any.whl", hash = "sha256:de6748ff75370180cdbe81ea586e4215de25cb13543899445decc7d47d8144af"},

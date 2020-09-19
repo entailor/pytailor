@@ -28,6 +28,7 @@ pymdown-extensions = "^8.0"
 pygments = "^2.6.1"
 markdown = "^3.2.2"
 mkautodoc = "^0.1.0"
+nox = "^2020.8.22"
 
 [build-system]
 requires = ["poetry>=0.12"]
