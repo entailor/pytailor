@@ -7,8 +7,9 @@ from .auth import TailorAuth
 class AsyncRestClient(httpx.AsyncClient):
 
     def __init__(self):
+        timeout = httpx.Timeout(15.0, connect=60.0)
         super().__init__(base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY),
-                         timeout=15.0)
+                         timeout=timeout)
 
     async def checkout_task(self, checkout_query: TaskCheckout
                             ) -> Optional[TaskExecutionData]:
