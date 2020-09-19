@@ -30,8 +30,7 @@ async def async_run_task(pool, task_execution_data: TaskExecutionData):
 
 
 # job run-manager
-async def run_manager(checkout_query: TaskCheckout, worker, n_cores, sleep):
-    # use default project if not provided
+async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
 
     # set up logging
     core_report_format = LOGGING_FORMAT + f' (%(n)s/{n_cores} cores in use)'
@@ -51,13 +50,18 @@ async def run_manager(checkout_query: TaskCheckout, worker, n_cores, sleep):
     # go into loop with process pool
     with concurrent.futures.ProcessPoolExecutor(max_workers=n_cores) as pool:
         try:
+
             asyncio_tasks = set()
+
             while True:
+
                 n_running = len(asyncio_tasks)
                 extra['n'] = n_running  # update running for logging
+
                 if n_running < n_cores:
-                    # look for READY job
+                    # worker can checkout task
                     task_exec_data = await do_checkout(checkout_query)
+
                     if task_exec_data:
                         logger.info(
                             f'Task available, starting run for task'
@@ -65,14 +69,14 @@ async def run_manager(checkout_query: TaskCheckout, worker, n_cores, sleep):
                         asyncio_task = asyncio.create_task(async_run_task(
                             pool, task_exec_data))
                         asyncio_tasks.add(asyncio_task)
-                        # use a shorter fixed sleep time here in order to start
-                        # jobs faster when many are available
-                        await asyncio.sleep(.3)
+                        await asyncio.sleep(.3)  # needed?
                         handle_finished(asyncio_tasks)
+
                     else:
                         logger.info(f'No jobs available, waiting {sleep} seconds')
                         await asyncio.sleep(sleep)
                         handle_finished(asyncio_tasks)
+
                 else:
                     logger.info(f'All cores in use, waiting {sleep} seconds')
                     await asyncio.sleep(sleep)
@@ -82,6 +86,9 @@ async def run_manager(checkout_query: TaskCheckout, worker, n_cores, sleep):
             pass  # TODO recover or die?
             # print('\excepted CanceledError\n')
 
+        # TODO: do graceful handling of non-finished tasks on worker errors, e.g:
+        #       - try to checkin FAILED with a meaningful error message,
+        #       - or try to reset tasks for re-execution elsewhere
 
 def run_worker(sleep, n_cores, worker_name):
     checkout_query = TaskCheckout(
@@ -91,7 +98,7 @@ def run_worker(sleep, n_cores, worker_name):
 
     try:
         asyncio.run(
-            run_manager(checkout_query, worker_name, int(n_cores), int(sleep))
+            run_manager(checkout_query, int(n_cores), int(sleep))
         )
     except KeyboardInterrupt:
         print("CTRL-C pressed, exiting...")
