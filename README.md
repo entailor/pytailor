@@ -1,3 +1,5 @@
+[![Tests](https://github.com/entailor/pytailor/workflows/Tests/badge.svg)](https://github.com/entailor/pytailor/actions?workflow=Tests)
+
 # Pytailor - A python client for Tailor.wf
 
 ## Get started
