@@ -1,5 +1,5 @@
 [![Tests](https://github.com/entailor/pytailor/workflows/Tests/badge.svg)](https://github.com/entailor/pytailor/actions?workflow=Tests)
-
+[![PyPI](https://img.shields.io/pypi/v/pytailor.svg)](https://pypi.org/project/pytailor/)
 # Pytailor - A python client for Tailor.wf
 
 ## Get started
