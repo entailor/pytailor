@@ -12,7 +12,7 @@ from datetime import datetime
 from glob import glob
 from pathlib import Path
 from typing import List, Dict, Union
-from tailor.config import RUNDIR_TIME_FORMAT, LOGGING_FORMAT
+from pytailor.config import RUNDIR_TIME_FORMAT, LOGGING_FORMAT
 
 
 def default_worker_name():

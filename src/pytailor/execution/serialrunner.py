@@ -1,10 +1,10 @@
 from typing import Optional
 import httpx
 
-from tailor.utils import get_logger
-from tailor.models import TaskCheckout, TaskExecutionData
-from tailor.clients import RestClient
-from tailor.common.base import APIBase
+from pytailor.utils import get_logger
+from pytailor.models import TaskCheckout, TaskExecutionData
+from pytailor.clients import RestClient
+from pytailor.common.base import APIBase
 from .taskrunner import run_task
 
 

@@ -3,7 +3,7 @@ This script defines and executes a 2-level branching workflow and makes assertio
 the expected inputs, outputs and files at different scoping levels
 """
 
-from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
+from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 ### DAG with two levels of branching ###
 

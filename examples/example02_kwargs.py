@@ -7,7 +7,7 @@ This example introduces the following NEW concepts:
         - Specifying keyword arguments (**kwargs) to the function
 """
 
-from tailor import PythonTask, DAG, Workflow, Project
+from pytailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###
 

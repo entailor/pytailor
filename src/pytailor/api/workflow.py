@@ -4,13 +4,13 @@ from typing import Optional
 import uuid
 from collections import defaultdict
 
-from tailor.models import Workflow as WorkflowModel, WorkflowCreate
-from tailor.clients import RestClient
-from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
-from tailor.common.state import State
-from tailor.execution import SerialRunner
-from tailor.common.base import APIBase
-from tailor.exceptions import BackendResourceError
+from pytailor.models import Workflow as WorkflowModel, WorkflowCreate
+from pytailor.clients import RestClient
+from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
+from pytailor.common.state import State
+from pytailor.execution import SerialRunner
+from pytailor.common.base import APIBase
+from pytailor.exceptions import BackendResourceError
 from .project import Project
 from .fileset import FileSet
 from .dag import DAG

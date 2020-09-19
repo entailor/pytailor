@@ -2,7 +2,7 @@ from typing import Callable, Any, Union, List, Optional
 from pydantic import BaseModel
 import httpx
 
-from tailor.exceptions import BackendResponseError
+from pytailor.exceptions import BackendResponseError
 
 
 class APIBase:

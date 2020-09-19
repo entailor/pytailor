@@ -1,7 +1,7 @@
 import click
 from multiprocessing import cpu_count
-from tailor.utils import default_worker_name
-from tailor.execution.worker import run_worker
+from pytailor.utils import default_worker_name
+from pytailor.execution.worker import run_worker
 
 
 @click.group()

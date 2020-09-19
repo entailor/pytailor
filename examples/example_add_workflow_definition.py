@@ -1,4 +1,4 @@
-from tailor import PythonTask, DAG, Account, WorkflowDefinition
+from pytailor import PythonTask, DAG, Account, WorkflowDefinition
 
 
 # a simple dag definition

@@ -32,7 +32,7 @@ File *names* can be accessed with queries: "<% $.files.<tag> %>" which is useful
 file name(s) are input to functions.
 """
 
-from tailor import PythonTask, DAG, Workflow, Project, FileSet
+from pytailor import PythonTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###
 

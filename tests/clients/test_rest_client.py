@@ -1,7 +1,7 @@
-from tailor.clients import RestClient
+from pytailor.clients import RestClient
 
 from ..data import *
-from tailor.models import *
+from pytailor.models import *
 
 
 def test_get_accounts(httpx_mock):

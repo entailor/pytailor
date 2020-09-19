@@ -8,14 +8,14 @@ from pathlib import Path
 
 import yaql
 
-from tailor.common.state import State
-from tailor.api.dag import TaskType
-from tailor.utils import create_rundir, extract_real_filenames, get_logger, list_files, \
+from pytailor.common.state import State
+from pytailor.api.dag import TaskType
+from pytailor.utils import create_rundir, extract_real_filenames, get_logger, list_files, \
     as_query
-from tailor.utils import format_traceback, get_basenames
-from tailor.models import *
-from tailor.clients import RestClient, FileClient
-from tailor.common.base import APIBase
+from pytailor.utils import format_traceback, get_basenames
+from pytailor.models import *
+from pytailor.clients import RestClient, FileClient
+from pytailor.common.base import APIBase
 
 
 def _resolve_callable(function_name):

@@ -5,8 +5,8 @@ from abc import ABC, abstractmethod
 from typing import Optional, List, Union, Any, Dict
 from enum import Enum
 
-from tailor.utils import as_query
-from tailor.exceptions import DAGError
+from pytailor.utils import as_query
+from pytailor.exceptions import DAGError
 
 # Not thread safe, but this is considered ok
 _CONTEXT_MANAGER_OWNER = None

@@ -19,7 +19,7 @@ This example introduces the following NEW concepts:
     - Retrieve a workflow from the backend into a new Workflow object
 """
 
-from tailor import PythonTask, DAG, Project, Workflow
+from pytailor import PythonTask, DAG, Project, Workflow
 
 ### dag definition ###
 

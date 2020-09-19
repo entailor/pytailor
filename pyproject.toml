@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "tailor"
+name = "pytailor"
 version = "0.0.1"
 description = "pyTailor orchestrates your existing python code as *workflows*"
 authors = ["Audun Gravdal Johansen <audun@entail.no>"]

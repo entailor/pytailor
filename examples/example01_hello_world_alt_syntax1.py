@@ -6,7 +6,7 @@ Here is the Hello world example with alternative syntax allowing for definition 
 DAG in "reversed" order by using the *owner* parameter.
 """
 
-from tailor import PythonTask, DAG, Project, Workflow
+from pytailor import PythonTask, DAG, Project, Workflow
 
 ### dag definition ###
 

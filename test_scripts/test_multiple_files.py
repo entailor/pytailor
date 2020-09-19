@@ -3,7 +3,7 @@ This script defines and executes a branching workflow and makes assertions for
 the expected outputs and files at different scoping levels
 """
 
-from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
+from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 
 with DAG(name='DAG') as dag:

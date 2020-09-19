@@ -5,7 +5,7 @@ pyTailor Example 1, alternative syntax 2
 Here is the Hello world example with alternative syntax using context managers.
 """
 
-from tailor import PythonTask, DAG, Project, Workflow
+from pytailor import PythonTask, DAG, Project, Workflow
 
 ### dag definition ###
 

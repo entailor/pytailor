@@ -10,7 +10,7 @@ This example introduces the following NEW concepts:
 *branch_files* is given as one or more file tags.
 """
 
-from tailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
+from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###
 

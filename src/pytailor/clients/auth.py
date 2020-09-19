@@ -1,6 +1,6 @@
 import httpx
 
-from tailor.config import AUTH_KEY
+from pytailor.config import AUTH_KEY
 
 
 class TailorAuth(httpx.Auth):

@@ -22,7 +22,7 @@ JSON-serializable. In the future non-JSON compatible objects may be handled
 as well (by use of pickling).
 """
 
-from tailor import PythonTask, DAG, Workflow, Project
+from pytailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###
 

@@ -1,11 +1,11 @@
 from typing import Union, List, Dict
 from pathlib import Path
 
-from tailor.common.base import APIBase
+from pytailor.common.base import APIBase
 from .project import Project
-from tailor.clients import RestClient, FileClient
-from tailor.models import FileSetDownload, FileSetUpload
-from tailor.utils import check_local_files_exist, get_basenames
+from pytailor.clients import RestClient, FileClient
+from pytailor.models import FileSetDownload, FileSetUpload
+from pytailor.utils import check_local_files_exist, get_basenames
 
 
 class FileSet(APIBase):

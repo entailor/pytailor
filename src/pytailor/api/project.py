@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from tailor.common.base import APIBase
-from tailor.clients import RestClient
+from pytailor.common.base import APIBase
+from pytailor.clients import RestClient
 
 
 class Project(APIBase):

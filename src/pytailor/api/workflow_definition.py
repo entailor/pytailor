@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import Optional, List
 
-from tailor.clients import RestClient
-from tailor.common.base import APIBase
-from tailor.exceptions import BackendResourceError
-from tailor.models import WorkflowDefinition as WorkflowDefinitionModel
-from tailor.models import WorkflowDefinitionCreate
-from tailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
+from pytailor.clients import RestClient
+from pytailor.common.base import APIBase
+from pytailor.exceptions import BackendResourceError
+from pytailor.models import WorkflowDefinition as WorkflowDefinitionModel
+from pytailor.models import WorkflowDefinitionCreate
+from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 from .account import Account
 from .dag import DAG
 from .project import Project

@@ -1,4 +1,4 @@
-from tailor import __version__
+from pytailor import __version__
 
 
 def test_version():

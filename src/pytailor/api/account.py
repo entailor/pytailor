@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import List
 
-from tailor.common.base import APIBase
-from tailor.clients import RestClient
-from tailor.models import Account as AccountModel
+from pytailor.common.base import APIBase
+from pytailor.clients import RestClient
+from pytailor.models import Account as AccountModel
 
 
 class Account(APIBase):

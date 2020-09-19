@@ -15,7 +15,7 @@ Branched tasks always become children of the BranchTask that created them.
 
 """
 
-from tailor import PythonTask, BranchTask, DAG, Workflow, Project
+from pytailor import PythonTask, BranchTask, DAG, Workflow, Project
 
 ### workflow definition ###
 

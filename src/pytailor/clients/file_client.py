@@ -2,7 +2,7 @@ from typing import Dict, List, Union
 from pathlib import Path, PurePath
 import httpx
 import requests
-from tailor.models import FileSetUpload, FileSet
+from pytailor.models import FileSetUpload, FileSet
 import shutil
 import os
 

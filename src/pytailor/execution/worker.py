@@ -9,11 +9,11 @@ import uuid
 from multiprocessing import cpu_count
 from typing import Optional
 
-from tailor.config import LOGGING_FORMAT
-from tailor.execution.taskrunner import run_task
-from tailor.models import TaskCheckout, TaskExecutionData
-from tailor.utils import get_logger
-from tailor.clients import AsyncRestClient
+from pytailor.config import LOGGING_FORMAT
+from pytailor.execution.taskrunner import run_task
+from pytailor.models import TaskCheckout, TaskExecutionData
+from pytailor.utils import get_logger
+from pytailor.clients import AsyncRestClient
 
 
 async def do_checkout(checkout_query: TaskCheckout

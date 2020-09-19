@@ -1,6 +1,6 @@
 import httpx
-from tailor.models import *
-from tailor.config import API_BASE_URL, AUTH_KEY
+from pytailor.models import *
+from pytailor.config import API_BASE_URL, AUTH_KEY
 from .auth import TailorAuth
 
 
