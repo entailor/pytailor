@@ -32,12 +32,11 @@ with DAG(name='dag') as dag:
 ### workflow run ###
 
 # open a project
-project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
-prj = Project(project_uuid)
+prj = Project.from_name('Test')
 
 inputs = {
-    # 'data': [1, 2],
-    'data': {0: 1, 1: 2},  # alternatively use a dict with int keys
+    'data': [1, 2],
+    # 'data': {0: 1, 1: 2},  # alternatively use a dict with int keys
     'other': 'this is not used for branching'
 }
 

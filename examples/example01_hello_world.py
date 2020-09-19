@@ -39,8 +39,7 @@ t2 = PythonTask(
 dag = DAG(tasks=[t1, t2], name='dag')
 
 # open a project
-# prj = Project.from_name('Test')
-prj = Project('702d688e-972d-4580-afa2-fc616533ccba')
+prj = Project.from_name('Test')
 
 ### workflow execution ###
 

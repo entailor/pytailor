@@ -24,8 +24,7 @@ with DAG(name='dag') as dag:
     )
 
 # open a project
-# prj = Project.from_name('Test')
-prj = Project('702d688e-972d-4580-afa2-fc616533ccba')
+prj = Project.from_name('Test')
 
 ### workflow execution ###
 

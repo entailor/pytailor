@@ -64,8 +64,7 @@ with DAG(name='dag') as dag:
 ### workflow run ###
 
 # open a project
-project_uuid = "702d688e-972d-4580-afa2-fc616533ccba"
-prj = Project(project_uuid)
+prj = Project.from_name('Test')
 
 # create a fileset and upload files
 fileset = FileSet(prj)

@@ -44,8 +44,7 @@ with DAG(name='dag') as dag:
 ### run workflow ###
 
 # open a project
-project_uuid = '702d688e-972d-4580-afa2-fc616533ccba'
-prj = Project(project_uuid)
+prj = Project.from_name('Test')
 
 # define inputs
 inputs = {
