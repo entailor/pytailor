@@ -10,8 +10,13 @@ import yaql
 
 from pytailor.common.state import State
 from pytailor.api.dag import TaskType
-from pytailor.utils import create_rundir, extract_real_filenames, get_logger, list_files, \
-    as_query
+from pytailor.utils import (
+    create_rundir,
+    extract_real_filenames,
+    get_logger,
+    list_files,
+    as_query,
+)
 from pytailor.utils import format_traceback, get_basenames
 from pytailor.models import *
 from pytailor.clients import RestClient, FileClient
@@ -19,21 +24,20 @@ from pytailor.common.base import APIBase
 
 
 def _resolve_callable(function_name):
-    parts = function_name.split('.')
+    parts = function_name.split(".")
     func_name = parts[-1]
-    module_name = '.'.join(parts[:-1])
+    module_name = ".".join(parts[:-1])
     function = getattr(importlib.import_module(module_name), func_name)
     return function
 
 
 class TaskRunner(APIBase):
-
     def __init__(self, exec_data: TaskExecutionData):
 
         self.__set_exec_data(exec_data)
 
         # get logger
-        self.logger = get_logger('JobRunner')
+        self.logger = get_logger("JobRunner")
 
         # create a run directory (here or in self.run?)
         self.run_dir = create_rundir(logger=self.logger)
@@ -49,7 +53,7 @@ class TaskRunner(APIBase):
 
     def run(self):
 
-        self.logger.info(f'Starting task {self.__task.id}: {self.__task.name}')
+        self.logger.info(f"Starting task {self.__task.id}: {self.__task.name}")
 
         # step into run dir
         current_dir = Path.cwd()
@@ -57,15 +61,11 @@ class TaskRunner(APIBase):
 
         # check in state RUNNING
         task_update = TaskUpdate(
-            task_id=self.__task.id,
-            state=State.RUNNING.name,
-            run_dir=str(self.run_dir)
+            task_id=self.__task.id, state=State.RUNNING.name, run_dir=str(self.run_dir)
         )
         with RestClient() as client:
             exec_data = self._handle_rest_client_call(
-                client.checkin_task,
-                task_update,
-                error_msg='Could not check in task.'
+                client.checkin_task, task_update, error_msg="Could not check in task."
             )
         self.__set_exec_data(exec_data)
 
@@ -76,9 +76,9 @@ class TaskRunner(APIBase):
 
             state = State.FAILED
 
-            failure_detail = ''.join(format_traceback(e))
-            failure_summary = f'Error when executing task {self.__task.id}'
-            if hasattr(e, 'message'):
+            failure_detail = "".join(format_traceback(e))
+            failure_summary = f"Error when executing task {self.__task.id}"
+            if hasattr(e, "message"):
                 failure_summary: str = e.message
 
             # check in state FAILED
@@ -87,17 +87,17 @@ class TaskRunner(APIBase):
                 task_id=self.__task.id,
                 state=state.name,
                 failure_detail=failure_detail,
-                failure_summary=failure_summary
+                failure_summary=failure_summary,
             )
             with RestClient() as client:
                 exec_data = self._handle_rest_client_call(
                     client.checkin_task,
                     task_update,
-                    error_msg='Could not check in task.'
+                    error_msg="Could not check in task.",
                 )
             self.__set_exec_data(exec_data)
 
-            self.logger.error(f'Task {self.__task.id} FAILED', exc_info=True)
+            self.logger.error(f"Task {self.__task.id} FAILED", exc_info=True)
         else:
             state = State.COMPLETED
 
@@ -111,11 +111,11 @@ class TaskRunner(APIBase):
                 exec_data = self._handle_rest_client_call(
                     client.checkin_task,
                     task_update,
-                    error_msg='Could not check in task.'
+                    error_msg="Could not check in task.",
                 )
             self.__set_exec_data(exec_data)
 
-            self.logger.info(f'Task {self.__task.id} COMPLETED successfully')
+            self.logger.info(f"Task {self.__task.id} COMPLETED successfully")
 
         # step out of run dir
         os.chdir(current_dir)
@@ -125,9 +125,9 @@ class TaskRunner(APIBase):
     def __execute_task(self):
         # call job-type specific code
         task_def = self.__task.definition
-        if TaskType(task_def['type']) == TaskType.PYTHON:
+        if TaskType(task_def["type"]) == TaskType.PYTHON:
             self.__run_python_task(task_def)
-        elif TaskType(task_def['type']) == TaskType.BRANCH:
+        elif TaskType(task_def["type"]) == TaskType.BRANCH:
             self.__run_branch_task()
 
     def __run_python_task(self, task_def):
@@ -139,7 +139,7 @@ class TaskRunner(APIBase):
         self.__maybe_upload_files(task_def, function_output)
 
     def __maybe_upload_files(self, task_def, function_output):
-        upload = task_def.get('upload')
+        upload = task_def.get("upload")
         # upload must be dict of (tag: val), where val can be:
         #   1:  one or more query expressions(str og list of str) which is applied
         #       to function_output. The query result is searched for file names
@@ -156,8 +156,7 @@ class TaskRunner(APIBase):
                 file_names = []
                 for vi in v:
                     if as_query(vi):  # alt 1
-                        file_names_i = self.__eval_query(as_query(vi),
-                                                         function_output)
+                        file_names_i = self.__eval_query(as_query(vi), function_output)
                         file_names_i = extract_real_filenames(file_names_i) or []
                     else:  # alt 2
                         file_names_i = [str(p) for p in list_files(pattern=vi)]
@@ -169,8 +168,7 @@ class TaskRunner(APIBase):
                 # DO UPLOAD
 
                 fileset_upload = FileSetUpload(
-                    task_id=self.__task.id,
-                    tags=get_basenames(files_to_upload)
+                    task_id=self.__task.id, tags=get_basenames(files_to_upload)
                 )
                 # get upload links
                 with RestClient() as client:
@@ -179,7 +177,7 @@ class TaskRunner(APIBase):
                         self.__project_id,
                         self.__fileset_id,
                         fileset_upload,
-                        error_msg='Could not get upload urls.'
+                        error_msg="Could not get upload urls.",
                     )
                 # do uploads
                 with FileClient() as client:
@@ -190,12 +188,12 @@ class TaskRunner(APIBase):
         #       Need a mechanism to persist non-JSON objects on
         #       the storage resource
         outputs = {}
-        output_to = task_def.get('output_to')
+        output_to = task_def.get("output_to")
         if output_to:
             # The entire function_output is put on $.outputs.<output>
             outputs[output_to] = function_output
 
-        output_extraction = task_def.get('output_extraction')
+        output_extraction = task_def.get("output_extraction")
         if output_extraction:
             # For each (tag: query), the query is applied to function_output
             # and the result is put on $.outputs.<tag>
@@ -203,20 +201,16 @@ class TaskRunner(APIBase):
                 if as_query(v):
                     val = self.__eval_query(as_query(v), function_output)
                 else:
-                    raise ValueError('Bad values for *output_extraction* parameter...')
+                    raise ValueError("Bad values for *output_extraction* parameter...")
                 outputs[k] = val
 
         # check in updated outputs
         task_update = TaskUpdate(
-            run_id=self.__run_id,
-            task_id=self.__task.id,
-            outputs=outputs
+            run_id=self.__run_id, task_id=self.__task.id, outputs=outputs
         )
         with RestClient() as client:
             exec_data = self._handle_rest_client_call(
-                client.checkin_task,
-                task_update,
-                error_msg='Could not check in task.'
+                client.checkin_task, task_update, error_msg="Could not check in task."
             )
         self.__set_exec_data(exec_data)
 
@@ -235,32 +229,29 @@ class TaskRunner(APIBase):
         #       https://github.com/zopefoundation/RestrictedPython
 
         # run callable
-        function_name = task_def['function']
+        function_name = task_def["function"]
         function = _resolve_callable(function_name)
-        self.logger.info(f'Calling: {function_name}')
+        self.logger.info(f"Calling: {function_name}")
         function_output = function(*args, **kwargs)
         return function_output
 
     def __determine_kwargs(self, task_def):
-        kwargs = task_def.get('kwargs', {})
+        kwargs = task_def.get("kwargs", {})
         parsed_kwargs = self.__handle_kwargs(kwargs)
         return parsed_kwargs
 
     def __determine_args(self, task_def):
-        args = task_def.get('args', [])
+        args = task_def.get("args", [])
         parsed_args = self.__handle_args(args)
         return parsed_args
 
     def __maybe_download_files(self, task_def):
-        download = task_def.get('download', [])
+        download = task_def.get("download", [])
         download = [download] if isinstance(download, str) else download
 
         # DO DOWNLOAD
         if download:
-            fileset_download = FileSetDownload(
-                task_id=self.__task.id,
-                tags=download
-            )
+            fileset_download = FileSetDownload(task_id=self.__task.id, tags=download)
             # get download links
             with RestClient() as client:
                 fileset = self._handle_rest_client_call(
@@ -268,7 +259,7 @@ class TaskRunner(APIBase):
                     self.__project_id,
                     self.__fileset_id,
                     fileset_download,
-                    error_msg='Could not get download urls.'
+                    error_msg="Could not get download urls.",
                 )
             # do downloads
             with FileClient() as client:
@@ -278,10 +269,14 @@ class TaskRunner(APIBase):
         if as_query(args):
             parsed_args = self.__eval_query(as_query(args), self.__context)
             if not isinstance(parsed_args, list):
-                raise TypeError(f'Query expression must evaluate to list. Got '
-                                f'{type(parsed_args)}')
+                raise TypeError(
+                    f"Query expression must evaluate to list. Got "
+                    f"{type(parsed_args)}"
+                )
         elif not isinstance(args, list):
-            raise TypeError(f'*args* must be list or query-expression.. Got {type(args)}')
+            raise TypeError(
+                f"*args* must be list or query-expression.. Got {type(args)}"
+            )
         else:
             parsed_args = []
             for arg in args:
@@ -296,17 +291,19 @@ class TaskRunner(APIBase):
         if as_query(kwargs):
             parsed_kwargs = self.__eval_query(as_query(kwargs), self.__context)
             if not isinstance(parsed_kwargs, dict):
-                raise TypeError(f'Query expression must evaluate to dict. Got '
-                                f'{type(parsed_kwargs)}')
+                raise TypeError(
+                    f"Query expression must evaluate to dict. Got "
+                    f"{type(parsed_kwargs)}"
+                )
         elif not isinstance(kwargs, dict):
-            raise TypeError(f'*kwargs* must be dict or query-expression.. Got '
-                            f'{type(kwargs)}')
+            raise TypeError(
+                f"*kwargs* must be dict or query-expression.. Got " f"{type(kwargs)}"
+            )
         else:
             parsed_kwargs = {}
             for kw, arg in kwargs.items():
                 if as_query(arg):
-                    parsed_arg = self.__eval_query(as_query(arg),
-                                                   self.__context)
+                    parsed_arg = self.__eval_query(as_query(arg), self.__context)
                     parsed_kwargs[kw] = parsed_arg
                 else:
                     parsed_kwargs[kw] = arg
@@ -316,15 +313,13 @@ class TaskRunner(APIBase):
 
         # check in updated outputs
         task_update = TaskUpdate(
-            run_id=self.__run_id,
-            task_id=self.__task.id,
-            perform_branching=True
+            run_id=self.__run_id, task_id=self.__task.id, perform_branching=True
         )
         with RestClient() as client:
             exec_data = self._handle_rest_client_call(
                 client.checkin_task,
                 task_update,
-                error_msg='Could not perform branching.'
+                error_msg="Could not perform branching.",
             )
         self.__set_exec_data(exec_data)
 
@@ -337,9 +332,9 @@ class TaskRunner(APIBase):
         if state == State.COMPLETED:  # only remove non-empty run dir if COMPLETED
             try:
                 shutil.rmtree(self.run_dir, ignore_errors=True)
-                self.logger.info('Deleted run dir')
+                self.logger.info("Deleted run dir")
             except:
-                self.logger.info('Could not delete run dir', exc_info=1)
+                self.logger.info("Could not delete run dir", exc_info=1)
 
             # TODO: trigger additional actions (FUTURE features):
             #   - is this the last job of a COMPLETED workflow:
@@ -350,7 +345,7 @@ class TaskRunner(APIBase):
         else:  # always remove empty dirs
             try:
                 self.run_dir.rmdir()
-                self.logger.info('Deleted empty run dir')
+                self.logger.info("Deleted empty run dir")
             except:  # non-empty dir, leave as is
                 pass
 

@@ -9,5 +9,5 @@ class TailorAuth(httpx.Auth):
 
     def auth_flow(self, request):
         # Send the request, with an `Authorization` header.
-        request.headers['Authorization'] = 'Bearer ' + self.token
+        request.headers["Authorization"] = "Bearer " + self.token
         yield request

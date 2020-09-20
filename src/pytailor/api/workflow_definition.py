@@ -14,15 +14,15 @@ from .project import Project
 
 
 class WorkflowDefinition(APIBase):
-
-    def __init__(self,
-                 name: str,
-                 description: str,
-                 dag: DAG,
-                 inputs_schema: Optional[dict] = None,
-                 outputs_schema: Optional[dict] = None,
-                 files_schema: Optional[dict] = None
-                 ):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        dag: DAG,
+        inputs_schema: Optional[dict] = None,
+        outputs_schema: Optional[dict] = None,
+        files_schema: Optional[dict] = None,
+    ):
         self.__name = name
         self.__description = description
         self.__dag = dag
@@ -63,8 +63,10 @@ class WorkflowDefinition(APIBase):
 
         # check not existing
         if self.__id is not None:
-            raise BackendResourceError('Cannot add workflow definition to account. The '
-                                     'workflow definition already exist backend.')
+            raise BackendResourceError(
+                "Cannot add workflow definition to account. The "
+                "workflow definition already exist backend."
+            )
 
         # make request model
         wf_def_create = WorkflowDefinitionCreate(
@@ -73,7 +75,7 @@ class WorkflowDefinition(APIBase):
             dag=dict_keys_int_to_str(self.dag.to_dict()),
             inputs_schema=self.inputs_schema,
             outputs_schema=self.outputs_schema,
-            files_schema=self.files_schema
+            files_schema=self.files_schema,
         )
 
         # make rest call
@@ -82,14 +84,16 @@ class WorkflowDefinition(APIBase):
                 client.new_workflow_definition,
                 account.id,
                 wf_def_create,
-                error_msg='Could not add workflow definition to backend.'
+                error_msg="Could not add workflow definition to backend.",
             )
 
         # update self
         self.__update_from_backend(wf_def_model)
 
     @classmethod
-    def from_project_and_id(cls, project: Project, wf_def_id: str) -> WorkflowDefinition:
+    def from_project_and_id(
+        cls, project: Project, wf_def_id: str
+    ) -> WorkflowDefinition:
         """
         Retrieve a single workflow definition from a project.
         """
@@ -99,7 +103,7 @@ class WorkflowDefinition(APIBase):
                 client.get_workflow_definition_project,
                 project.id,
                 wf_def_id,
-                error_msg='Could not retrieve workflow definition.'
+                error_msg="Could not retrieve workflow definition.",
             )
         wf_def = cls.__from_model(wf_def_model)
         return wf_def
@@ -114,7 +118,7 @@ class WorkflowDefinition(APIBase):
             wf_def_models = cls._handle_rest_client_call(
                 client.get_workflow_definition_summaries_project,
                 project.id,
-                error_msg='Could not retrieve workflow definition summaries.'
+                error_msg="Could not retrieve workflow definition summaries.",
             )
         return [wf_def_model.dict() for wf_def_model in wf_def_models]
 
@@ -126,7 +130,7 @@ class WorkflowDefinition(APIBase):
             dag=dict_keys_int_to_str(DAG.from_dict(wf_def_model.dag)),
             inputs_schema=wf_def_model.inputs_schema,
             outputs_schema=wf_def_model.outputs_schema,
-            files_schema=wf_def_model.files_schema
+            files_schema=wf_def_model.files_schema,
         )
         wf_def.__update_from_backend(wf_def_model)
 

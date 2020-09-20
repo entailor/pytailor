@@ -17,12 +17,11 @@ from pytailor.config import RUNDIR_TIME_FORMAT, LOGGING_FORMAT
 
 def default_worker_name():
     machine_id = hex(uuid.getnode())[2:-4]
-    short_hostname = platform.node().split('.', 1)[0]
-    return f'{short_hostname}_{machine_id}'
+    short_hostname = platform.node().split(".", 1)[0]
+    return f"{short_hostname}_{machine_id}"
 
 
-def walk_and_apply(d, key_cond=None, key_apply=None,
-                   val_cond=None, val_apply=None):
+def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=None):
     """
     Walk a nested data structure *d* (think JSON) and apply conditional transformations
     to keys and/or values. Returns a new version of *d* with applied
@@ -74,8 +73,9 @@ def walk_and_apply(d, key_cond=None, key_apply=None,
                 # go deeper if v has not been transformed and v is a data structure
                 if new_val is v and isinstance(v, (dict, list)):
                     # key = new_key if not new_key is None else k
-                    recursive_func(v, d_out[new_key], key_cond, key_apply, val_cond,
-                                   val_apply)
+                    recursive_func(
+                        v, d_out[new_key], key_cond, key_apply, val_cond, val_apply
+                    )
 
         elif isinstance(d, list):
             for i, v in enumerate(d):
@@ -86,8 +86,9 @@ def walk_and_apply(d, key_cond=None, key_apply=None,
 
                 # go deeper if v has not been transformed and v is a data structure
                 elif isinstance(v, (dict, list)):
-                    recursive_func(v, d_out[i], key_cond, key_apply, val_cond,
-                                   val_apply)
+                    recursive_func(
+                        v, d_out[i], key_cond, key_apply, val_cond, val_apply
+                    )
 
     if val_cond and val_cond(d):
         return val_apply(d)
@@ -124,24 +125,24 @@ def list_files(path: Path = None, pattern: str = None):
     return sorted(use_path.rglob(use_pattern))
 
 
-def create_rundir(root_dir='.', friendly_name=None, logger=None):
+def create_rundir(root_dir=".", friendly_name=None, logger=None):
     """
     Creates a directory for a task run and returns the full path.
     """
     friendly_name_part = friendly_name + "_" if friendly_name else ""
-    rundir = 'taskrun_' + friendly_name_part + datetime.utcnow().strftime(
-        RUNDIR_TIME_FORMAT)
+    rundir = (
+        "taskrun_" + friendly_name_part + datetime.utcnow().strftime(RUNDIR_TIME_FORMAT)
+    )
     root_dir = Path(root_dir).absolute() or Path.cwd()
     p = root_dir / rundir
     p.mkdir()
     if logger:
-        logger.info(f'Created dir {p.absolute().as_posix()}')
+        logger.info(f"Created dir {p.absolute().as_posix()}")
     return p
 
 
 def flatten_dictvals_or_list(container):
-    """Iterate values of in an arbitrary nested dict/list/tuple
-    """
+    """Iterate values of in an arbitrary nested dict/list/tuple"""
     if isinstance(container, Mapping):
         container = container.values()
     for i in container:
@@ -165,7 +166,7 @@ def extract_real_filenames(data):
     return None
 
 
-def get_logger(name, stream_level='DEBUG', formatter=None):
+def get_logger(name, stream_level="DEBUG", formatter=None):
     # TODO: file loggers
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
@@ -187,9 +188,7 @@ def get_logger(name, stream_level='DEBUG', formatter=None):
 
 
 def format_traceback(exc: Exception) -> List[str]:
-    return traceback.format_exception(etype=type(exc),
-                                      value=exc,
-                                      tb=exc.__traceback__)
+    return traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
 
 
 def check_local_files_exist(tag_filename_mapping: Dict[str, List[Union[str, Path]]]):
@@ -197,11 +196,12 @@ def check_local_files_exist(tag_filename_mapping: Dict[str, List[Union[str, Path
         for filename in filenames:
             p = Path(filename)
             if not p.exists():
-                raise FileNotFoundError(f'Could not find local file: {filename}.')
+                raise FileNotFoundError(f"Could not find local file: {filename}.")
 
 
-def get_basenames(tag_filename_mapping: Dict[str, List[Union[str, Path]]]
-                  ) -> Dict[str, List[Union[str, Path]]]:
+def get_basenames(
+    tag_filename_mapping: Dict[str, List[Union[str, Path]]]
+) -> Dict[str, List[Union[str, Path]]]:
     tag_basename_mapping = {}
     for tag, filenames in tag_filename_mapping.items():
         tag_basename_mapping[tag] = [Path(fn).name for fn in filenames]
@@ -209,9 +209,9 @@ def get_basenames(tag_filename_mapping: Dict[str, List[Union[str, Path]]]
 
 
 def as_query(arg, accept_no_escape=False):
-    if isinstance(arg, str) and arg.startswith('<%') and arg.endswith('%>'):
+    if isinstance(arg, str) and arg.startswith("<%") and arg.endswith("%>"):
         return arg[2:-2].strip()
-    elif accept_no_escape and arg.startswith('$.'):
+    elif accept_no_escape and arg.startswith("$."):
         return arg.strip()
     else:
         return False

@@ -26,45 +26,37 @@ from pytailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###
 
-with DAG(name='dag') as dag:
+with DAG(name="dag") as dag:
 
     t1 = PythonTask(
-        function='time.sleep',
-        name='task 1',
-        args=['<% $.inputs.sleep_time %>']
+        function="time.sleep", name="task 1", args=["<% $.inputs.sleep_time %>"]
     )
     t2 = PythonTask(
-        function='builtins.print',
-        name='task 2',
-        args=['\nSlept for', '<% $.inputs.sleep_time %>', 'second'],
-        kwargs={'sep': '   ', 'end': '\n\n'},
-        parents=t1
+        function="builtins.print",
+        name="task 2",
+        args=["\nSlept for", "<% $.inputs.sleep_time %>", "second"],
+        kwargs={"sep": "   ", "end": "\n\n"},
+        parents=t1,
     )
 
 ### run workflow ###
 
 # open a project
-prj = Project.from_name('Test')
+prj = Project.from_name("Test")
 
 # define inputs
-inputs = {
-    'sleep_time': 1.5  # try to change this and rerun the workflow
-}
+inputs = {"sleep_time": 1.5}  # try to change this and rerun the workflow
 
 # create a workflow:
-wf = Workflow(project=prj,
-              dag=dag,
-              name='inputs workflow',
-              inputs=inputs
-              )
+wf = Workflow(project=prj, dag=dag, name="inputs workflow", inputs=inputs)
 
 # run the workflow
 wf.run()
 
 # check the status of the workflow
-print('The workflow finished with state:')
+print("The workflow finished with state:")
 print(wf.state)
 
 # inputs are available on the run object
-print('Inputs were:')
+print("Inputs were:")
 print(wf.inputs)

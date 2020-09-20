@@ -19,7 +19,7 @@ class FileSet(APIBase):
                 fileset_model = self._handle_rest_client_call(
                     client.new_fileset,
                     project.id,
-                    error_msg='An error occurred during fileset creation.'
+                    error_msg="An error occurred during fileset creation.",
                 )
         else:
             fileset_download = FileSetDownload()
@@ -29,7 +29,7 @@ class FileSet(APIBase):
                     project.id,
                     fileset_id,
                     fileset_download,
-                    error_msg=f'Could not retrieve fileset with id {fileset_id}'
+                    error_msg=f"Could not retrieve fileset with id {fileset_id}",
                 )
         self.id = fileset_model.id
         self.project = project
@@ -47,7 +47,7 @@ class FileSet(APIBase):
                 self.project.id,
                 self.id,
                 fileset_upload,
-                error_msg='Error while getting upload urls from the backend.'
+                error_msg="Error while getting upload urls from the backend.",
             )
 
         with FileClient() as client:

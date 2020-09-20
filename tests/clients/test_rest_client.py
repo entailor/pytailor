@@ -23,7 +23,7 @@ def test_get_projects(httpx_mock):
 
 
 def test_get_project(httpx_mock):
-    project_id = 'a_project_id'
+    project_id = "a_project_id"
     httpx_mock.add_response(json=data_project)
     with RestClient() as client:
         model = client.get_project(project_id)
@@ -32,7 +32,7 @@ def test_get_project(httpx_mock):
 
 
 def test_new_fileset(httpx_mock):
-    project_id = 'a_project_id'
+    project_id = "a_project_id"
     httpx_mock.add_response(json=data_empty_fileset)
     with RestClient() as client:
         model = client.new_fileset(project_id)
@@ -41,8 +41,8 @@ def test_new_fileset(httpx_mock):
 
 
 def test_get_download_urls_empty_payload(httpx_mock):
-    project_id = 'a_project_id'
-    fileset_id = 'a_filset_id'
+    project_id = "a_project_id"
+    fileset_id = "a_filset_id"
     fileset_download = FileSetDownload()
     httpx_mock.add_response(json=data_empty_fileset)
     with RestClient() as client:
@@ -52,8 +52,8 @@ def test_get_download_urls_empty_payload(httpx_mock):
 
 
 def test_get_download_urls(httpx_mock):
-    project_id = 'a_project_id'
-    fileset_id = 'a_filset_id'
+    project_id = "a_project_id"
+    fileset_id = "a_filset_id"
     fileset_download = FileSetDownload(**data_fileset_download)
     httpx_mock.add_response(json=data_fileset)
     with RestClient() as client:
@@ -63,8 +63,8 @@ def test_get_download_urls(httpx_mock):
 
 
 def test_get_upload_urls(httpx_mock):
-    project_id = 'a_project_id'
-    fileset_id = 'a_filset_id'
+    project_id = "a_project_id"
+    fileset_id = "a_filset_id"
     fileset_upload = FileSetUpload(**data_fileset_upload)
     httpx_mock.add_response(json=data_fileset)
     with RestClient() as client:
@@ -74,8 +74,8 @@ def test_get_upload_urls(httpx_mock):
 
 
 def test_get_workflow(httpx_mock):
-    project_id = 'a_project_id'
-    workflow_id = '1'
+    project_id = "a_project_id"
+    workflow_id = "1"
     httpx_mock.add_response(json=data_workflow)
     with RestClient() as client:
         model = client.get_workflow(project_id, workflow_id)
@@ -84,7 +84,7 @@ def test_get_workflow(httpx_mock):
 
 
 def test_new_workflow_from_dag(httpx_mock):
-    project_id = 'a_project_id'
+    project_id = "a_project_id"
     workflow_create = WorkflowCreate(**data_workflow_create_dag)
     httpx_mock.add_response(json=data_workflow)
     with RestClient() as client:

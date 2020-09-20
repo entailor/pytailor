@@ -24,22 +24,22 @@ from pytailor import PythonTask, DAG, Project, Workflow
 ### dag definition ###
 
 t1 = PythonTask(
-    function='builtins.print',
+    function="builtins.print",
     # function='builtins.abs',  # will raise type error
-    name='job 1',
-    args=['\nHello, world!\n'],
+    name="job 1",
+    args=["\nHello, world!\n"],
 )
 t2 = PythonTask(
-    function='builtins.print',
-    name='job 2',
-    args=['\nHello again,', 'world!\n'],
-    parents=t1
+    function="builtins.print",
+    name="job 2",
+    args=["\nHello again,", "world!\n"],
+    parents=t1,
 )
 
-dag = DAG(tasks=[t1, t2], name='dag')
+dag = DAG(tasks=[t1, t2], name="dag")
 
 # open a project
-prj = Project.from_name('Test')
+prj = Project.from_name("Test")
 
 ### workflow execution ###
 
@@ -47,14 +47,14 @@ prj = Project.from_name('Test')
 wf = Workflow(
     project=prj,
     dag=dag,
-    name='Hello from Pytailor',
+    name="Hello from Pytailor",
 )
 
 # run the workflow
 wf.run()
 
 # check the status of the workflow run
-print('The workflow finished with state:')
+print("The workflow finished with state:")
 print(wf.state)
 
 

@@ -8,18 +8,16 @@ import os
 
 
 class FileClient(httpx.Client):
+    def upload_files(
+        self, file_paths: Dict[str, List[Union[str, Path]]], fileset: FileSet
+    ):
 
-    def upload_files(self,
-                     file_paths: Dict[str, List[Union[str, Path]]],
-                     fileset: FileSet):
-
-        for file_paths, fileset_links in zip(file_paths.values(),
-                                             fileset.tags):
+        for file_paths, fileset_links in zip(file_paths.values(), fileset.tags):
             for file_path, fileset_link in zip(file_paths, fileset_links.links):
                 if os.stat(file_path).st_size == 0:
-                    response = requests.put(fileset_link.url, data=b'')
+                    response = requests.put(fileset_link.url, data=b"")
                 else:
-                    with open(file_path, 'rb') as f:
+                    with open(file_path, "rb") as f:
                         # alt 1 not working:
                         # response = self.put(fileset_link.url, data=f)
 
@@ -38,7 +36,7 @@ class FileClient(httpx.Client):
                 local_filename = fileset_link.filename
                 Path(local_filename).parent.mkdir(parents=True, exist_ok=True)
                 with requests.get(fileset_link.url, stream=True) as r:
-                    with open(local_filename, 'wb') as f:
+                    with open(local_filename, "wb") as f:
                         shutil.copyfileobj(r.raw, f)
 
     @staticmethod
@@ -48,7 +46,7 @@ class FileClient(httpx.Client):
 
         if len(indices) <= len(scope_indices):
             # downloading from a lower dup level
-            return ''
+            return ""
         else:
             # downloading from a higher dup level
             target_indices = indices.copy()
@@ -58,7 +56,7 @@ class FileClient(httpx.Client):
                 else:
                     break
 
-            filename_prefix = ''
+            filename_prefix = ""
             for index in target_indices:
-                filename_prefix += str(index) + '_'
+                filename_prefix += str(index) + "_"
             return filename_prefix

@@ -9,12 +9,7 @@ from .taskrunner import run_task
 
 
 class SerialRunner(APIBase):
-
-    def __init__(self,
-                 project_id: str,
-                 worker_name: str,
-                 workflow_id: int
-                 ):
+    def __init__(self, project_id: str, worker_name: str, workflow_id: int):
 
         self.project_id = project_id
         self.worker_name = worker_name
@@ -22,15 +17,15 @@ class SerialRunner(APIBase):
 
     def run(self):
 
-        logger = get_logger('SerialRunner')
-        logger.info(f'Starting workflow with id {self.workflow_id}')
+        logger = get_logger("SerialRunner")
+        logger.info(f"Starting workflow with id {self.workflow_id}")
 
         # checkout and run tasks
 
         checkout_query = TaskCheckout(
-            worker_capabilities=['python'],
+            worker_capabilities=["python"],
             worker_name=self.worker_name,
-            workflows=[self.workflow_id]
+            workflows=[self.workflow_id],
         )
 
         checkout = self.do_checkout(checkout_query)
@@ -41,14 +36,13 @@ class SerialRunner(APIBase):
             run_task(checkout)
             checkout = self.do_checkout(checkout_query)
 
-        logger.info(f'Workflow with id {self.workflow_id} finished')
+        logger.info(f"Workflow with id {self.workflow_id} finished")
 
-    def do_checkout(self, checkout_query: TaskCheckout
-                    ) -> Optional[TaskExecutionData]:
+    def do_checkout(self, checkout_query: TaskCheckout) -> Optional[TaskExecutionData]:
         with RestClient() as client:
             return self._handle_rest_client_call(
                 client.checkout_task,
                 checkout_query,
-                error_msg='Error during task checkout.',
-                return_none_on=[httpx.codes.NOT_FOUND]
+                error_msg="Error during task checkout.",
+                return_none_on=[httpx.codes.NOT_FOUND],
             )

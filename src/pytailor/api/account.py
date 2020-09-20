@@ -21,15 +21,16 @@ class Account(APIBase):
         self.id = account_model.id
         self.__account_model = account_model
         self.name = self.__account_model.organization_name
-        self.workflow_definitions_owned = self.__account_model.workflow_definitions_owned
+        self.workflow_definitions_owned = (
+            self.__account_model.workflow_definitions_owned
+        )
 
     @classmethod
     def get_my_accounts(cls) -> List[Account]:
         """Get list of all my accounts."""
         with RestClient() as client:
             account_models = cls._handle_rest_client_call(
-                client.get_accounts,
-                error_msg=f'Error while fetching accounts.'
+                client.get_accounts, error_msg=f"Error while fetching accounts."
             )
         accounts = []
         for account_model in account_models:

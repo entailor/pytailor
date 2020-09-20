@@ -9,12 +9,12 @@ class APIBase:
     """Base class for classes that interact with backend (makes rest calls)"""
 
     @staticmethod
-    def _handle_rest_client_call(client_method: Callable[..., Union[BaseModel,
-                                                                    List[BaseModel]]],
-                                 *args,
-                                 error_msg: str = 'Error.',
-                                 return_none_on: Optional[List[httpx.codes]] = None
-                                 ) -> Any:
+    def _handle_rest_client_call(
+        client_method: Callable[..., Union[BaseModel, List[BaseModel]]],
+        *args,
+        error_msg: str = "Error.",
+        return_none_on: Optional[List[httpx.codes]] = None,
+    ) -> Any:
         if return_none_on is None:
             return_none_on = []
         try:
@@ -25,10 +25,10 @@ class APIBase:
             # TODO handle a 401:
             if exc.response.status_code == httpx.codes.UNAUTHORIZED:
                 pass
-            error_msg += f' The response from the backend was: {exc}'
+            error_msg += f" The response from the backend was: {exc}"
             raise BackendResponseError(error_msg)
         except httpx.RequestError as exc:
-            error_msg += f' {exc}'
+            error_msg += f" {exc}"
             raise BackendResponseError(error_msg)
         except Exception:
             raise

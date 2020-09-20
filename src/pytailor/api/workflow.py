@@ -31,13 +31,14 @@ class Workflow(APIBase):
     # - Workflow.from_project_and_id()
     # - Workflow.from_model()
 
-    def __init__(self,
-                 project: Project,
-                 dag: DAG,
-                 name: Optional[str] = None,
-                 inputs: Optional[dict] = None,
-                 fileset: Optional[FileSet] = None
-                 ):
+    def __init__(
+        self,
+        project: Project,
+        dag: DAG,
+        name: Optional[str] = None,
+        inputs: Optional[dict] = None,
+        fileset: Optional[FileSet] = None,
+    ):
         """
         Create a new workflow.
 
@@ -58,7 +59,7 @@ class Workflow(APIBase):
 
         self.__project = project
         self.__dag = dag
-        self.__name = name or 'Unnamed workflow'
+        self.__name = name or "Unnamed workflow"
         self.__inputs = inputs or {}
         self.__state = State.PRE
         self.__fileset = fileset or FileSet(self.__project)
@@ -109,8 +110,10 @@ class Workflow(APIBase):
     def refresh(self) -> None:
         """Update with latest data from backend."""
         if self.__state == State.PRE:
-            raise BackendResourceError('This workflow has not been run yet and can '
-                                       'therefore not be refreshed.')
+            raise BackendResourceError(
+                "This workflow has not been run yet and can "
+                "therefore not be refreshed."
+            )
         wf_model = self.__fetch_model(self.project.id, self.id)
         self.__update_from_backend(wf_model)
 
@@ -121,7 +124,7 @@ class Workflow(APIBase):
                 client.get_workflow,
                 project_id,
                 wf_id,
-                error_msg='Could not retrieve workflow.'
+                error_msg="Could not retrieve workflow.",
             )
 
     @classmethod
@@ -135,7 +138,7 @@ class Workflow(APIBase):
             dag=DAG.from_dict(dict_keys_str_to_int(wf_model.dag)),
             name=wf_model.name,
             inputs=wf_model.inputs,
-            fileset=wf_model.fileset_id
+            fileset=wf_model.fileset_id,
         )
         wf.__update_from_backend(wf_model)
         return wf
@@ -157,7 +160,7 @@ class Workflow(APIBase):
         """
 
         if self.__state != State.PRE:
-            raise BackendResourceError('Cannot run an existing workflow.')
+            raise BackendResourceError("Cannot run an existing workflow.")
 
         if not distributed:
             worker_name = str(uuid.uuid4())
@@ -168,7 +171,7 @@ class Workflow(APIBase):
             name=self.name,
             inputs=self.inputs,
             fileset_id=self.__fileset.id,
-            worker_name_restriction=worker_name
+            worker_name_restriction=worker_name,
         )
 
         # add workflow to backend
@@ -177,7 +180,7 @@ class Workflow(APIBase):
                 client.new_workflow,
                 self.__project.id,
                 create_data,
-                error_msg='Could not create workflow.'
+                error_msg="Could not create workflow.",
             )
             self.__update_from_backend(wf_model)
 
@@ -192,7 +195,7 @@ class Workflow(APIBase):
                 client.get_workflow,
                 self.__project.id,
                 self.__id,
-                error_msg='Could not fetch workflow.'
+                error_msg="Could not fetch workflow.",
             )
             self.__update_from_backend(wf_model)
 
@@ -207,21 +210,32 @@ class Workflow(APIBase):
     def __pretty_printed(self):
         lines = []
         # columns
-        tf = '{:^6.6}'  # task id
-        n1 = '{:<21.20}'  # name
-        p1 = '{:^22.21}'  # parents
-        n2 = '{:<19.19}..'  # name
-        p2 = '{:^20.20}..'  # parents
-        typ = '{:^12.12}'  # type
-        s = '{:^12.12}'  # state
+        tf = "{:^6.6}"  # task id
+        n1 = "{:<21.20}"  # name
+        p1 = "{:^22.21}"  # parents
+        n2 = "{:<19.19}.."  # name
+        p2 = "{:^20.20}.."  # parents
+        typ = "{:^12.12}"  # type
+        s = "{:^12.12}"  # state
 
-        row = '|' + tf + '|' + n1 + '|' + p1 + '|' + typ + '|' + s + '|\n'
-        top = '+' + '-' * 77 + '+' + '\n'
-        vsep = '+' + '-' * 6 + '+' + '-' * 21 + '+' + '-' * 22 + '+' + '-' * 12 + \
-               '+' + '-' * 12 + '+\n'
-        header = f'| Workflow {self.id}: {self.name}'
-        header = header + ' ' * (78 - len(header)) + '|\n'
-        colheader = row.format('id', ' Task name', 'Parents', 'Type', 'State')
+        row = "|" + tf + "|" + n1 + "|" + p1 + "|" + typ + "|" + s + "|\n"
+        top = "+" + "-" * 77 + "+" + "\n"
+        vsep = (
+            "+"
+            + "-" * 6
+            + "+"
+            + "-" * 21
+            + "+"
+            + "-" * 22
+            + "+"
+            + "-" * 12
+            + "+"
+            + "-" * 12
+            + "+\n"
+        )
+        header = f"| Workflow {self.id}: {self.name}"
+        header = header + " " * (78 - len(header)) + "|\n"
+        colheader = row.format("id", " Task name", "Parents", "Type", "State")
         lines.append(top)
         lines.append(header)
         lines.append(vsep)
@@ -240,18 +254,17 @@ class Workflow(APIBase):
             if not tid in added_tasks:
                 added_tasks.add(tid)
                 t = id_task_mapping[tid]
-                task_name = ' ' + t.name
+                task_name = " " + t.name
                 n = n1 if len(task_name) < 21 else n2
-                parents = str(parent_links[tid])[
-                          1:-1] if tid in parent_links else '-'
+                parents = str(parent_links[tid])[1:-1] if tid in parent_links else "-"
                 p = p1 if len(parents) < 22 else p2
-                row = '|' + tf + '|' + n + '|' + p + '|' + typ + '|' + s + '|\n'
+                row = "|" + tf + "|" + n + "|" + p + "|" + typ + "|" + s + "|\n"
                 rows_dict[tid] = row.format(
                     str(tid),
                     task_name,
                     parents,
                     t.type.upper(),
-                    self.__model.task_states[tid]
+                    self.__model.task_states[tid],
                 )
 
                 for cid in self.__model.task_links[tid]:
@@ -263,4 +276,4 @@ class Workflow(APIBase):
         lines.extend([v for k, v in sorted(rows_dict.items())])
         lines.append(vsep)
 
-        return ''.join(lines)
+        return "".join(lines)

@@ -11,32 +11,28 @@ from pytailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###
 
-with DAG(name='dag') as dag:
+with DAG(name="dag") as dag:
 
-    t1 = PythonTask(
-        function='time.sleep',
-        name='task 1',
-        args=[1]
-    )
+    t1 = PythonTask(function="time.sleep", name="task 1", args=[1])
     t2 = PythonTask(
-        function='builtins.print',
-        name='task 2',
-        args=['\nSlept for', '1', 'second'],
-        kwargs={'sep': '   ', 'end': '\n\n'},
-        parents=t1
+        function="builtins.print",
+        name="task 2",
+        args=["\nSlept for", "1", "second"],
+        kwargs={"sep": "   ", "end": "\n\n"},
+        parents=t1,
     )
 
 ### workflow run ###
 
 # open a project
-prj = Project.from_name('Test')
+prj = Project.from_name("Test")
 
 # create a workflow:
-wf = Workflow(project=prj, dag=dag, name='kwarg workflow')
+wf = Workflow(project=prj, dag=dag, name="kwarg workflow")
 
 # run the workflow
 wf.run()
 
 # check the status of the workflow run
-print('The workflow finished with state:')
+print("The workflow finished with state:")
 print(wf.state)

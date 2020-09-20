@@ -11,14 +11,14 @@ from ..data import data_empty_fileset
 model_obj = FileSetModel(**data_empty_fileset)
 
 
-@patch('pytailor.clients.RestClient.new_fileset', return_value=model_obj)
+@patch("pytailor.clients.RestClient.new_fileset", return_value=model_obj)
 def test_create_fileset(mocked_method):
     obj = FileSet(project=Mock())
     assert obj.id == model_obj.id
     mocked_method.assert_called_once()
 
 
-@patch('pytailor.clients.RestClient.get_download_urls', return_value=model_obj)
+@patch("pytailor.clients.RestClient.get_download_urls", return_value=model_obj)
 def test_get_existing_fileset(mocked_method):
     obj = FileSet(project=Mock(), fileset_id=model_obj.id)
     assert obj.id == model_obj.id
