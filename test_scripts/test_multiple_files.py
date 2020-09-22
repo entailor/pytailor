@@ -13,18 +13,31 @@ with DAG(name="DAG") as dag:
         name="MAKE_FILES", branch_data="<% $.inputs.file_name %>"
     ) as branch1:
 
-        PythonTask(
-            name="T1",
-            function="builtins.open",
-            args=["<% $.inputs.file_name %>", "a"],
-            upload={"outfile": "*"},
-        )
+        with DAG(name="SUBDAG2"):
+
+            t1 = PythonTask(
+                name="T1",
+                function="builtins.open",
+                args=["<% $.inputs.file_name %>", "a"],
+                upload={"outfile": "*"},
+            )
+
+            PythonTask(
+                function="glob.glob",
+                name="T2",
+                args=["**/*.txt"],
+                kwargs={"recursive": True},
+                download="outfile",
+                output_to="downloaded_to_T2",
+                parents=t1
+            )
+
 
     t2 = PythonTask(
-        name="T2",
+        name="T3",
         function="builtins.str",
         args=["<% $.files.outfile %>"],
-        output_to="output_T2",
+        output_to="output_T3",
         parents=branch1,
     )
 
@@ -33,11 +46,11 @@ with DAG(name="DAG") as dag:
         name="USE_FILES", branch_files=["testfiles", "outfile"], parents=t2
     ) as branch2:
 
-        with DAG(name="SUBDAG"):
+        with DAG(name="SUBDAG2"):
 
-            t3 = PythonTask(
+            t4 = PythonTask(
                 function="glob.glob",
-                name="T3",
+                name="T4",
                 args=["**/*.txt"],
                 kwargs={"recursive": True},
                 download=["testfiles", "outfile", "inpfile"],
@@ -45,11 +58,11 @@ with DAG(name="DAG") as dag:
             )
 
             PythonTask(
-                name="T4",
+                name="T5",
                 function="builtins.str",
                 args=["<% $.outputs.downloaded_files %>"],
-                output_to="output_T2",
-                parents=t3,
+                output_to="output_T5",
+                parents=t4,
             )
 
 
@@ -72,5 +85,5 @@ wf = Workflow(
 )
 
 # run the workflow
-# wf.run(distributed=True, worker_name='test_worker')
-wf.run()
+wf.run(distributed=True, worker_name='test_worker')
+# wf.run()
