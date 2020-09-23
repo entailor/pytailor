@@ -12,7 +12,7 @@
           "project"
         ],
         "summary": "Details about the specified project",
-        "operationId": "workflow_list_projects__project_id__get",
+        "operationId": "project_details_projects__project_id__get",
         "parameters": [
           {
             "description": "Project id",
@@ -1180,6 +1180,112 @@
         ]
       }
     },
+    "/projects/{project_id}/permissions/workflow-definitions": {
+      "get": {
+        "tags": [
+          "workflow_definition"
+        ],
+        "summary": "Lists the available workflow-definition ids for project",
+        "operationId": "allowed_workflow_definitions_projects__project_id__permissions_workflow_definitions_get",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "workflow_definition"
+        ],
+        "summary": "Change the available workflow-definition ids for project",
+        "operationId": "update_allowed_workflow_definitions_projects__project_id__permissions_workflow_definitions_post",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PermissionChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/admin/accounts": {
       "get": {
         "tags": [
@@ -1745,6 +1851,35 @@
           }
         }
       },
+      "PermissionChange": {
+        "title": "PermissionChange",
+        "type": "object",
+        "properties": {
+          "add": {
+            "title": "Ids to add",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "delete": {
+            "title": "Ids to add",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          }
+        }
+      },
+      "PermissionList": {
+        "title": "PermissionList",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
       "Project": {
         "title": "Project",
         "type": "object",
@@ -1772,12 +1907,21 @@
             "title": "a reference number or code this project uses in other systems",
             "type": "string"
           },
+          "available_workflow_definitions": {
+            "title": "the workflow definitions this project can use, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
           "users": {
             "title": "the users who are a member of this account, by id",
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "default": []
           }
         }
       },
