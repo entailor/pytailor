@@ -1,4 +1,4 @@
-from pytailor import PythonTask, DAG, Account, WorkflowDefinition
+from pytailor import PythonTask, DAG, Account, WorkflowDefinition, Project
 
 
 # a simple dag definition
@@ -30,10 +30,14 @@ wf_def = WorkflowDefinition(
 )
 
 # get an account and add wf_def to account
-
+# (requires account admin privileges)
 account = Account.get_my_accounts()[0]
 wf_def.add_to_account(account)
 
-# reload the account and assert that the workflow definition was added
-account = Account.get_my_accounts()[0]
-assert wf_def.id in account.workflow_definitions_owned
+# wf_def has now gotten an id
+print(wf_def.id)
+
+# the workflow definition can now be added to a project
+# (requires account admin privileges)
+prj = Project.from_name("Test")
+prj.add_workflow_definition(wf_def.id)

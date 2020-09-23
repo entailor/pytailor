@@ -104,11 +104,23 @@ class RestClient(httpx.Client):
 
     def new_workflow_definition(
         self, account_id, create_data: WorkflowDefinitionCreate
-    ):
+    ) -> WorkflowDefinition:
         url = f"accounts/{account_id}/workflow_definitions"
         response = self.post(url, data=create_data.json())
         if response.status_code == httpx.codes.OK:
-            return Workflow.parse_obj(response.json())
+            return WorkflowDefinition.parse_obj(response.json())
+        else:
+            response.raise_for_status()
+
+    def update_workflow_definitions_for_project(
+            self,
+            project_id: str,
+            permission_change: PermissionChange
+    ) -> PermissionList:
+        url = f"/projects/{project_id}/permissions/workflow-definitions"
+        response = self.post(url, data=permission_change.json())
+        if response.status_code == httpx.codes.OK:
+            return PermissionList.parse_obj(response.json())
         else:
             response.raise_for_status()
 
