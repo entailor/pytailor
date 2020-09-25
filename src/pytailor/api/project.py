@@ -39,6 +39,14 @@ class Project(APIBase):
                     return Project(prj.id)
             raise ValueError(f"Could not find project with name {project_name}.")
 
+    @classmethod
+    def list_projects_names(cls):
+        with RestClient() as client:
+            projects = cls._handle_rest_client_call(
+                client.get_projects, error_msg=f"Error while fetching projects."
+            )
+            return [prj.name for prj in projects]
+
     def add_workflow_definition(self, workflow_definition_id: str) -> List[str]:
         """Add workflow definition with id *workflow_defninition_id* to project."""
         permission_change = PermissionChange(add=[workflow_definition_id])
