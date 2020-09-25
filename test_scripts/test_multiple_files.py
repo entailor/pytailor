@@ -85,5 +85,25 @@ wf = Workflow(
 )
 
 # run the workflow
-wf.run(distributed=True, worker_name='test_worker')
-# wf.run()
+# wf.run(distributed=True, worker_name='test_worker')
+wf.run()
+
+target_outputs = {
+    'downloaded_files': {'0': ['inpfile\\0\\testfile_03.txt',
+                               'outfile\\0\\0\\file1.txt',
+                               'testfiles\\0\\testfile_01.txt'],
+                         '1': ['inpfile\\0\\testfile_03.txt',
+                               'outfile\\1\\0\\file2.txt',
+                               'testfiles\\1\\testfile_02.txt']},
+    'downloaded_to_T2': {'0': ['outfile\\0\\0\\file1.txt'],
+                         '1': ['outfile\\1\\0\\file2.txt']},
+    'output_T3': "['outfile/0/0/file1.txt', 'outfile/1/0/file2.txt']",
+    'output_T5': {'0': "['inpfile\\\\0\\\\testfile_03.txt', "
+                       "'outfile\\\\0\\\\0\\\\file1.txt', "
+                       "'testfiles\\\\0\\\\testfile_01.txt']",
+                  '1': "['inpfile\\\\0\\\\testfile_03.txt', "
+                       "'outfile\\\\1\\\\0\\\\file2.txt', "
+                       "'testfiles\\\\1\\\\testfile_02.txt']"}
+}
+
+assert wf.outputs == target_outputs

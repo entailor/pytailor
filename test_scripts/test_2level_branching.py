@@ -144,7 +144,7 @@ wf = Workflow(
 # wf.run(distributed=True, worker_name='test_worker')
 wf.run()
 
-target_output = {
+target_outputs = {
     "out_from_T1": [3, 4, 5],
     "out_from_T10": "{'0': 'newfile1.txt', '1': 'newfile1.txt', '2': "
     "'newfile1.txt'}",
@@ -178,4 +178,4 @@ target_output = {
     "'newfile2.txt'}}",
 }
 
-assert wf.outputs == target_output
+assert wf.outputs == target_outputs
