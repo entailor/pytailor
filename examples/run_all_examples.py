@@ -1,0 +1,12 @@
+# runfile is a special function avalable in the pycharm python console
+runfile('example01_hello_world.py', wdir='.')
+runfile('example01_hello_world_alt_syntax1.py', wdir='.')
+runfile('example01_hello_world_alt_syntax2.py', wdir='.')
+runfile('example02_kwargs.py', wdir='.')
+runfile('example03_inputs.py', wdir='.')
+runfile('example04_outputs.py', wdir='.')
+runfile('example05_files.py', wdir='.')
+runfile('example06_duplicate_task.py', wdir='.')
+runfile('example07_duplicate_dag.py', wdir='.')
+runfile('example_add_workflow_definition.py', wdir='.')
+runfile('example_add_workflow_definition2.py', wdir='.')
