@@ -28,11 +28,9 @@ def check_config_names(config_dict):
 
 
 def load_config_from_file() -> dict:
-    homedir = Path.home()
-    # homedir = os.path.expanduser('~')
-    config_file_homedir = homedir / ".tailor" / "config.toml"
-    if config_file_homedir.exists():
-        return toml.load(str(config_file_homedir))
+    config_file = Path.home() / ".tailor" / "config.toml"
+    if config_file.exists():
+        return toml.load(str(config_file))["pytailor"]
     else:
         return {}
 
