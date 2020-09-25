@@ -57,7 +57,7 @@ class Project(APIBase):
                 permission_change,
                 error_msg=f"Error while adding workflow definition to project."
             )
-        return permission_list.json()
+        return permission_list.__root__
 
     def remove_workflow_definition(self, workflow_definition_id: str) -> List[str]:
         """Remove workflow definition with id *workflow_defninition_id* from project."""
@@ -69,4 +69,4 @@ class Project(APIBase):
                 permission_change,
                 error_msg=f"Error while removing workflow definition to project."
             )
-        return permission_list.json()
+        return permission_list.__root__
