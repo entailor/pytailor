@@ -1,12 +1,14 @@
 import httpx
 from pytailor.models import *
-from pytailor.config import API_BASE_URL, AUTH_KEY
+from pytailor.config import API_BASE_URL, AUTH_KEY, ASYNC_REQUEST_TIMEOUT, \
+    ASYNC_CONNECT_TIMEOUT
 from .auth import TailorAuth
 
 
 class AsyncRestClient(httpx.AsyncClient):
     def __init__(self):
-        timeout = httpx.Timeout(15.0, connect=60.0)
+        timeout = httpx.Timeout(timeout=ASYNC_REQUEST_TIMEOUT,
+                                connect=ASYNC_CONNECT_TIMEOUT)
         super().__init__(
             base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY), timeout=timeout
         )
