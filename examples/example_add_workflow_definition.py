@@ -40,4 +40,12 @@ print(wf_def.id)
 # the workflow definition can now be added to a project
 # (requires account admin privileges)
 prj = Project.from_name("Test")
-prj.add_workflow_definition(wf_def.id)
+wf_def_ids = prj.add_workflow_definition(wf_def.id)
+
+assert wf_def.id in wf_def_ids
+
+# the workflow definition can also be removed from the project
+# (requires account admin privileges)
+wf_def_ids = prj.remove_workflow_definition(wf_def.id)
+
+assert wf_def.id not in wf_def_ids

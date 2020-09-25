@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import List
+
 from pytailor.common.base import APIBase
 from pytailor.clients import RestClient
 from pytailor.models import PermissionList, PermissionChange
@@ -37,7 +39,7 @@ class Project(APIBase):
                     return Project(prj.id)
             raise ValueError(f"Could not find project with name {project_name}.")
 
-    def add_workflow_definition(self, workflow_definition_id: str):
+    def add_workflow_definition(self, workflow_definition_id: str) -> List[str]:
         """Add workflow definition with id *workflow_defninition_id* to project."""
         permission_change = PermissionChange(add=[workflow_definition_id])
         with RestClient() as client:
@@ -47,3 +49,16 @@ class Project(APIBase):
                 permission_change,
                 error_msg=f"Error while adding workflow definition to project."
             )
+        return permission_list.json()
+
+    def remove_workflow_definition(self, workflow_definition_id: str) -> List[str]:
+        """Remove workflow definition with id *workflow_defninition_id* from project."""
+        permission_change = PermissionChange(delete=[workflow_definition_id])
+        with RestClient() as client:
+            permission_list: PermissionList = self._handle_rest_client_call(
+                client.update_workflow_definitions_for_project,
+                self.id,
+                permission_change,
+                error_msg=f"Error while removing workflow definition to project."
+            )
+        return permission_list.json()
