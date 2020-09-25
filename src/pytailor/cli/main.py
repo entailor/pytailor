@@ -17,5 +17,13 @@ def cli():
 @click.option(
     "--workername", default=default_worker_name(), help="Provide a worker name"
 )
-def worker(sleep, ncores, workername):
-    run_worker(sleep, ncores, workername)
+@click.option(
+    "--project-id-filter", default=None, type=str, help="Add a project filter",
+    multiple=True
+)
+def worker(sleep, ncores, workername, project_id_filter):
+    run_worker(sleep, ncores, workername, project_id_filter)
+
+
+if __name__ == '__main__':
+    cli()

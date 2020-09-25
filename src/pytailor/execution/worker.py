@@ -1,24 +1,25 @@
-# -*- coding: utf-8 -*-
-
-import argparse
 import asyncio
 import concurrent.futures
 import logging
-import platform
-import uuid
-from multiprocessing import cpu_count
 from typing import Optional
+import httpx
 
 from pytailor.config import LOGGING_FORMAT
 from pytailor.execution.taskrunner import run_task
 from pytailor.models import TaskCheckout, TaskExecutionData
 from pytailor.utils import get_logger
 from pytailor.clients import AsyncRestClient
+from pytailor.exceptions import BackendResponseError
 
 
 async def do_checkout(checkout_query: TaskCheckout) -> Optional[TaskExecutionData]:
     async with AsyncRestClient() as client:
-        exec_data = await client.checkout_task(checkout_query)
+        try:
+            exec_data = await client.checkout_task(checkout_query)
+        except httpx.HTTPError as exc:
+            raise BackendResponseError(f"Error while checking out task. The response"
+                                       f"was: {exc}. "
+                                       f"Details: {exc.response.json()['detail']}")
     return exec_data
 
 
@@ -92,10 +93,11 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
         #       - or try to reset tasks for re-execution elsewhere
 
 
-def run_worker(sleep, n_cores, worker_name):
+def run_worker(sleep, n_cores, worker_name, project_id_filter):
     checkout_query = TaskCheckout(
         worker_capabilities=["python"],
         worker_name=worker_name,
+        projects=list(project_id_filter) or None
     )
 
     try:
