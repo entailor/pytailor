@@ -109,20 +109,6 @@ class WorkflowDefinition(APIBase):
         return wf_def
 
     @classmethod
-    def list_available_workflow_definitions(cls, project: Project) -> List[dict]:
-        """
-        Retrieve a list of all available workflow definitions under *project*.
-        """
-        # get workflow definition models
-        with RestClient() as client:
-            wf_def_models = cls._handle_rest_client_call(
-                client.get_workflow_definition_summaries_project,
-                project.id,
-                error_msg="Could not retrieve workflow definition summaries.",
-            )
-        return [wf_def_model.dict() for wf_def_model in wf_def_models]
-
-    @classmethod
     def __from_model(cls, wf_def_model: WorkflowDefinitionModel):
         wf_def = WorkflowDefinition(
             name=wf_def_model.name,

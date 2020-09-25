@@ -70,3 +70,15 @@ class Project(APIBase):
                 error_msg=f"Error while removing workflow definition to project."
             )
         return permission_list.__root__
+
+    def list_available_workflow_definitions(self) -> List[dict]:
+        """
+        Retrieve a list of all available workflow definitions as summary dicts.
+        """
+        with RestClient() as client:
+            wf_def_models = self._handle_rest_client_call(
+                client.get_workflow_definition_summaries_project,
+                self.id,
+                error_msg="Could not retrieve workflow definition summaries.",
+            )
+        return [wf_def_model.dict() for wf_def_model in wf_def_models]
