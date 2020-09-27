@@ -21,7 +21,8 @@ def default_worker_name():
     return f"{short_hostname}_{machine_id}"
 
 
-def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=None):
+def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=None,
+                   key_apply_on="key_cond", val_apply_on="val_cond"):
     """
     Walk a nested data structure *d* (think JSON) and apply conditional transformations
     to keys and/or values. Returns a new version of *d* with applied
@@ -30,9 +31,6 @@ def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=No
 
     def update_dict_key(d, old_k, new_k, new_v=None):
         # use this to keep order when replacing keys
-        # new_v = new_v or d[old_k]
-        # return dict((new_k, new_v) if k == old_k else (k, v) for k, v in d.items())
-
         # inplace update of d
         for k in list(d.keys()):
             v = d.pop(k)
@@ -41,41 +39,39 @@ def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=No
             else:
                 d[k] = v
 
-    def recursive_func(d, d_out, key_cond, key_apply, val_cond, val_apply):
+    def recursive_func(d, d_out):
 
         if isinstance(d, dict):
             for k, v in d.items():
 
                 # apply transformations
+                new_key = k
+                new_val = v
                 if key_cond and key_cond(k):
-                    new_key = key_apply(k)
-                else:
-                    new_key = k
+                    if key_apply_on == "key_cond":
+                        new_key = key_apply(k)
+                    if val_apply_on == "key_cond":
+                        new_val = val_apply(v)
 
                 if val_cond and val_cond(v):
-                    new_val = val_apply(v)
-                else:
-                    new_val = v
+                    if key_apply_on == "val_cond":
+                        new_key = key_apply(k)
+                    if val_apply_on == "val_cond":
+                        new_val = val_apply(v)
 
                 # update d_out
                 if not new_val is v:
                     if not new_key is k:
                         update_dict_key(d_out, k, new_key, new_val)
-                        # d_out[new_key] = new_val
-                        # del d_out[k]
                     else:
                         d_out[k] = new_val
                 elif not new_key is k:
                     update_dict_key(d_out, k, new_key, d_out[k])
-                    # d_out[new_key] = d_out[k]
-                    # del d_out[k]
 
                 # go deeper if v has not been transformed and v is a data structure
                 if new_val is v and isinstance(v, (dict, list)):
-                    # key = new_key if not new_key is None else k
                     recursive_func(
-                        v, d_out[new_key], key_cond, key_apply, val_cond, val_apply
-                    )
+                        v, d_out[new_key])
 
         elif isinstance(d, list):
             for i, v in enumerate(d):
@@ -86,15 +82,13 @@ def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=No
 
                 # go deeper if v has not been transformed and v is a data structure
                 elif isinstance(v, (dict, list)):
-                    recursive_func(
-                        v, d_out[i], key_cond, key_apply, val_cond, val_apply
-                    )
+                    recursive_func(v, d_out[i])
 
     if val_cond and val_cond(d):
         return val_apply(d)
 
     d_out = copy.deepcopy(d)
-    recursive_func(d, d_out, key_cond, key_apply, val_cond, val_apply)
+    recursive_func(d, d_out)
 
     return d_out
 
