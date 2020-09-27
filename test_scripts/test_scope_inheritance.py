@@ -41,8 +41,8 @@ wf = Workflow(
 wf.run()
 
 target_outputs = {
-    'downloaded': {'0': {'0': ['mesh\\0\\0\\T1.FEM'], '1': ['mesh\\0\\1\\T1.FEM']},
-                   '1': {'0': ['mesh\\1\\0\\T1.FEM'], '1': ['mesh\\1\\1\\T1.FEM']}}
+    'downloaded': {'0': {'0': ['mesh\\0\\0\\T1.FEM'], '1': ['mesh\\0\\0\\T1.FEM']},
+                   '1': {'0': ['mesh\\1\\0\\T1.FEM'], '1': ['mesh\\1\\0\\T1.FEM']}}
 }
 
 assert wf.outputs == target_outputs
