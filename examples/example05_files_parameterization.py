@@ -6,6 +6,9 @@ pyTailor Example 5
 from pytailor import PythonTask, DAG, Workflow, Project, FileSet
 from pytailor.api.parameterization import Outputs, Files
 
+import glob
+import shutil
+
 ### workflow definition ###
 
 files = Files()
@@ -14,7 +17,7 @@ outputs = Outputs()
 with DAG(name="dag") as dag:
 
     t1 = PythonTask(
-        function="glob.glob",
+        function=glob.glob,
         name="task 1",
         args=["**/*.txt"],
         kwargs={"recursive": True},
@@ -22,14 +25,14 @@ with DAG(name="dag") as dag:
         output_to=outputs.downloaded_files,  # put function's return value on outputs.downloaded_files
     )
     t2 = PythonTask(
-        function="shutil.copyfile",
+        function=shutil.copyfile,
         name="task 2",
         args=[files.inpfile[0], "newfile.txt"],
         download=files.inpfile,
         upload={files.outfile: "newfile.txt"},
     )
     t3 = PythonTask(
-        function="builtins.print",
+        function=print,
         name="task 3",
         args=["Downloaded", files.outfile],
         download="outfile",

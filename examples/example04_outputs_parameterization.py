@@ -6,6 +6,10 @@ pyTailor Example 4
 from pytailor import PythonTask, DAG, Workflow, Project
 from pytailor.api.parameterization import Outputs
 
+import glob
+import os
+
+
 ### workflow definition ###
 
 outputs = Outputs()
@@ -13,18 +17,18 @@ outputs = Outputs()
 with DAG(name="dag") as dag:
 
     t1 = PythonTask(
-        function="glob.glob",
+        function=glob.glob,
         name="task 1",
         args=["../*.py"],
         output_to=outputs.parentdir_content,  # form 1: single string
     )
     t2 = PythonTask(
-        function="os.getcwd",
+        function=os.getcwd,
         name="task 2",
         output_extraction={outputs.curdir: "<% $ %>"},  # form 2: (tag: query) dict
     )
     t3 = PythonTask(
-        function="builtins.print",
+        function=print,
         name="task 3",
         args=[
             "Python files in parent dir (as list):",

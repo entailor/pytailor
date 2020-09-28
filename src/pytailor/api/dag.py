@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 from abc import ABC, abstractmethod
-from typing import Optional, List, Union, Any, Dict
+from typing import Optional, List, Union, Any, Dict, Callable
 from enum import Enum
 
 from pytailor.utils import as_query, walk_and_apply
@@ -57,7 +57,6 @@ def _object_from_dict(d):
 
 
 def _resolve_queries(d: dict):
-
     def val_apply_download(v):
         if isinstance(v, Parameterization):
             return v._name
@@ -99,6 +98,21 @@ def _resolve_queries(d: dict):
     return walk_and_apply(d_tmp,
                           val_cond=lambda v: isinstance(v, Parameterization),
                           val_apply=lambda v: v.get_query()
+                          )
+
+
+def _resolve_callables(d: dict):
+    def val_apply_function(v):
+        if callable(v):
+            return v.__module__ + "." + v.__name__
+        else:
+            return v
+
+    return walk_and_apply(d,
+                          key_cond=lambda k: k == "function",
+                          val_apply=val_apply_function,
+                          key_apply_on=None,
+                          val_apply_on="key_cond",
                           )
 
 
@@ -227,7 +241,7 @@ class PythonTask(BaseTask):
 
     def __init__(
             self,
-            function: str,
+            function: Union[str, Callable],
             name: Optional[str] = None,
             parents: Optional[Union[List[BaseTask], BaseTask]] = None,
             owner: Optional[BaseTask] = None,
@@ -477,6 +491,7 @@ class DAG(OwnerTask):
         if not any(self.links.values()):  # no links exist, explicitly write empty dict
             d["links"] = {}
         d = _resolve_queries(d)
+        d = _resolve_callables(d)
         return d
 
     @classmethod

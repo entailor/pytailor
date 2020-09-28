@@ -6,17 +6,20 @@ pyTailor Example 3
 from pytailor import PythonTask, DAG, Workflow, Project
 from pytailor.api.parameterization import Inputs
 
+import time
+
 ### workflow definition ###
+
 
 inputs = Inputs()
 
 with DAG(name="dag") as dag:
 
     t1 = PythonTask(
-        function="time.sleep", name="task 1", args=[inputs.data.sleep_time[0]]
+        function=time.sleep, name="task 1", args=[inputs.data.sleep_time[0]]
     )
     t2 = PythonTask(
-        function="builtins.print",
+        function=print,
         name="task 2",
         args=["\nSlept for", inputs.data, "second"],
         kwargs={"sep": "   ", "end": "\n\n"},
