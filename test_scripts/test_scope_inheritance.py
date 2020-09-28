@@ -1,23 +1,28 @@
 from pytailor import PythonTask, BranchTask, DAG, Workflow, Project
 
-
 with DAG() as dag:
     with BranchTask(branch_data="<% $.inputs.data1 %>"):
         with DAG():
             t1 = PythonTask(
-                name="Create files",
+                name="Create files 1",
                 function="builtins.open",
                 args=["T1.FEM", "a"],
-                upload={"mesh": "*.FEM"}
+                upload={"mesh1": "*.FEM"}
+            )
+            t2 = PythonTask(
+                name="Create files 2",
+                function="builtins.open",
+                args=["T2.FEM", "a"],
+                upload={"mesh2": "*.FEM"}
             )
             with BranchTask(branch_data="<% $.inputs.data2 %>",
-                            parents=t1):
+                            parents=[t1, t2]):
                 PythonTask(
                     function="glob.glob",
                     name="Use files",
                     args=["**/*.FEM"],
                     kwargs={"recursive": True},
-                    download="mesh",
+                    download=["mesh1", "mesh2"],
                     output_to="downloaded"
                 )
 
@@ -41,8 +46,10 @@ wf = Workflow(
 wf.run()
 
 target_outputs = {
-    'downloaded': {'0': {'0': ['mesh\\0\\0\\T1.FEM'], '1': ['mesh\\0\\0\\T1.FEM']},
-                   '1': {'0': ['mesh\\1\\0\\T1.FEM'], '1': ['mesh\\1\\0\\T1.FEM']}}
+    'downloaded': {'0': {'0': ['mesh1\\0\\0\\T1.FEM', 'mesh2\\0\\0\\T2.FEM'],
+                         '1': ['mesh1\\0\\0\\T1.FEM', 'mesh2\\0\\0\\T2.FEM']},
+                   '1': {'0': ['mesh1\\1\\0\\T1.FEM', 'mesh2\\1\\0\\T2.FEM'],
+                         '1': ['mesh1\\1\\0\\T1.FEM', 'mesh2\\1\\0\\T2.FEM']}}
 }
 
 assert wf.outputs == target_outputs
