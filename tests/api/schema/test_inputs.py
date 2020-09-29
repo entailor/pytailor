@@ -1,115 +1,85 @@
-import unittest
-from input_data import *
+from .input_data import *
 from pytailor import InputsSchema
 import genson
 import os
 import pprint
+import pytest
 import jsonschema
 schema_validator = jsonschema.Draft7Validator.check_schema
 
 
-def genson_to_schema(inputs):
-    builder = genson.SchemaBuilder()
-    builder.add_schema()
-    return builder.to_schema()
+def test_schema_from_inputs():
+    inputs = InputsSchema(inputs1)
+    assert not schema_validator(inputs.inputschema)
+    inputs = InputsSchema(inputs2)
+    assert not schema_validator(inputs.inputschema)
 
 
-class TestInputs(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.inputs1 = inputs1
-        cls.inputs2 = inputs2
-        cls.jsonschema1 = json_schema1
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    def test_schema_from_inputs(self):
-        inputs = InputsSchema(inputs1)
-        self.assertFalse(schema_validator(inputs.inputschema))
-        inputs = InputsSchema(inputs2)
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-    def test_schema_from_schema(self):
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-    def test_add_defaults(self):
-        inputs = InputsSchema(inputs2)
-        inputs.add_defaults(inputs2)
-        pprint.pprint(inputs.inputschema)
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        inputs.add_defaults(json_schema2_defaults)
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema3
-        inputs.add_defaults(json_schema3_defaults)
-        # pprint.pprint(inputs.inputschema)
-        self.assertFalse(schema_validator(inputs.inputschema))
+def test_schema_from_schema():
+    inputs = InputsSchema({})
+    inputs.inputschema = json_schema2
+    assert not schema_validator(inputs.inputschema)
 
 
+def test_add_defaults():
+    inputs = InputsSchema(inputs2)
+    inputs.add_defaults(inputs2)
 
-    def test_invalid_defaults(self):
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        self.assertRaises(jsonschema.exceptions.ValidationError, inputs.add_defaults, json_schema2_invaliddefaults)
+    pprint.pprint(inputs.inputschema)
+    assert not schema_validator(inputs.inputschema)
 
-    def test_add_enums(self):
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        inputs.add_enums(json_schema2_enums1)
-        self.assertFalse(schema_validator(inputs.inputschema))
-        # pprint.pprint(inputs.inputschema)
-
-    def test_enum_not_as_list(self):
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        self.assertRaises(AssertionError, inputs.add_enums, json_schema2_enumsnotvalid)
-
-    def test_to_dict(self):
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        self.assertEqual(inputs.inputschema, inputs.to_dict()['inputs'])
-
-    def test_to_json(self):
-        inputs = InputsSchema({})
-        inputs.inputschema = json_schema2
-        inputs.to_json('test.json')
-        os.remove('test.json')
-
-    def test_multiple_data(self):
-        inputs = InputsSchema(inputs_multiple_datatypes)
-        # pprint.pprint(inputs.to_dict())
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-        inputs = InputsSchema(inputs_multiple_datatypes2)
-        # pprint.pprint(inputs.to_dict())
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-        inputs = InputsSchema(inputs_nested_anyof)
-        # pprint.pprint(inputs.to_dict())
-        self.assertFalse(schema_validator(inputs.inputschema))
-
-        inputs = InputsSchema(inputs_nested_anyof2)
-        # pprint.pprint(inputs.to_dict())
-        self.assertFalse(schema_validator(inputs.inputschema))
+    inputs = InputsSchema({})
+    inputs.inputschema = json_schema2
+    inputs.add_defaults(json_schema2_defaults)
+    assert not schema_validator(inputs.inputschema)
 
 
-    def test_bool(self):
-        inputs = InputsSchema(inputs_bool)
-        pprint.pprint(inputs.to_dict())
-        inputs.add_defaults(inputs_bool)
-        pprint.pprint(inputs.to_dict())
+def test_invalid_defaults():
+    inputs = InputsSchema({})
+    inputs.inputschema = json_schema2
+    with pytest.raises(jsonschema.exceptions.ValidationError):
+        inputs.add_defaults(json_schema2_invaliddefaults)
 
 
-if __name__ == "__main__":
-    suite1 = unittest.defaultTestLoader.loadTestsFromTestCase(TestInputs)
-    suite = unittest.TestSuite([suite1])
-    unittest.TextTestRunner().run(suite)
+def test_add_enums():
+    inputs = InputsSchema({})
+    inputs.inputschema = json_schema2
+    inputs.add_enums(json_schema2_enums1)
+    assert not schema_validator(inputs.inputschema)
+
+
+def test_enum_not_as_list():
+    inputs = InputsSchema({})
+    inputs.inputschema = json_schema2
+    with pytest.raises(AssertionError):
+        inputs.add_enums(json_schema2_enumsnotvalid)
+
+
+def test_to_dict():
+    inputs = InputsSchema({})
+    inputs.inputschema = json_schema2
+    assert inputs.inputschema == inputs.to_dict()['inputs']
+
+def test_multiple_data():
+    inputs = InputsSchema(inputs_multiple_datatypes)
+    # pprint.pprint(inputs.to_dict())
+    assert not schema_validator(inputs.inputschema)
+
+    inputs = InputsSchema(inputs_multiple_datatypes2)
+    # pprint.pprint(inputs.to_dict())
+    assert not schema_validator(inputs.inputschema)
+
+    inputs = InputsSchema(inputs_nested_anyof)
+    # pprint.pprint(inputs.to_dict())
+    assert not schema_validator(inputs.inputschema)
+
+    inputs = InputsSchema(inputs_nested_anyof2)
+    # pprint.pprint(inputs.to_dict())
+    assert not schema_validator(inputs.inputschema)
+
+
+def test_bool():
+    inputs = InputsSchema(inputs_bool)
+    inputs.add_defaults(inputs_bool)
+
+
