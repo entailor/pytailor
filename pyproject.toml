@@ -17,6 +17,7 @@ toml = "^0.10.1"
 pydantic = "^1.5.1"
 yaql = "^1.1.3"
 requests = "^2.24.0"
+genson = "^1.2.2"
 
 [tool.poetry.dev-dependencies]
 datamodel-code-generator = "^0.5.33"
@@ -30,9 +31,9 @@ markdown = "^3.2.2"
 mkautodoc = "^0.1.0"
 nox = "^2020.8.22"
 
+[tool.poetry.scripts]
+tailor = 'pytailor.cli.main:cli'
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
-[tool.poetry.scripts]
-tailor = 'pytailor.cli.main:cli'
