@@ -1,8 +1,6 @@
-from .description_data import *
-import unittest
+from tests.api.schema.testdata.description_data import *
 from pytailor import Description
 import os
-import pprint
 import pytest
 
 
@@ -12,6 +10,7 @@ def test_description_init_():
     assert description.name == 'title'
     with pytest.raises(AssertionError):
         Description(2)
+
 
 def test_description_from_dag():
     description = Description.from_dag(dag,

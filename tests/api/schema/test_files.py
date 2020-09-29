@@ -1,4 +1,4 @@
-from .files_data import *
+from tests.api.schema.testdata.files_data import *
 from pytailor import FilesSchema
 import os
 import pprint

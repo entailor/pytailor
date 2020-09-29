@@ -1,7 +1,5 @@
-from .input_data import *
+from tests.api.schema.testdata.input_data import *
 from pytailor import InputsSchema
-import genson
-import os
 import pprint
 import pytest
 import jsonschema

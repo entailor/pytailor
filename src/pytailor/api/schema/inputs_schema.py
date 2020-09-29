@@ -1,8 +1,5 @@
 """
 """
-# Todo: make sure no double types, ongoing
-# Todo: Validate that enums are within json schema og inputschema
-#  (json schema validate)
 
 
 from .strategies.tailorschemabuilder import TailorSchemaBuilder
