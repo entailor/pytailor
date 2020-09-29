@@ -1,5 +1,5 @@
-from typing import Union, List, Dict
 import json
+from typing import List
 
 # todo: titles and descriptions should be asserted for type
 
@@ -27,7 +27,7 @@ class FilesSchema:
     def add_file(
         self,
         tag: str,
-        ext: List[str] = ["*"],
+        ext: List[str] = None,
         multiple: bool = False,
         required: bool = True,
         title: str = None,
@@ -39,7 +39,7 @@ class FilesSchema:
         if not description:
             description = [""]
         self._tags.append(tag)
-        self._exts.append(ext)
+        self._exts.append(ext or ["*"])
         self._multiples.append(multiple)
         self._requireds.append(required)
         self.titles.append(title)

@@ -135,11 +135,11 @@ class InputsSchema:
         if isinstance(schema_dict, dict):
             if schema_dict.get(key):
                 if isinstance(schema_dict[key], list):
-                    anyOf = []
+                    any_of = []
                     for listtype in schema_dict[key]:
-                        anyOf.append({"type": listtype, "title": listtype})
+                        any_of.append({"type": listtype, "title": listtype})
                     schema_dict.pop("type")
-                    schema_dict.update({"anyOf": anyOf})
+                    schema_dict.update({"anyOf": any_of})
             for this_key, value in schema_dict.items():
                 self._rm_multiple_types(value, key=key)
 
