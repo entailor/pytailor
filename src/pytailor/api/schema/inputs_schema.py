@@ -12,12 +12,11 @@ input_base_schema = {
     "description": "Inputs for the Workflow",
     "outputs": {},
     "type": "object",
-    "inputs": None
+    "inputs": None,
 }
 
 
 class InputsSchema:
-
     def __init__(self, inputs: dict):
         self.inputschema = self._build_jsonschema(inputs.copy())
         self.enum_inputs = None
@@ -43,11 +42,11 @@ class InputsSchema:
         # self._rm_multiple_types()
         self._rm_multiple_types(self._inputschema)
         self._add_defeault_for_bool_none(self._inputschema)
-        input_base_schema['inputs'] = self._inputschema
+        input_base_schema["inputs"] = self._inputschema
         return input_base_schema
 
     def to_json(self, filename, indent=4):
-        json.dump(self.to_dict(), open(filename, 'w+'), indent=indent)
+        json.dump(self.to_dict(), open(filename, "w+"), indent=indent)
 
     @property
     def inputschema(self):
@@ -83,22 +82,21 @@ class InputsSchema:
             keys = []
         else:
             keys.append(key)
-        if item['type'] == 'object' and 'properties' in item.keys():
-            for key, val in item['properties'].items():
+        if item["type"] == "object" and "properties" in item.keys():
+            for key, val in item["properties"].items():
                 self._add_defaults(val, key, keys.copy())
-        elif item['type'] == 'object':
+        elif item["type"] == "object":
             default = self._get_default(keys, self.default_inputs)
             if default:
-                item['default'] = default
-        elif item['type'] == 'array':
+                item["default"] = default
+        elif item["type"] == "array":
             default = self._get_default(keys, self.default_inputs)
             if default:
-                item['default'] = default
-        elif item['type'] in ['number', 'integer', 'boolean',
-                              'string', 'null']:
+                item["default"] = default
+        elif item["type"] in ["number", "integer", "boolean", "string", "null"]:
             default = self._get_default(keys, self.default_inputs)
             if default:
-                item['default'] = default
+                item["default"] = default
 
     @staticmethod
     def _get_enum(keys, enum_inputs):
@@ -107,7 +105,9 @@ class InputsSchema:
                 enum_inputs = enum_inputs[key]
             else:
                 return False
-        assert isinstance(enum_inputs, list), 'to add enums the input values must be list'
+        assert isinstance(
+            enum_inputs, list
+        ), "to add enums the input values must be list"
         return enum_inputs
 
     def _add_enums(self, item=None, key=None, keys=None):
@@ -116,18 +116,17 @@ class InputsSchema:
             keys = []
         else:
             keys.append(key)
-        if item['type'] == 'object' and 'properties' in item.keys():
-            for key, val in item['properties'].items():
+        if item["type"] == "object" and "properties" in item.keys():
+            for key, val in item["properties"].items():
                 self._add_enums(val, key, keys.copy())
-        elif item['type'] == 'array':
+        elif item["type"] == "array":
             enum = self._get_enum(keys, self.enum_inputs)
             if enum:
-                item['enum'] = enum
-        elif item['type'] in ['number', 'integer',
-                              'boolean', 'string', 'null']:
+                item["enum"] = enum
+        elif item["type"] in ["number", "integer", "boolean", "string", "null"]:
             enum = self._get_enum(keys, self.enum_inputs)
             if enum:
-                item['enum'] = enum
+                item["enum"] = enum
 
     def _rm_multiple_types(self, schema_dict, key="type"):
         if isinstance(schema_dict, list):
@@ -138,7 +137,7 @@ class InputsSchema:
                 if isinstance(schema_dict[key], list):
                     anyOf = []
                     for listtype in schema_dict[key]:
-                        anyOf.append({'type': listtype, 'title': listtype})
+                        anyOf.append({"type": listtype, "title": listtype})
                     schema_dict.pop("type")
                     schema_dict.update({"anyOf": anyOf})
             for this_key, value in schema_dict.items():
@@ -150,14 +149,10 @@ class InputsSchema:
                 self._add_defeault_for_bool_none(item, key=key)
         if isinstance(schema_dict, dict):
             if schema_dict.get(key):
-                if schema_dict[key] == 'boolean':
+                if schema_dict[key] == "boolean":
                     schema_dict.update({"default": False})
-                elif schema_dict[key] == 'null':
+                elif schema_dict[key] == "null":
                     schema_dict.update({"default": None})
 
             for this_key, value in schema_dict.items():
                 self._add_defeault_for_bool_none(value, key=key)
-
-
-
-

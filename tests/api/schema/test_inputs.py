@@ -3,6 +3,7 @@ from pytailor import InputsSchema
 import pprint
 import pytest
 import jsonschema
+
 schema_validator = jsonschema.Draft7Validator.check_schema
 
 
@@ -56,7 +57,8 @@ def test_enum_not_as_list():
 def test_to_dict():
     inputs = InputsSchema({})
     inputs.inputschema = json_schema2
-    assert inputs.inputschema == inputs.to_dict()['inputs']
+    assert inputs.inputschema == inputs.to_dict()["inputs"]
+
 
 def test_multiple_data():
     inputs = InputsSchema(inputs_multiple_datatypes)
@@ -79,5 +81,3 @@ def test_multiple_data():
 def test_bool():
     inputs = InputsSchema(inputs_bool)
     inputs.add_defaults(inputs_bool)
-
-

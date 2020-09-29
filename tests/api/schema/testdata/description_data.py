@@ -1,4 +1,3 @@
-
 wf_def_description = """
         pyTailor Example 7
         
@@ -36,4 +35,4 @@ with DAG(name="duplicate dag example") as dag:
                 parents=t1,
             )
 
-wf_def_name = 'duplicate dag example'
+wf_def_name = "duplicate dag example"
