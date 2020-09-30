@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import copy
 from abc import ABC, abstractmethod
-from typing import Optional, List, Union, Any, Dict
+from typing import Optional, List, Union, Any, Dict, Callable
 from enum import Enum
 
-from pytailor.utils import as_query
+from pytailor.utils import as_query, walk_and_apply
 from pytailor.exceptions import DAGError
+from .parameterization import Parameterization
 
 # Not thread safe, but this is considered ok
 _CONTEXT_MANAGER_OWNER = None
@@ -55,16 +56,76 @@ def _object_from_dict(d):
         return DAG.from_dict(d)
 
 
+def _resolve_queries(d: dict):
+    def val_apply_file_tags(v):
+        if isinstance(v, Parameterization):
+            return v.get_name()
+        elif isinstance(v, str):
+            return v
+        resolved_download = []
+        for tag in v:
+            if isinstance(tag, Parameterization):
+                resolved_download.append(tag.get_name())
+            else:
+                resolved_download.append(tag)
+        return resolved_download
+
+    def val_apply_output_to(v):
+        return v.get_name() if isinstance(v, Parameterization) else v
+
+    def val_apply_dict_keys(v):
+        return {k.get_name() if isinstance(k, Parameterization) else k: val
+                for k, val in v.items()}
+
+    d_tmp = walk_and_apply(d,
+                           key_cond=lambda k: k == "output_to",
+                           val_apply=val_apply_output_to,
+                           key_apply_on=None,
+                           val_apply_on="key_cond",
+                           )
+    d_tmp = walk_and_apply(d_tmp,
+                           key_cond=lambda k: k in {"output_extraction", "upload"},
+                           val_apply=val_apply_dict_keys,
+                           key_apply_on=None,
+                           val_apply_on="key_cond",
+                           )
+    d_tmp = walk_and_apply(d_tmp,
+                           key_cond=lambda k: k in {"download", "branch_files"},
+                           val_apply=val_apply_file_tags,
+                           key_apply_on=None,
+                           val_apply_on="key_cond",
+                           )
+    return walk_and_apply(d_tmp,
+                          val_cond=lambda v: isinstance(v, Parameterization),
+                          val_apply=lambda v: v.get_query()
+                          )
+
+
+def _resolve_callables(d: dict):
+    def val_apply_function(v):
+        if callable(v):
+            return v.__module__ + "." + v.__name__
+        else:
+            return v
+
+    return walk_and_apply(d,
+                          key_cond=lambda k: k == "function",
+                          val_apply=val_apply_function,
+                          key_apply_on=None,
+                          val_apply_on="key_cond",
+                          )
+
+
 class BaseTask(ABC):
     """
     Base class for tasks.
     """
 
     def __init__(
-        self,
-        name: str = None,
-        parents: Optional[Union[List[BaseTask], BaseTask]] = None,
-        owner: Optional[OwnerTask] = None,
+            self,
+            name: str = None,
+            parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+            owner: Optional[OwnerTask] = None,
     ):
         self.name: str = name or "Unnamed"
         parents = [parents] if isinstance(parents, (BaseTask, int)) else parents
@@ -97,10 +158,10 @@ class OwnerTask(BaseTask):
     """
 
     def __init__(
-        self,
-        name: Optional[str] = None,
-        parents: Optional[Union[List[BaseTask], BaseTask]] = None,
-        owner: Optional[BaseTask] = None,
+            self,
+            name: Optional[str] = None,
+            parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+            owner: Optional[BaseTask] = None,
     ):
         super().__init__(name=name, parents=parents, owner=owner)
         self._old_context_manager_owners = []
@@ -179,17 +240,17 @@ class PythonTask(BaseTask):
     TYPE = TaskType.PYTHON
 
     def __init__(
-        self,
-        function: str,
-        name: Optional[str] = None,
-        parents: Optional[Union[List[BaseTask], BaseTask]] = None,
-        owner: Optional[BaseTask] = None,
-        download: Optional[Union[List[str], str]] = None,
-        upload: Optional[dict] = None,
-        args: Optional[Union[list, str]] = None,
-        kwargs: Optional[Union[Dict[str, Any], str]] = None,
-        output_to: Optional[str] = None,
-        output_extraction: Optional[dict] = None,
+            self,
+            function: Union[str, Callable],
+            name: Optional[str] = None,
+            parents: Optional[Union[List[BaseTask], BaseTask]] = None,
+            owner: Optional[BaseTask] = None,
+            download: Optional[Union[List[str], str]] = None,
+            upload: Optional[dict] = None,
+            args: Optional[Union[list, str]] = None,
+            kwargs: Optional[Union[Dict[str, Any], str]] = None,
+            output_to: Optional[str] = None,
+            output_extraction: Optional[dict] = None,
     ):
         super().__init__(name=name, parents=parents, owner=owner)
         self.function = function
@@ -201,7 +262,7 @@ class PythonTask(BaseTask):
         self.output_extraction = output_extraction
 
         # check arguments here to avoid downstream errors
-        if not (isinstance(self.args, list) or as_query(self.args)):
+        if not (isinstance(self.args, (list, Parameterization)) or as_query(self.args)):
             raise TypeError("*args* must be list or query-expression.")
         if not (isinstance(self.kwargs, dict) or as_query(self.kwargs)):
             raise TypeError("*kwargs* must be dict or query-expression.")
@@ -264,13 +325,13 @@ class BranchTask(OwnerTask):
     TYPE = TaskType.BRANCH
 
     def __init__(
-        self,
-        task: BaseTask = None,
-        name: str = None,
-        parents: Union[List[BaseTask], BaseTask] = None,
-        owner: Optional[OwnerTask] = None,
-        branch_data: Union[list, str] = None,
-        branch_files: Union[list, str] = None,
+            self,
+            task: BaseTask = None,
+            name: str = None,
+            parents: Union[List[BaseTask], BaseTask] = None,
+            owner: Optional[OwnerTask] = None,
+            branch_data: Union[list, str] = None,
+            branch_files: Union[list, str] = None,
     ):
         super().__init__(name=name, parents=parents, owner=owner)
         self.task = task
@@ -340,12 +401,12 @@ class DAG(OwnerTask):
     TYPE = TaskType.DAG
 
     def __init__(
-        self,
-        tasks: Union[List[BaseTask], BaseTask] = None,
-        name: Optional[str] = None,
-        parents: Union[List[BaseTask], BaseTask] = None,
-        owner: Optional[OwnerTask] = None,
-        links: dict = None,
+            self,
+            tasks: Union[List[BaseTask], BaseTask] = None,
+            name: Optional[str] = None,
+            parents: Union[List[BaseTask], BaseTask] = None,
+            owner: Optional[OwnerTask] = None,
+            links: dict = None,
     ):
         super().__init__(name=name, parents=parents, owner=owner)
         if tasks:
@@ -429,6 +490,8 @@ class DAG(OwnerTask):
         d["type"] = self.TYPE.value
         if not any(self.links.values()):  # no links exist, explicitly write empty dict
             d["links"] = {}
+        d = _resolve_queries(d)
+        d = _resolve_callables(d)
         return d
 
     @classmethod

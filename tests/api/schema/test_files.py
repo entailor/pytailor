@@ -6,7 +6,7 @@ import pprint
 
 def test_add_file_from_tag_ext():
     filesschema = FilesSchema()
-    filesschema.add_file(files_ex1['tag'], files_ex1['ext'])
+    filesschema.add_file(files_ex1["tag"], files_ex1["ext"])
 
 
 def test_add_file():
@@ -22,6 +22,5 @@ def test_from_class():
 
 def test_tojson():
     filesschema = FilesSchema(**files_ex3)
-    filesschema.to_json('test.json')
-    os.remove('test.json')
-
+    filesschema.to_json("test.json")
+    os.remove("test.json")
