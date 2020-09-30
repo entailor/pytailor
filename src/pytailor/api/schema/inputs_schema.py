@@ -3,7 +3,6 @@
 
 
 from .strategies.tailorschemabuilder import TailorSchemaBuilder
-from jsonschema import validate
 import json
 
 
@@ -35,7 +34,6 @@ class InputsSchema:
 
     @default_inputs.setter
     def default_inputs(self, default_inputs):
-        validate(default_inputs, self.inputschema)
         self._default_inputs = default_inputs
 
     def to_dict(self):
