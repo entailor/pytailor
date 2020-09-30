@@ -3,7 +3,7 @@
 
 
 from .strategies.tailorschemabuilder import TailorSchemaBuilder
-from jsonschema import validate
+# from jsonschema import validate # removed validation to not include dependency on jsonschema
 import json
 
 
@@ -35,7 +35,7 @@ class InputsSchema:
 
     @default_inputs.setter
     def default_inputs(self, default_inputs):
-        validate(default_inputs, self.inputschema)
+        # validate(default_inputs, self.inputschema)
         self._default_inputs = default_inputs
 
     def to_dict(self):
