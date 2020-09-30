@@ -40,7 +40,7 @@ version and run:
 pyTailor uses [pytest](https://docs.pytest.org/en/stable/) for unit testing. To run tests
 with coverage report run:
  
-`pytest --cov=tailor tests`
+`pytest --cov=pytailor tests`
 
 ### Versioning
 
