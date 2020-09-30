@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 pyTailor Example 6
 
@@ -15,16 +14,18 @@ Branched tasks always become children of the BranchTask that created them.
 
 """
 
-from pytailor import PythonTask, BranchTask, DAG, Workflow, Project
+from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, Inputs
 
 ### workflow definition ###
 
+inputs = Inputs()
+
 with DAG(name="dag") as dag:
-    with BranchTask(name="duplicate", branch_data=["<% $.inputs.data %>"]):
+    with BranchTask(name="duplicate", branch_data=[inputs.data]):
         PythonTask(
-            function="builtins.print",
+            function=print,
             name="task 1",
-            args=["<% $.inputs.data %>", "<% $.inputs.other %>"],
+            args=[inputs.data, inputs.other],
         )
 
 ### workflow run ###
@@ -32,14 +33,14 @@ with DAG(name="dag") as dag:
 # open a project
 prj = Project.from_name("Test")
 
-inputs = {
+wf_inputs = {
     "data": [1, 2],
     # 'data': {0: 1, 1: 2},  # alternatively use a dict with int keys
     "other": "this is not used for branching",
 }
 
 # create a workflow:
-wf = Workflow(project=prj, dag=dag, name="branch workflow", inputs=inputs)
+wf = Workflow(project=prj, dag=dag, name="branch workflow", inputs=wf_inputs)
 
 # run the workflow
 wf.run()

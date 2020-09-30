@@ -57,7 +57,7 @@ def _object_from_dict(d):
 
 
 def _resolve_queries(d: dict):
-    def val_apply_download(v):
+    def val_apply_file_tags(v):
         if isinstance(v, Parameterization):
             return v.get_name()
         elif isinstance(v, str):
@@ -90,8 +90,8 @@ def _resolve_queries(d: dict):
                            val_apply_on="key_cond",
                            )
     d_tmp = walk_and_apply(d_tmp,
-                           key_cond=lambda k: k == "download",
-                           val_apply=val_apply_download,
+                           key_cond=lambda k: k in {"download", "branch_files"},
+                           val_apply=val_apply_file_tags,
                            key_apply_on=None,
                            val_apply_on="key_cond",
                            )
