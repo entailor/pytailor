@@ -29,12 +29,15 @@ class FileClient(httpx.Client):
                         # fallback to requests
                         response = requests.put(fileset_link.url, data=f)
 
-    def download_files(self, fileset: FileSet):
-
+    def download_files(self, fileset: FileSet, use_storage_dirs: bool = True):
         for fileset_links in fileset.tags:
             for fileset_link in fileset_links.links:
-                local_filename = fileset_link.filename
-                Path(local_filename).parent.mkdir(parents=True, exist_ok=True)
+                path = Path(fileset_link.filename)
+                if use_storage_dirs:
+                    local_filename = str(path)
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                else:
+                    local_filename = path.name
                 with requests.get(fileset_link.url, stream=True) as r:
                     with open(local_filename, "wb") as f:
                         shutil.copyfileobj(r.raw, f)

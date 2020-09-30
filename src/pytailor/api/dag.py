@@ -19,9 +19,10 @@ class TaskType(Enum):
     DAG = "dag"
 
 
-def _object_to_dict(obj, exclude_varnames=None):
+def _object_to_dict(obj, exclude_varnames=None, allow_none_or_false=None):
     """Helper to serialize objects to dicts"""
     exclude_varnames = exclude_varnames or []
+    allow_none_or_false = allow_none_or_false or []
     d = {}
 
     # get all potential variables
@@ -33,7 +34,7 @@ def _object_to_dict(obj, exclude_varnames=None):
     for name, val in objvars.items():
         if name.startswith("_"):  # do not include private variables
             continue
-        elif not bool(val):  # do not include empty variables
+        elif not bool(val) and name not in allow_none_or_false:
             continue
         elif name in exclude_varnames:  # name in exclude list
             continue
@@ -258,6 +259,7 @@ class PythonTask(BaseTask):
         kwargs: Optional[Union[Dict[str, Any], str]] = None,
         output_to: Optional[str] = None,
         output_extraction: Optional[dict] = None,
+        use_storage_dirs: Optional[bool] = True
     ):
         super().__init__(name=name, parents=parents, owner=owner)
         self.function = function
@@ -267,6 +269,7 @@ class PythonTask(BaseTask):
         self.upload = upload or {}
         self.output_to = output_to
         self.output_extraction = output_extraction
+        self.use_storage_dirs = use_storage_dirs
 
         # check arguments here to avoid downstream errors
         if not (isinstance(self.args, (list, Parameterization)) or as_query(self.args)):
@@ -284,7 +287,8 @@ class PythonTask(BaseTask):
 
     def to_dict(self) -> dict:
         """Serialize task definition."""
-        d = _object_to_dict(self, exclude_varnames=["parents", "owner"])
+        d = _object_to_dict(self, exclude_varnames=["parents", "owner"],
+                            allow_none_or_false=["use_storage_dirs"])
         d["type"] = self.TYPE.value
         return d
 

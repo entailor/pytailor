@@ -18,10 +18,10 @@ with DAG(name="dag") as dag:
     t1 = PythonTask(
         function=glob.glob,
         name="task 1",
-        args=["**/*.txt"],
-        kwargs={"recursive": True},
-        download=files.testfiles,  # refers to a file tag
-        output_to=outputs.downloaded_files,  # put function's return value on outputs.downloaded_files
+        args=["*.txt"],
+        download=files.testfiles,
+        output_to=outputs.downloaded_files,
+        use_storage_dirs=False
     )
     t2 = PythonTask(
         function=shutil.copyfile,

@@ -251,6 +251,7 @@ class TaskRunner(APIBase):
 
         # DO DOWNLOAD
         if download:
+            use_storage_dirs = task_def.get("use_storage_dirs", True)
             fileset_download = FileSetDownload(task_id=self.__task.id, tags=download)
             # get download links
             with RestClient() as client:
@@ -263,7 +264,7 @@ class TaskRunner(APIBase):
                 )
             # do downloads
             with FileClient() as client:
-                client.download_files(fileset)
+                client.download_files(fileset, use_storage_dirs)
 
     def __handle_args(self, args):
         if as_query(args):
