@@ -17,16 +17,20 @@ class RestClient(httpx.Client):
     def get_accounts(self) -> List[Account]:
         url = "accounts"
         response = self.get(url)
-        accounts = [Account.parse_obj(obj) for obj in response.json()]
-        return accounts
+        if response.status_code == httpx.codes.OK:
+            return [Account.parse_obj(obj) for obj in response.json()]
+        else:
+            response.raise_for_status()
 
     # projects
 
     def get_projects(self) -> List[Project]:
         url = "projects"
         response = self.get(url)
-        projects = [Project.parse_obj(obj) for obj in response.json()]
-        return projects
+        if response.status_code == httpx.codes.OK:
+            return [Project.parse_obj(obj) for obj in response.json()]
+        else:
+            response.raise_for_status()
 
     def get_project(self, project_id: str) -> Project:
         url = f"projects/{project_id}"

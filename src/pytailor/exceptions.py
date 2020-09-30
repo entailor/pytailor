@@ -12,3 +12,7 @@ class BackendResourceError(PytailorBaseError):
 
 class DAGError(PytailorBaseError):
     pass
+
+
+class ParameterizationError(PytailorBaseError):
+    pass
