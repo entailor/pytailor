@@ -21,8 +21,15 @@ def default_worker_name():
     return f"{short_hostname}_{machine_id}"
 
 
-def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=None,
-                   key_apply_on="key_cond", val_apply_on="val_cond"):
+def walk_and_apply(
+    d,
+    key_cond=None,
+    key_apply=None,
+    val_cond=None,
+    val_apply=None,
+    key_apply_on="key_cond",
+    val_apply_on="val_cond",
+):
     """
     Walk a nested data structure *d* (think JSON) and apply conditional transformations
     to keys and/or values. Returns a new version of *d* with applied
@@ -70,8 +77,7 @@ def walk_and_apply(d, key_cond=None, key_apply=None, val_cond=None, val_apply=No
 
                 # go deeper if v has not been transformed and v is a data structure
                 if new_val is v and isinstance(v, (dict, list)):
-                    recursive_func(
-                        v, d_out[new_key])
+                    recursive_func(v, d_out[new_key])
 
         elif isinstance(d, list):
             for i, v in enumerate(d):

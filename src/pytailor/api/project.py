@@ -55,7 +55,7 @@ class Project(APIBase):
                 client.update_workflow_definitions_for_project,
                 self.id,
                 permission_change,
-                error_msg=f"Error while adding workflow definition to project."
+                error_msg=f"Error while adding workflow definition to project.",
             )
         return permission_list.__root__
 
@@ -67,7 +67,7 @@ class Project(APIBase):
                 client.update_workflow_definitions_for_project,
                 self.id,
                 permission_change,
-                error_msg=f"Error while removing workflow definition to project."
+                error_msg=f"Error while removing workflow definition to project.",
             )
         return permission_list.__root__
 

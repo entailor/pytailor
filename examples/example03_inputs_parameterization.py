@@ -31,11 +31,7 @@ with DAG(name="dag") as dag:
 prj = Project.from_name("Test")
 
 # define inputs
-wf_inputs = {
-    "data": {
-        "sleep_time": [1.5]
-    }
-}
+wf_inputs = {"data": {"sleep_time": [1.5]}}
 
 # create a workflow:
 wf = Workflow(project=prj, dag=dag, name="inputs workflow", inputs=wf_inputs)

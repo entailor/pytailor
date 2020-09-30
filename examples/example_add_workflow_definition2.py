@@ -18,40 +18,34 @@ with DAG(name="dag") as dag:
 
 # inputs schema
 inputs_schema = {
-  "title": "Inputs",
-  "description": "Inputs for the Workflow",
-  "outputs": {},
-  "type": "object",
-  "inputs": {
-    "$schema": "http://json-schema.org/schema#",
+    "title": "Inputs",
+    "description": "Inputs for the Workflow",
+    "outputs": {},
     "type": "object",
-    "properties": {
-      "sleep_time": {
-        "type": "number"
-      }
+    "inputs": {
+        "$schema": "http://json-schema.org/schema#",
+        "type": "object",
+        "properties": {"sleep_time": {"type": "number"}},
+        "required": ["sleep_time"],
     },
-    "required": [
-      "sleep_time"
-    ]
-  }
 }
 
 # files schema
 files_schema = {
-  "in": {
-    "coordfile": {
-      "ext": ["txt"],
-      "title": "Coordinates",
-      "description": "A file with coordinate values of nodes",
-      "required": True
-    },
-    "test": {
-      "ext": ["pdf"],
-      "multiple": True,
-      "title": "Test",
-      "description": "Just a test"
+    "in": {
+        "coordfile": {
+            "ext": ["txt"],
+            "title": "Coordinates",
+            "description": "A file with coordinate values of nodes",
+            "required": True,
+        },
+        "test": {
+            "ext": ["pdf"],
+            "multiple": True,
+            "title": "Test",
+            "description": "Just a test",
+        },
     }
-  }
 }
 
 # create the workflow definition
@@ -65,7 +59,7 @@ wf_def = WorkflowDefinition(
     """,
     dag=dag,
     inputs_schema=inputs_schema,
-    files_schema=files_schema
+    files_schema=files_schema,
 )
 
 # get an account and add wf_def to account

@@ -8,10 +8,10 @@ config = {
     "LOGGING_FORMAT": "%(asctime)s %(levelname)s %(message)s",
     "API_BASE_URL": "http://localhost:8000/",
     "AUTH_KEY": "",
-    "SYNC_REQUEST_TIMEOUT": 15.,
-    "SYNC_CONNECT_TIMEOUT": 15.,
-    "ASYNC_REQUEST_TIMEOUT": 15.,
-    "ASYNC_CONNECT_TIMEOUT": 60.,
+    "SYNC_REQUEST_TIMEOUT": 15.0,
+    "SYNC_CONNECT_TIMEOUT": 15.0,
+    "ASYNC_REQUEST_TIMEOUT": 15.0,
+    "ASYNC_CONNECT_TIMEOUT": 60.0,
 }
 
 allowed_config_names = list(config.keys())

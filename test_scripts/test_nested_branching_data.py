@@ -9,8 +9,12 @@ with DAG(name="dag") as dag:
                 PythonTask(
                     function="builtins.print",
                     name="task 1",
-                    args=["<% $.inputs.data1 %>", "<% $.inputs.data2 %>",
-                          "<% $.inputs.data3 %>", "<% $.inputs.other %>"],
+                    args=[
+                        "<% $.inputs.data1 %>",
+                        "<% $.inputs.data2 %>",
+                        "<% $.inputs.data3 %>",
+                        "<% $.inputs.other %>",
+                    ],
                 )
 
 ### workflow run ###

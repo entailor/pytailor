@@ -1,16 +1,22 @@
 import httpx
 from pytailor.models import *
-from pytailor.config import API_BASE_URL, AUTH_KEY, SYNC_REQUEST_TIMEOUT, \
-    SYNC_CONNECT_TIMEOUT
+from pytailor.config import (
+    API_BASE_URL,
+    AUTH_KEY,
+    SYNC_REQUEST_TIMEOUT,
+    SYNC_CONNECT_TIMEOUT,
+)
 from .auth import TailorAuth
 
 
 class RestClient(httpx.Client):
     def __init__(self):
-        timeout = httpx.Timeout(timeout=SYNC_REQUEST_TIMEOUT,
-                                connect=SYNC_CONNECT_TIMEOUT)
-        super().__init__(base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY),
-                         timeout=timeout)
+        timeout = httpx.Timeout(
+            timeout=SYNC_REQUEST_TIMEOUT, connect=SYNC_CONNECT_TIMEOUT
+        )
+        super().__init__(
+            base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY), timeout=timeout
+        )
 
     # accounts
 
@@ -121,9 +127,7 @@ class RestClient(httpx.Client):
             response.raise_for_status()
 
     def update_workflow_definitions_for_project(
-            self,
-            project_id: str,
-            permission_change: PermissionChange
+        self, project_id: str, permission_change: PermissionChange
     ) -> PermissionList:
         url = f"/projects/{project_id}/permissions/workflow-definitions"
         response = self.post(url, data=permission_change.json())

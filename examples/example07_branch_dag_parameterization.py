@@ -9,8 +9,16 @@ This example introduces the following NEW concepts:
 *branch_files* is given as one or more file tags.
 """
 
-from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet, Files, \
-    Outputs
+from pytailor import (
+    PythonTask,
+    BranchTask,
+    DAG,
+    Workflow,
+    Project,
+    FileSet,
+    Files,
+    Outputs,
+)
 
 ### workflow definition ###
 
@@ -49,9 +57,7 @@ fileset = FileSet(prj)
 fileset.upload(testfiles=["testfiles/testfile_01.txt", "testfiles/testfile_02.txt"])
 
 # create a workflow:
-wf = Workflow(
-    project=prj, dag=dag, name="branch workflow 2", fileset=fileset
-)
+wf = Workflow(project=prj, dag=dag, name="branch workflow 2", fileset=fileset)
 
 # run the workflow
 wf.run()
