@@ -7,6 +7,8 @@ nav:
       - Contexts: documentation/contexts.md
   - API reference:
       - Task definition classes: api/taskdefs.md
+      - Parameterization classes: api/parameterization.md
+      - Schema definition classes: api/schema.md
   - Code examples:
       Example 1: examples/example01.md
 theme:

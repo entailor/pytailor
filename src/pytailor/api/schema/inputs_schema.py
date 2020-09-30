@@ -18,15 +18,67 @@ input_base_schema = {
 
 
 class InputsSchema:
+    """
+    Generator for inputsschema to define workflow definition
+
+    **Basic usage**
+
+    Following example define a jsonschema, that sets "print" as a required property
+    for inputs and that the value must be a string
+    ``` python
+    example_inputs = {'print': 'Hello, world!'}
+    inputsschema = InputsSchema(inputs=example_inputs)
+    ```
+    Add 'Hello, world' as a default for property 'print'
+    ``` python
+    example_inputs = {'print': 'Hello, world!'}
+    inputsschema.add_defaults(example_inputs) #
+    ```
+
+    Set 'Hello, world' and 'Hello, tailor!' as only allowed alternatives for property
+    'print':
+
+    ``` python
+    enum_inputs = {'print': ['Hello, world!', 'Hello, tailor!']}
+    inputsschema.add_enums(enum_inputs)
+    ```
+
+
+
+
+    **Parameters**
+
+    - **inputs** (dict)
+        Specify an example input schema that is valid for your workflow definition.
+
+    """
+
+
     def __init__(self, inputs: dict):
         self.inputschema = self._build_jsonschema(inputs.copy())
         self.enum_inputs = None
 
     def add_defaults(self, default_inputs: dict):
+        """
+        ** Parameters **
+
+        - ** default_inputs ** (dict) S
+            Specify  an example
+            input schema that is valid for your workflow definition with defaults.
+        """
+
         self.default_inputs = default_inputs
         self._add_defaults()
 
     def add_enums(self, enum_inputs: dict):
+        """
+        ** Parameters **
+
+        - ** enum_inputs ** (dict) S
+            Specify altenatives for your inputsschema with a
+            input schema where the property's values in a list represents the alternatives
+        """
+
         self.enum_inputs = enum_inputs
         self._add_enums()
 
@@ -40,6 +92,9 @@ class InputsSchema:
         self._default_inputs = default_inputs
 
     def to_dict(self):
+        """Serialize input schema"""
+
+
         # self._rm_multiple_types()
         self._rm_multiple_types(self._inputschema)
         self._add_defeault_for_bool_none(self._inputschema)
@@ -47,6 +102,7 @@ class InputsSchema:
         return input_base_schema
 
     def to_json(self, filename, indent=4):
+        """a json file"""
         json.dump(self.to_dict(), open(filename, "w+"), indent=indent)
 
     @property
