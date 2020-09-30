@@ -112,10 +112,11 @@ wf = Workflow(project=prj,
               inputs=example_inputs,
               fileset=fileset)
 
-Workflow.from_definition(wf_def.id,
-                         name="my workflow",
-                         inputs=example_inputs,
-                         fileset=fileset)
+# not yet implemented:
+# Workflow.from_definition(wf_def.id,
+#                          name="my workflow",
+#                          inputs=example_inputs,
+#                          fileset=fileset)
 
 wf.run()
 
