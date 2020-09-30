@@ -1654,15 +1654,15 @@
         "tags": [
           "health"
         ],
-        "summary": "Lists all accounts",
-        "operationId": "account_list_health_get",
+        "summary": "Returns OK if server is healthy",
+        "operationId": "health_check_health_get",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Account List Health Get",
+                  "title": "Response Health Check Health Get",
                   "type": "string"
                 }
               }
