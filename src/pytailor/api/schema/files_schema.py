@@ -7,6 +7,40 @@ files_base = {"in": {}}
 
 
 class FilesSchema:
+    """
+    Generator for filesschema to define workflow definition
+
+    **Basic usage**
+
+    ``` python
+
+    files_ex1 = {
+    "tag": "my_tag",
+    "ext": ["txt"],
+    }
+    filesschema = FilesSchema()
+    filesschema.add_file(tag="my_tag", ext=["txt"])
+
+    files_ex2 = {
+    "tag": "my__new_tag",
+    "ext": ["txt"],
+    "title": "Coordinates",
+    "multiple": True,
+    "description": "A file with coordinate values of nodes",
+    "required": True,
+    }
+    filesschema = FilesSchema()
+    filesschema.add_file(**files_ex2)
+
+    ```
+
+    **Parameters**
+
+    - **inputs** (dict)
+        Specify an example input schema that is valid for your workflow definition.
+
+    """
+
     def __init__(
         self,
         tags: List[str] = None,
@@ -33,6 +67,23 @@ class FilesSchema:
         title: str = None,
         description: str = "",
     ):
+        """
+        **Parameters**
+
+        - **tag** (str)
+            Specify tag for file.
+        - **tag** (str)
+            Specify allowed extension for file
+        - **mutiple** (bool)
+            Specify whether multiples files are allowed
+        - **required** (bool)
+            Specify whether  file(s) are required
+        - **title** (str)
+            Specify the title to be shown in GUI
+        - **description** (str)
+            Specify the description to be shown in GUI
+        """
+
         if not title:
             title = tag
 
@@ -46,6 +97,7 @@ class FilesSchema:
         self.descriptions.append(description)
 
     def to_dict(self):
+        """Serialize files schema"""
         files_dict = files_base.copy()
         if not self.titles:
             self.titles = self.tags

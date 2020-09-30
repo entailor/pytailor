@@ -2,6 +2,50 @@ import importlib
 
 
 class Description:
+    """
+     Workflow definition description generator to define workflow definition
+
+    **Basic usage**
+
+    ``` python
+
+    wf_def_description = "This example explains branchtasks"
+    wf_def_name = "branch task example"
+    from pytailor import PythonTask, BranchTask, DAG
+
+    with DAG(name="duplicate dag example") as dag:
+        with BranchTask(
+            name="branch",
+            branch_data=["<% $.files.testfiles %>"],
+            branch_files=["testfiles"],
+        ):
+            with DAG(name="sub-dag") as sub_dag:
+                t1 = PythonTask(
+                    function="glob.glob",
+                    name="task 2",
+                    args=["**/*.txt"],
+                    kwargs={"recursive": True},
+                    download="testfiles",
+                    output_to="glob_res",
+                )
+                PythonTask(
+                    function="builtins.print",
+                    name="task 3",
+                    args=["<% $.files.testfiles %>", "<% $.outputs.glob_res %>"],
+                    parents=t1,
+                )
+    description = Description.from_dag(dag, wf_def_name=wf_def_name,
+                                       wf_def_description=wf_def_description
+    )
+    ```
+    **Parameters**
+
+    - **name** (dict)
+        Specify a name for the workflow definition
+    - **description_string** (str)
+        Specify a description string in markdown format
+
+    """
 
     _string = None
 
@@ -36,6 +80,22 @@ class Description:
 
     @classmethod
     def from_dag(cls, dag, wf_def_name="", wf_def_description=""):
+        """
+        Generates a workflow definition description from a pytailor DAG class
+
+        **Parameters**
+
+        - **dag** (DAG)
+            Specify your DAG for workflow definition
+        - **wf_def_name** (str)
+            Specify a name for workflow definition
+        - **wf_def_description** (str)
+            Specify an overall description, what are the main objectives of your workflow definition?
+            What are the main steps in the DAG?
+
+        """
+
+
         all_tasks = cls.get_all_tasks(dag.to_dict(), [])
 
         if wf_def_description:
