@@ -3,8 +3,7 @@
 pyTailor Example 5
 """
 
-from pytailor import PythonTask, DAG, Workflow, Project, FileSet
-from pytailor.api.parameterization import Outputs, Files
+from pytailor import PythonTask, DAG, Workflow, Project, FileSet, Outputs, Files
 
 import glob
 import shutil

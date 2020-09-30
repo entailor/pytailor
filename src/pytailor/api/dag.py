@@ -59,22 +59,22 @@ def _object_from_dict(d):
 def _resolve_queries(d: dict):
     def val_apply_download(v):
         if isinstance(v, Parameterization):
-            return v._name
+            return v.get_name()
         elif isinstance(v, str):
             return v
         resolved_download = []
         for tag in v:
             if isinstance(tag, Parameterization):
-                resolved_download.append(tag._name)
+                resolved_download.append(tag.get_name())
             else:
                 resolved_download.append(tag)
         return resolved_download
 
     def val_apply_output_to(v):
-        return v._name if isinstance(v, Parameterization) else v
+        return v.get_name() if isinstance(v, Parameterization) else v
 
     def val_apply_dict_keys(v):
-        return {k._name if isinstance(k, Parameterization) else k: val
+        return {k.get_name() if isinstance(k, Parameterization) else k: val
                 for k, val in v.items()}
 
     d_tmp = walk_and_apply(d,
@@ -262,7 +262,7 @@ class PythonTask(BaseTask):
         self.output_extraction = output_extraction
 
         # check arguments here to avoid downstream errors
-        if not (isinstance(self.args, list) or as_query(self.args)):
+        if not (isinstance(self.args, (list, Parameterization)) or as_query(self.args)):
             raise TypeError("*args* must be list or query-expression.")
         if not (isinstance(self.kwargs, dict) or as_query(self.kwargs)):
             raise TypeError("*kwargs* must be dict or query-expression.")

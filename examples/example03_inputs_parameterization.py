@@ -3,8 +3,7 @@
 pyTailor Example 3
 """
 
-from pytailor import PythonTask, DAG, Workflow, Project
-from pytailor.api.parameterization import Inputs
+from pytailor import PythonTask, DAG, Workflow, Project, Inputs
 
 import time
 
