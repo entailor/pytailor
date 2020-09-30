@@ -22,8 +22,11 @@ def cli():
     "--workername", default=default_worker_name(), help="Provide a worker name"
 )
 @click.option(
-    "--project-id-filter", default=None, type=str, help="Add a project filter",
-    multiple=True
+    "--project-id-filter",
+    default=None,
+    type=str,
+    help="Add a project filter",
+    multiple=True,
 )
 def worker(sleep, ncores, workername, project_id_filter):
     """Start a worker process."""
@@ -37,27 +40,28 @@ def init():
     if config_file.exists():
         print(f"A pyTailor config file already exists at {config_file}")
     else:
-        toml.dump({
-            "pytailor": {
-                "AUTH_KEY": "<PUT YOUR AUTH-KEY HERE>",
-                "API_BASE_URL": "<API BASE URL HERE>",
+        toml.dump(
+            {
+                "pytailor": {
+                    "AUTH_KEY": "<PUT YOUR AUTH-KEY HERE>",
+                    "API_BASE_URL": "<API BASE URL HERE>",
+                },
+                "worker": {
+                    "my_config": {
+                        "sleep": 3,
+                        "ncores": cpu_count() - 1,
+                        "workername": "my_worker",
+                        "capabilities": ["python"],
+                        "project_ids": [],
+                        "workflow_definition_ids": [],
+                        "workflow_ids": [],
+                    }
+                },
             },
-            "worker": {
-                "my_config": {
-                    "sleep": 3,
-                    "ncores": cpu_count() - 1,
-                    "workername": "my_worker",
-                    "capabilities": ["python"],
-                    "project_ids": [],
-                    "workflow_definition_ids": [],
-                    "workflow_ids": []
-                }
-            }
-        },
-            open(config_file, "w")
+            open(config_file, "w"),
         )
         print(f"Created a pyTailor config file at {config_file}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

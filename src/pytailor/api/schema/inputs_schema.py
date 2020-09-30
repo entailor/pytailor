@@ -3,6 +3,7 @@
 
 
 from .strategies.tailorschemabuilder import TailorSchemaBuilder
+
 # from jsonschema import validate # removed validation to not include dependency on jsonschema
 import json
 

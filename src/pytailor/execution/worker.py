@@ -17,9 +17,11 @@ async def do_checkout(checkout_query: TaskCheckout) -> Optional[TaskExecutionDat
         try:
             exec_data = await client.checkout_task(checkout_query)
         except httpx.HTTPError as exc:
-            raise BackendResponseError(f"Error while checking out task. The response"
-                                       f"was: {exc}. "
-                                       f"Details: {exc.response.json()['detail']}")
+            raise BackendResponseError(
+                f"Error while checking out task. The response"
+                f"was: {exc}. "
+                f"Details: {exc.response.json()['detail']}"
+            )
     return exec_data
 
 
@@ -97,7 +99,7 @@ def run_worker(sleep, n_cores, worker_name, project_id_filter):
     checkout_query = TaskCheckout(
         worker_capabilities=["python"],
         worker_name=worker_name,
-        projects=list(project_id_filter) or None
+        projects=list(project_id_filter) or None,
     )
 
     try:

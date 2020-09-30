@@ -21,8 +21,10 @@ class Parameterization:
             return self.__items[item]
         else:
             if not isinstance(item, int):
-                raise TypeError("Only integer indices allowed. Use dot-notation for"
-                                "key/value data")
+                raise TypeError(
+                    "Only integer indices allowed. Use dot-notation for"
+                    "key/value data"
+                )
             parametrization = Parameterization(self.__name + f"[{item}]", self.__parent)
             self.__items[item] = parametrization
             return parametrization
@@ -50,9 +52,11 @@ class Parameterization:
         if not (self.__name.isidentifier() and self.__parent.__parent is None):
             error_msg = "Illegal parameter reference."
             if arg_name:
-                error_msg += f" When specifying parameter name for '{arg_name}' " \
-                             f"format <parameterization_obj>.<parameter_name> must be" \
-                             f" used."
+                error_msg += (
+                    f" When specifying parameter name for '{arg_name}' "
+                    f"format <parameterization_obj>.<parameter_name> must be"
+                    f" used."
+                )
             raise ParameterizationError(error_msg)
 
 
@@ -84,6 +88,7 @@ class Inputs(Parameterization):
     wf.run()
     ```
     """
+
     def __init__(self):
         super().__init__(name="inputs")
 
@@ -122,41 +127,43 @@ class Outputs(Parameterization):
 
     ```
     """
+
     def __init__(self):
         super().__init__(name="outputs")
 
 
 class Files(Parameterization):
     """
-     Helper object for **files** parameterization.
+    Helper object for **files** parameterization.
 
-     **Basic usage**
+    **Basic usage**
 
-     ``` python
-     from pytailor import PythonTask, DAG, Files, Workflow, Project, FileSet
+    ``` python
+    from pytailor import PythonTask, DAG, Files, Workflow, Project, FileSet
 
-     files = Files()
+    files = Files()
 
-     with DAG() as dag:
-         PythonTask(
-             function='builtins.print',
-             args=["This tasks download the file:", files.inpfile[0]],
-             download=files.inpfile
-         )
+    with DAG() as dag:
+        PythonTask(
+            function='builtins.print',
+            args=["This tasks download the file:", files.inpfile[0]],
+            download=files.inpfile
+        )
 
-     prj = Project.from_name("Test")
+    prj = Project.from_name("Test")
 
-     fileset = FileSet(project=prj)
-     fileset.upload(inpfile=["my_file.txt"])
+    fileset = FileSet(project=prj)
+    fileset.upload(inpfile=["my_file.txt"])
 
-     wf = Workflow(
-         dag=dag,
-         project=prj,
-         fileset=fileset
-     )
+    wf = Workflow(
+        dag=dag,
+        project=prj,
+        fileset=fileset
+    )
 
-     wf.run()
-     ```
-     """
+    wf.run()
+    ```
+    """
+
     def __init__(self):
         super().__init__(name="files")

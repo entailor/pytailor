@@ -13,7 +13,7 @@ def test_inputs():
         inputs.data.value1,
         inputs.data.value2,
         inputs.list1[0],
-        inputs.nested_list[0][1]
+        inputs.nested_list[0][1],
     ]
 
     # do lookup of existing parameters
@@ -62,7 +62,7 @@ def test_outputs():
         outputs.data.value1,
         outputs.data.value2,
         outputs.list1[0],
-        outputs.nested_list[0][1]
+        outputs.nested_list[0][1],
     ]
 
     target_queries = [
@@ -113,13 +113,13 @@ def test_outputs_raises():
 
 def test_files():
     files = Files()
-    
+
     files_parameters = [
         files.param1,
         files.data.value1,
         files.data.value2,
         files.list1[0],
-        files.nested_list[0][1]
+        files.nested_list[0][1],
     ]
 
     target_queries = [

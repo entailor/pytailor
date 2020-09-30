@@ -32,6 +32,7 @@ def test_add_defaults():
     inputs.add_defaults(json_schema2_defaults)
     assert not schema_validator(inputs.inputschema)
 
+
 # def test_invalid_defaults():
 #     inputs = InputsSchema({})
 #     inputs.inputschema = json_schema2
