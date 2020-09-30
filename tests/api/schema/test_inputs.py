@@ -32,12 +32,11 @@ def test_add_defaults():
     inputs.add_defaults(json_schema2_defaults)
     assert not schema_validator(inputs.inputschema)
 
-
-def test_invalid_defaults():
-    inputs = InputsSchema({})
-    inputs.inputschema = json_schema2
-    with pytest.raises(jsonschema.exceptions.ValidationError):
-        inputs.add_defaults(json_schema2_invaliddefaults)
+# def test_invalid_defaults():
+#     inputs = InputsSchema({})
+#     inputs.inputschema = json_schema2
+#     with pytest.raises(jsonschema.exceptions.ValidationError):
+#         inputs.add_defaults(json_schema2_invaliddefaults)
 
 
 def test_add_enums():
