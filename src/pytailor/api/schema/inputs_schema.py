@@ -22,21 +22,27 @@ class InputsSchema:
 
     **Basic usage**
 
+    Following example define a jsonschema, that sets "print" as a required property
+    for inputs and that the value must be a string
     ``` python
-
     example_inputs = {'print': 'Hello, world!'}
-    inputsschema = InputsSchema(inputs=example_inputs) # defines a jsonschema, that sets
-                                                      # "print" as a required property for inputs
-                                                      # and that the value must be a string
-
-    inputsschema.add_defaults(example_inputs) # adds 'Hello, world' as a default for property 'print'
-
-    enum_inputs = {'print': ['Hello, world!', 'Hello, tailor!']}
-
-    inputsschema.add_enums(enum_inputs) # Alternatives for property 'print' are set to
-                                       # 'Hello, world' and 'Hello, tailor!'
-
+    inputsschema = InputsSchema(inputs=example_inputs)
     ```
+    Add 'Hello, world' as a default for property 'print'
+    ``` python
+    example_inputs = {'print': 'Hello, world!'}
+    inputsschema.add_defaults(example_inputs) #
+    ```
+
+    Set 'Hello, world' and 'Hello, tailor!' as only allowed alternatives for property
+    'print':
+
+    ``` python
+    enum_inputs = {'print': ['Hello, world!', 'Hello, tailor!']}
+    inputsschema.add_enums(enum_inputs)
+    ```
+
+
 
 
     **Parameters**
