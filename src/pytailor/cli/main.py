@@ -4,7 +4,7 @@ from pathlib import Path
 import toml
 
 from pytailor.utils import default_worker_name
-from pytailor.execution.worker import run_worker
+from pytailor.execution.worker import run_worker, test_worker
 
 
 @click.group()
@@ -30,8 +30,17 @@ def cli():
 )
 def worker(sleep, ncores, workername, project_id_filter):
     """Start a worker process."""
+    # wf_defs_info = test_worker(project_id_filter)
     run_worker(sleep, ncores, workername, project_id_filter)
 
+
+@cli.command()
+@click.option(
+    "--projectname", help="Provide a project name", type=str,
+)
+def testworker(projectname):
+    """Start only the test worker process."""
+    wf_defs_info = test_worker(projectname)
 
 @cli.command()
 def init():
