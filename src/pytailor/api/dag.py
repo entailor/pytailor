@@ -205,14 +205,13 @@ class PythonTask(BaseTask):
 
     **Parameters**
 
-    - **function** (str)
-        Python callable. Must be importable in the executing python env. E.g.
-        'mymodule.myfunc'.
+    - **function** (str or Callable)
+        Python callable. Must be importable in the executing python env.
     - **name** (str, optional)
         A default name is used if not provided.
     - **parents** (BaseTask or List[BaseTask], optional)
         Specify one or more upstream tasks that this task depends on.
-    - **download** (str or list, optional)
+    - **download** (str, list or Parameterization, optional)
         Provide one or more file tags. These file tags refer to files in
         the storage object associated with the workflow run.
     - **upload** (dict, optional)
@@ -228,21 +227,26 @@ class PythonTask(BaseTask):
             applied in the task working dir. matching files are uploaded
             under the given tag.
 
-    - **args** (list or str, optional)
-        Arguments to be passed as positional arguments to *function*. Arguments
-        can be given as ordinary python values or as query expressions. See
-        the examples for how query expressions are used.
-    - **kwargs** (dict or str, optional)
-        Arguments to be passed as keyword arguments to *function*. Arguments
-        can be given as ordinary python values or as query expressions. See
-        the examples for how query expressions are used.
-    - **output_to** (str, optional)
-        The return value of the callable is stored in a tag with the specified name.
-        This value is made available for later use through the expression $.outputs.<tag>.
+    - **args** (list, str or Parameterization, optional)
+        Arguments to be passed as positional arguments to *function*. Accepts a list of
+        ordinary python values, parameterization objects or query expressions. Also
+        accepts a single single parameterization object or query expression which
+        evaluate to a list. See the examples for how parameterization objects and query
+        expressions are used.
+    - **kwargs** (dict, str or Parameterization, optional)
+        Arguments to be passed as keyword arguments to *function*. accepts a kwargs dict
+        where values can be ordinary python values, parameterization objects or query
+        expressions. Also accepts a single single parameterization object or query
+        expression which evaluate to a dict. See the examples for how parameterization
+        objects and query expressions are used.
+    - **output_to** (str or Parameterization, optional)
+        The return value of the callable is stored under the provided name in the
+        workflow *outputs*. This value is then available for downstream task.
     - output_extraction (dict, optional)
-        An expression to extract parts of the return value of the callable. The keys of
-        the dictionary are used as tags, and the values becomes available for later use
-        through the expressions $.outputs.<tag1>, $.outputs.<tag2>, and so on.
+        Provide a dict of *name: expr* where *expr* are query-expressions to extract
+        parts of the return value of the callable. The keys of the dict are used as
+        names for storing in the workflow *outputs* which becomes available for
+        downstream tasks.
     """
 
     TYPE = TaskType.PYTHON
@@ -253,11 +257,11 @@ class PythonTask(BaseTask):
         name: Optional[str] = None,
         parents: Optional[Union[List[BaseTask], BaseTask]] = None,
         owner: Optional[BaseTask] = None,
-        download: Optional[Union[List[str], str]] = None,
+        download: Optional[Union[List[str], str, Parameterization]] = None,
         upload: Optional[dict] = None,
-        args: Optional[Union[list, str]] = None,
-        kwargs: Optional[Union[Dict[str, Any], str]] = None,
-        output_to: Optional[str] = None,
+        args: Optional[Union[list, str, Parameterization]] = None,
+        kwargs: Optional[Union[Dict[str, Any], str, Parameterization]] = None,
+        output_to: Optional[Union[str, Parameterization]] = None,
         output_extraction: Optional[dict] = None,
         use_storage_dirs: Optional[bool] = True
     ):
@@ -273,9 +277,12 @@ class PythonTask(BaseTask):
 
         # check arguments here to avoid downstream errors
         if not (isinstance(self.args, (list, Parameterization)) or as_query(self.args)):
-            raise TypeError("*args* must be list or query-expression.")
-        if not (isinstance(self.kwargs, dict) or as_query(self.kwargs)):
-            raise TypeError("*kwargs* must be dict or query-expression.")
+            raise TypeError(
+                "*args* must be list, a parameterization object or query-expression.")
+        if not (isinstance(self.kwargs, (dict, Parameterization)) or
+                as_query(self.kwargs)):
+            raise TypeError(
+                "*args* must be list, a parameterization object or query-expression.")
 
     @property
     def function(self):
