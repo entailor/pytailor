@@ -348,8 +348,8 @@ class BranchTask(OwnerTask):
         name: str = None,
         parents: Union[List[BaseTask], BaseTask] = None,
         owner: Optional[OwnerTask] = None,
-        branch_data: Union[list, str] = None,
-        branch_files: Union[list, str] = None,
+        branch_data: Union[list, str, Parameterization] = None,
+        branch_files: Union[list, str, Parameterization] = None,
     ):
         super().__init__(name=name, parents=parents, owner=owner)
         self.task = task
@@ -361,11 +361,13 @@ class BranchTask(OwnerTask):
             raise ValueError("Either *branch_data* or *branch_files* must be specified")
         if branch_data is not None:
             self.branch_data = (
-                [branch_data] if isinstance(branch_data, str) else branch_data
+                [branch_data] if isinstance(branch_data, (str, Parameterization))
+                else branch_data
             )
         if branch_files is not None:
             self.branch_files = (
-                [branch_files] if isinstance(branch_files, str) else branch_files
+                [branch_files] if isinstance(branch_files, (str, Parameterization))
+                else branch_files
             )
 
     def to_dict(self) -> dict:
