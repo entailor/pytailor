@@ -21,7 +21,7 @@ with DAG(name="dag") as dag:
         function=print,
         name="task 2",
         args=["\nSlept for", inputs.data, "second"],
-        kwargs={"sep": "   ", "end": "\n\n"},
+        kwargs={"sep": inputs.sep, "end": "\n\n"},
         parents=t1,
     )
 
@@ -31,7 +31,8 @@ with DAG(name="dag") as dag:
 prj = Project.from_name("Test")
 
 # define inputs
-wf_inputs = {"data": {"sleep_time": [1.5]}}
+wf_inputs = {"data": {"sleep_time": [1.5]},
+             "sep": "   "}
 
 # create a workflow:
 wf = Workflow(project=prj, dag=dag, name="inputs workflow", inputs=wf_inputs)
