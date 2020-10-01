@@ -14,8 +14,8 @@ pyTailor can be installed from pypi:
 
 `pip install pytailor`
 
-pyTailor can also be installed with pip using a .whl file. This file can be
-built directly form the dev environment as shown [below](#building) with (replacing `x.y.z`
+pyTailor can also be installed with pip using a .whl file. A .whl file can be
+built directly form the dev environment as shown [below](#building). To install directly from a .whl file (replacing `x.y.z`
 with the actual version):
 
 `pip install dist/pytailor-x.y.z-py3-none-any.wheel`
