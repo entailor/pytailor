@@ -7,7 +7,7 @@ pyTailor is a python client for the Tailor automation and collaboration platform
 With the pyTailor API you can:
 
 - Turn your existing python code into parameterized and reusable workflows.
-- Run workflows locally in your computer of distributed to dedicated worker nodes.
+- Run workflows locally in your computer or distributed to dedicated worker nodes.
 - Store your workflows as *workflow definitions* in the Tailor backend and share it with others.
 
 ## How does it work?
@@ -146,6 +146,6 @@ Head over to the [Getting started](documentation/getting_started.md) section for
 
 Once you are setup and are able to run the basic examples you can start working through the [tutorials]().
 
-At any time you can visit the [Concepts]() section to read about the core concepts of Tailor.
+At any time you can visit the [Concepts](documentation/concepts.md) section to read about the core concepts of Tailor.
 
 You can also consult the [API Reference]() for documentation of the pyTailor API.
