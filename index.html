@@ -469,7 +469,7 @@
 <p>With the pyTailor API you can:</p>
 <ul>
 <li>Turn your existing python code into parameterized and reusable workflows.</li>
-<li>Run workflows locally in your computer of distributed to dedicated worker nodes.</li>
+<li>Run workflows locally in your computer or distributed to dedicated worker nodes.</li>
 <li>Store your workflows as <em>workflow definitions</em> in the Tailor backend and share it with others.</li>
 </ul>
 <h2 id="how-does-it-work">How does it work?</h2>
@@ -480,8 +480,8 @@
 <p>prepare input data for a set of simulations. This is handled by the function <strong>engineering_tasks.prepare_simulation_data</strong>. Let's say this function:</p>
 <ul>
 <li>takes a base input file as input.</li>
-<li>takes a list of parameter sets for each simulation.</li>
-<li>produces one simulation input file for each parameter set.</li>
+<li>takes a list of parameter dicts for each simulation.</li>
+<li>produces one simulation input file for each parameter dict.</li>
 </ul>
 </li>
 <li>
@@ -538,9 +538,9 @@
     <span class="p">)</span>
 </code></pre></div>
 
-<p>The DAG object represents the recipe for how the the computations shall be performed. By instantiating a DAG no computations are performed, note that we are just <em>referencing</em> the functions we want to use, we are not <em>calling</em> them. DAG is short for <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">Directed Asyclic Graph</a>, a term used to describe the logical flow of computations. The DAG defined above is visualized below:</p>
+<p>The DAG object represents the recipe for how the the computations shall be performed. By instantiating a DAG no computations are performed, note that we are just <em>referencing</em> the functions we want to use, we are not <em>calling</em> them. DAG is short for <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">Directed Asyclic Graph</a>, a term used to describe the logical flow of computations in a workflow. The DAG defined above is visualized below:</p>
 <p><img alt="DAG" src="DAG.png" /></p>
-<p>A key feature in this DAG is the use of <a href="api/taskdefs/#branchtask">BranchTask</a> to achieve parallelization or "fan-out" functionality. The term <em>brancing</em> is used describe this functionality, where one branch is created for each simulation.</p>
+<p>A key feature in this DAG is the use of <a href="api/taskdefs/#branchtask">BranchTask</a> to achieve parallelization or "fan-out" functionality. The term <em>branching</em> is used to describe this functionality, where one branch is created for each simulation.</p>
 <p>The <a href="api/parameterization/#inputs">Inputs</a>, <a href="api/parameterization/#outputs">Outputs</a> and <a href="api/parameterization/#files">Files</a> objects are helper-objects for <em>parameterization</em>. When we e.g. say <code>kwargs={"parameters": inputs.pre_proc_data}</code> we are specifying that the value for the "parameters" keyword argument is parameterized and shall be looked up from the <em>pre_proc_data</em> name in the workflow's <em>inputs</em> when the task is executed. The concept of parameterization becomes clearer when we see how <em>inputs</em>, <em>outputs</em> and <em>files</em> are defined when we run a Workflow below.</p>
 <p>We now have a <em>parameterized</em> DAG describing the <em>recipe</em> of how we want to perform our computing workflow. Based on this definition we can <em>run</em> a <a href="">Workflow</a>, and we have sereral options:</p>
 <ul>
@@ -596,7 +596,7 @@
 <h2 id="get-started-with-pytailor">Get started with pyTailor</h2>
 <p>Head over to the <a href="documentation/getting_started/">Getting started</a> section for instructions on how to setup pyTailor.</p>
 <p>Once you are setup and are able to run the basic examples you can start working through the <a href="">tutorials</a>.</p>
-<p>At any time you can visit the <a href="">Concepts</a> section to read about the core concepts of Tailor.</p>
+<p>At any time you can visit the <a href="documentation/concepts/">Concepts</a> section to read about the core concepts of Tailor.</p>
 <p>You can also consult the <a href="">API Reference</a> for documentation of the pyTailor API.</p>
                 
               
