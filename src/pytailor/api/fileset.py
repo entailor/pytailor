@@ -52,3 +52,42 @@ class FileSet(APIBase):
 
         with FileClient() as client:
             client.upload_files(files, fileset_model)
+
+    def download(self, task_id: str = None, tags: List[str] = None, use_storage_dirs: bool = True):
+        """Download files with specified filenames, task_id and/or tags. If use_storage_dirs=False all files are downloaded to
+        the current directory"""
+
+        fileset_download = FileSetDownload(task_id=task_id, tags=tags)
+
+        with RestClient() as client:
+            fileset_model = self._handle_rest_client_call(
+                client.get_download_urls,
+                self.project.id,
+                self.id,
+                fileset_download,
+                error_msg="Error while getting download urls from the backend.",
+            )
+
+        with FileClient() as client:
+            client.download_files(fileset_model, use_storage_dirs=use_storage_dirs)
+
+    def list_files(self, task_id: str = None, tags: List[str] = None):
+        """List files with specified task_id and/or tags"""
+
+        fileset_download = FileSetDownload(task_id=task_id, tags=tags)
+
+        with RestClient() as client:
+            fileset_model = self._handle_rest_client_call(
+                client.get_download_urls,
+                self.project.id,
+                self.id,
+                fileset_download,
+                error_msg="Error while getting upload urls from the backend.",
+            )
+        files = []
+        for tags in fileset_model.tags:
+            files_in_tag = []
+            for link in tags.links:
+                files_in_tag.append(link.filename)
+            files.append({'tag': tags.tag_name, 'filenames': files_in_tag})
+        return files
