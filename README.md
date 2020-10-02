@@ -1,4 +1,6 @@
 [![Tests](https://github.com/entailor/pytailor/workflows/Tests/badge.svg)](https://github.com/entailor/pytailor/actions?workflow=Tests)
+[![Tests](https://github.com/entailor/pytailor/workflows/Release/badge.svg)](https://github.com/entailor/pytailor/actions?workflow=Release)
+[![PyPI version](https://badge.fury.io/py/pytailor.svg)](https://badge.fury.io/py/pytailor)
 
 # pyTailor - A python client for Tailor.wf
 
@@ -12,15 +14,11 @@ pyTailor can be installed from pypi:
 
 `pip install pytailor`
 
-pyTailor can also be installed with pip using a .whl file. This file can either be
-built directly form the dev environment as shown [below](#building) with (replacing `x.y.z`
+pyTailor can also be installed with pip using a .whl file. A .whl file can be
+built directly form the dev environment as shown [below](#building). To install directly from a .whl file (replacing `x.y.z`
 with the actual version):
 
 `pip install dist/pytailor-x.y.z-py3-none-any.wheel`
-
-Or, you can install from a github release (replacing `x.y.z` with the actual version):
-
-`pip install https://github.com/entailor/pytailor/releases/download/vx.y.z/pytailor-x.y.z-py3-none-any.whl`
 
 ## Development
 

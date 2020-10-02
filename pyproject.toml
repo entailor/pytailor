@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytailor"
-version = "0.1.7"
+version = "0.1.8"
 description = "pyTailor orchestrates your existing python code as *workflows*"
 authors = ["Audun Gravdal Johansen <audun@entail.no>"]
 license = "BSD-3-Clause"
