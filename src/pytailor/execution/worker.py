@@ -168,7 +168,7 @@ def test_worker(project_name):
                     test_ok = False
                     print(print_string)
             else:
-                print_string = "task has no functions"
+                print_string = "task has no function"
                 report_string.append(print_string + "\n")
 
         return test_ok, report_string
