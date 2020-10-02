@@ -18,8 +18,8 @@ Say you have a three-step workflow like this:
 
 1. prepare input data for a set of simulations. This is handled by the function **engineering_tasks.prepare_simulation_data**. Let's say this function:
     - takes a base input file as input.
-    - takes a list of parameter sets for each simulation.
-    - produces one simulation input file for each parameter set.
+    - takes a list of parameter dicts for each simulation.
+    - produces one simulation input file for each parameter dict.
 
 2. run a set of simulations in parallel. A single simulation is handled by the function **engineering_tasks.run_simulation**. Let's say this function:
     - takes a .inp file as input
@@ -72,11 +72,11 @@ with DAG(name="Advanced simulation dag") as dag:
     )
 ```
 
-The DAG object represents the recipe for how the the computations shall be performed. By instantiating a DAG no computations are performed, note that we are just *referencing* the functions we want to use, we are not *calling* them. DAG is short for [Directed Asyclic Graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph), a term used to describe the logical flow of computations. The DAG defined above is visualized below:
+The DAG object represents the recipe for how the the computations shall be performed. By instantiating a DAG no computations are performed, note that we are just *referencing* the functions we want to use, we are not *calling* them. DAG is short for [Directed Asyclic Graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph), a term used to describe the logical flow of computations in a workflow. The DAG defined above is visualized below:
 
 ![DAG](DAG.png)
 
-A key feature in this DAG is the use of [BranchTask](api/taskdefs.md#branchtask) to achieve parallelization or "fan-out" functionality. The term *brancing* is used describe this functionality, where one branch is created for each simulation.
+A key feature in this DAG is the use of [BranchTask](api/taskdefs.md#branchtask) to achieve parallelization or "fan-out" functionality. The term *branching* is used to describe this functionality, where one branch is created for each simulation.
 
 The [Inputs](api/parameterization.md#inputs), [Outputs](api/parameterization.md#outputs) and [Files](api/parameterization.md#files) objects are helper-objects for *parameterization*. When we e.g. say `kwargs={"parameters": inputs.pre_proc_data}` we are specifying that the value for the "parameters" keyword argument is parameterized and shall be looked up from the *pre_proc_data* name in the workflow's *inputs* when the task is executed. The concept of parameterization becomes clearer when we see how *inputs*, *outputs* and *files* are defined when we run a Workflow below.
 
