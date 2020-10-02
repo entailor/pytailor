@@ -13,7 +13,7 @@
     
     
       
-        <title>Task definition classes - Pytailor</title>
+        <title>Task definition classes - pyTailor</title>
       
     
     
@@ -67,7 +67,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="Pytailor" class="md-header-nav__button md-logo" aria-label="Pytailor">
+    <a href="../.." title="pyTailor" class="md-header-nav__button md-logo" aria-label="pyTailor">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -80,7 +80,7 @@
       
         <div class="md-header-nav__ellipsis">
           <span class="md-header-nav__topic md-ellipsis">
-            Pytailor
+            pyTailor
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
@@ -152,13 +152,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Pytailor" class="md-nav__button md-logo" aria-label="Pytailor">
+    <a href="../.." title="pyTailor" class="md-nav__button md-logo" aria-label="pyTailor">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    Pytailor
+    pyTailor
   </label>
   
     <div class="md-nav__source">
@@ -323,6 +323,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#branchtask" class="md-nav__link">
+    BranchTask
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -434,6 +441,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#branchtask" class="md-nav__link">
+    BranchTask
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -466,14 +480,13 @@
 
 <p><strong>Parameters</strong></p>
 <ul>
-<li><strong>function</strong> (str)
-    Python callable. Must be importable in the executing python env. E.g.
-    'mymodule.myfunc'.</li>
+<li><strong>function</strong> (str or Callable)
+    Python callable. Must be importable in the executing python env.</li>
 <li><strong>name</strong> (str, optional)
     A default name is used if not provided.</li>
 <li><strong>parents</strong> (BaseTask or List[BaseTask], optional)
     Specify one or more upstream tasks that this task depends on.</li>
-<li><strong>download</strong> (str or list, optional)
+<li><strong>download</strong> (str, list or Parameterization, optional)
     Provide one or more file tags. These file tags refer to files in
     the storage object associated with the workflow run.</li>
 <li>
@@ -492,22 +505,27 @@
 </ul>
 </li>
 <li>
-<p><strong>args</strong> (list or str, optional)
-    Arguments to be passed as positional arguments to <em>function</em>. Arguments
-    can be given as ordinary python values or as query expressions. See
-    the examples for how query expressions are used.</p>
+<p><strong>args</strong> (list, str or Parameterization, optional)
+    Arguments to be passed as positional arguments to <em>function</em>. Accepts a list of
+    ordinary python values, parameterization objects or query expressions. Also
+    accepts a single single parameterization object or query expression which
+    evaluate to a list. See the examples for how parameterization objects and query
+    expressions are used.</p>
 </li>
-<li><strong>kwargs</strong> (dict or str, optional)
-    Arguments to be passed as keyword arguments to <em>function</em>. Arguments
-    can be given as ordinary python values or as query expressions. See
-    the examples for how query expressions are used.</li>
-<li><strong>output_to</strong> (str, optional)
-    The return value of the callable is stored in a tag with the specified name.
-    This value is made available for later use through the expression $.outputs.<tag>.</li>
+<li><strong>kwargs</strong> (dict, str or Parameterization, optional)
+    Arguments to be passed as keyword arguments to <em>function</em>. accepts a kwargs dict
+    where values can be ordinary python values, parameterization objects or query
+    expressions. Also accepts a single single parameterization object or query
+    expression which evaluate to a dict. See the examples for how parameterization
+    objects and query expressions are used.</li>
+<li><strong>output_to</strong> (str or Parameterization, optional)
+    The return value of the callable is stored under the provided name in the
+    workflow <em>outputs</em>. This value is then available for downstream task.</li>
 <li>output_extraction (dict, optional)
-    An expression to extract parts of the return value of the callable. The keys of
-    the dictionary are used as tags, and the values becomes available for later use
-    through the expressions $.outputs.<tag1>, $.outputs.<tag2>, and so on.</li>
+    Provide a dict of <em>name: expr</em> where <em>expr</em> are query-expressions to extract
+    parts of the return value of the callable. The keys of the dict are used as
+    names for storing in the workflow <em>outputs</em> which becomes available for
+    downstream tasks.</li>
 </ul></div>
 <div class="autodoc-members">
 <div class="autodoc-signature"><code><strong>to_dict</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">self</em><span class="autodoc-punctuation">)</span></div>
@@ -534,6 +552,36 @@ links : dict, optional
     be indices (ints) into <em>tasks</em> or BaseTask instances. Note that links
     may also be defined on task  objects with the <em>parents</em> argument instead of
     using links: (parents=[parent_def1, parent_def2])</p></div>
+<div class="autodoc-members">
+<div class="autodoc-signature"><code><strong>to_dict</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">self</em><span class="autodoc-punctuation">)</span></div>
+<div class="autodoc-docstring"></div>
+<div class="autodoc-signature"><code><strong>from_dict</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">d</em><span class="autodoc-punctuation">)</span></div>
+<div class="autodoc-docstring"></div>
+</div>
+</div>
+<h2 id="branchtask">BranchTask</h2>
+<div class="autodoc">
+<div class="autodoc-signature"><em>class </em><code>pytailor.<strong>BranchTask</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">task=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">name=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">parents=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">owner=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">branch_data=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">branch_files=None</em><span class="autodoc-punctuation">)</span></div>
+<div class="autodoc-docstring"><p>Dynamically <em>branch</em> a task or DAG during workflow execution.</p>
+<p>BranchTask Provides parallelization or "fan-out" functionality. The <em>task</em>
+is duplicated based on <em>branch_data</em> or <em>branch_files</em>. At least one of these must be
+specified.</p>
+<h2>Parameters</h2>
+<p>task : BaseTask
+    Task to be duplicated (PythonTask, BranchTask or DAG).
+name : str, optional
+    A default name is used if not provided.
+parents : BaseTask or List[BaseTask], optional
+    Specify one or more upstream tasks that this task
+    depends on.
+branch_data : list or str, optional
+    Data to be used as basis for branching. Accepts a query-expression or a list of
+    query-expressions. The queries must evaluate to a list or a dict. If the query
+    evaluates to a dict, that dict must have integer keys to represent the index of
+    each branch.
+branch_files : list or str, optional
+    Files to be used as basis for branching. Accepts a file tag or a list of
+    file tags.</p></div>
 <div class="autodoc-members">
 <div class="autodoc-signature"><code><strong>to_dict</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">self</em><span class="autodoc-punctuation">)</span></div>
 <div class="autodoc-docstring"></div>
