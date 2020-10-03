@@ -30,9 +30,11 @@ def _check_all_function_imports_in_project(project_id: str, log_file: TextIO):
         wf_def_summaries = handle_rest_client_call(
             client.get_workflow_definition_summaries_project, project_id
         )
+    if not wf_def_summaries:
+        log_file.write("No workflow definitions for project\n")
     for wf_def_info in wf_def_summaries:
         log_file.write(f"Checking workflow definition: "
-                       f"{wf_def_info.name} ({wf_def_info.id})\n\n")
+                       f"{wf_def_info.name} ({wf_def_info.id})\n")
         wf_def_check_summary = {"id": wf_def_info.id, "name": wf_def_info.name}
         with RestClient() as client:
             wf_def = handle_rest_client_call(
