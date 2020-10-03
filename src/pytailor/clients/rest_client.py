@@ -86,14 +86,6 @@ class RestClient(httpx.Client):
         else:
             response.raise_for_status()
 
-    def get_workflows(self, project_id: str) -> List[Workflow]:
-        url = f"projects/{project_id}/workflows/"
-        response = self.get(url)
-        if response.status_code == httpx.codes.OK:
-            return [Workflow.parse_obj(obj) for obj in response.json()]
-        else:
-            response.raise_for_status()
-
     def new_workflow(self, project_id: str, create_data: WorkflowCreate) -> Workflow:
         url = f"projects/{project_id}/workflows"
         response = self.post(url, data=create_data.json())

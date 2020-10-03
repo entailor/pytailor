@@ -82,15 +82,3 @@ class Project(APIBase):
                 error_msg="Could not retrieve workflow definition summaries.",
             )
         return [wf_def_model.dict() for wf_def_model in wf_def_models]
-
-    def list_workflows(self) -> List[dict]:
-        """
-        Retrieve a list of all available workflows as summary dicts.
-        """
-        with RestClient() as client:
-            wf_models = self._handle_rest_client_call(
-                client.get_workflows,
-                self.id,
-                error_msg="Could not retrieve workflows.",
-            )
-        return [wf_model.dict() for wf_model in wf_models]

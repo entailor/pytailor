@@ -4,7 +4,8 @@ from pathlib import Path
 import toml
 
 from pytailor.utils import default_worker_name
-from pytailor.execution.worker import run_worker, test_worker
+from pytailor.execution.worker import run_worker
+from pytailor.execution.worker_checks import workflow_definition_compliance_test
 
 
 @click.group()
@@ -28,19 +29,25 @@ def cli():
     help="Add a project filter",
     multiple=True,
 )
-def worker(sleep, ncores, workername, project_id_filter):
+@click.option(
+    "--checks/--no-checks",
+    default=True,
+    help="Perform checks to validate the worker environment before starting the worker"
+)
+@click.option(
+    "--checks-only", is_flag=True, help="Perform checks without starting the worker"
+)
+def worker(sleep, ncores, workername, project_id_filter, checks, checks_only):
     """Start a worker process."""
-    # wf_defs_info = test_worker(project_id_filter)
+    if checks:
+        # check compliance with project wf defs
+        wf_defs_info = workflow_definition_compliance_test(project_id_filter)
+        # TODO: create a wf_def_filter based on wf_defs_info ?
+
+    if checks_only:
+        return
     run_worker(sleep, ncores, workername, project_id_filter)
 
-
-@cli.command()
-@click.option(
-    "--projectname", help="Provide a project name", type=str,
-)
-def testworker(projectname):
-    """Start only the test worker process."""
-    wf_defs_info = test_worker(projectname)
 
 @cli.command()
 def init():
