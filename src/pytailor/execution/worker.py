@@ -18,8 +18,7 @@ async def do_checkout(checkout_query: TaskCheckout) -> Optional[TaskExecutionDat
             exec_data = await client.checkout_task(checkout_query)
         except httpx.HTTPError as exc:
             raise BackendResponseError(
-                f"Error while checking out task. The response "
-                f"was: {str(exc)}."
+                f"Error while checking out task. The response " f"was: {str(exc)}."
             )
     return exec_data
 
