@@ -2,6 +2,7 @@ import importlib
 import inspect
 import sys
 
+
 class Description:
     """
      Workflow definition description generator to define workflow definition
@@ -130,10 +131,10 @@ class Description:
                 for annotation in my_class.__init__.__annotations__.keys():
                     if key == annotation:
                         if key not in ["name", "task"]:
-                            readme.append(f'    {key}: {value}\n')
-                            if key == 'function':
-                                readme.append(f'#### Function docstring:\n\n')
-                                readme.append(cls.get_docstring(value) + '\n\n')
+                            readme.append(f"    {key}: {value}\n")
+                            if key == "function":
+                                readme.append(f"#### Function docstring:\n\n")
+                                readme.append(cls.get_docstring(value) + "\n\n")
 
         return cls(wf_def_name, "".join(readme))
 
@@ -167,7 +168,9 @@ class Description:
 
     @staticmethod
     def get_class(task_type):
-        cls_members = inspect.getmembers(sys.modules["pytailor.api.dag"], inspect.isclass)
+        cls_members = inspect.getmembers(
+            sys.modules["pytailor.api.dag"], inspect.isclass
+        )
         for cls_member in cls_members:
             if cls_member[1].__dict__.get("TYPE"):
                 try:
