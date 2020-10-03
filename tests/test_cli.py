@@ -26,15 +26,8 @@ def test_worker_no_args(wf_def_check, run_worker):
     result = runner.invoke(cli, ["worker"])
 
     assert result.exit_code == 0
-    run_worker.assert_called_once()
-    wf_def_check.assert_called_once()
-
-    # check defaults
-    assert run_worker.call_args.args[0] == 3
-    assert run_worker.call_args.args[1] == cpu_count() - 1
-    assert run_worker.call_args.args[2] == default_worker_name()
-    assert run_worker.call_args.args[3] == []
-    assert wf_def_check.call_args.args[0] == []
+    run_worker.assert_called_once_with(3, cpu_count() - 1, default_worker_name(), [])
+    wf_def_check.assert_called_once_with([])
 
 
 @patch("pytailor.cli.main.run_worker")
