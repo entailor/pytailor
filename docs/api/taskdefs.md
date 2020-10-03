@@ -12,3 +12,10 @@
 ::: pytailor.DAG
     :docstring:
     :members: to_dict from_dict
+
+
+## BranchTask
+
+::: pytailor.BranchTask
+    :docstring:
+    :members: to_dict from_dict

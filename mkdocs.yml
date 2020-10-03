@@ -1,4 +1,4 @@
-site_name: Pytailor
+site_name: pyTailor
 nav:
   - Home: index.md
   - Documentation:
@@ -23,4 +23,5 @@ markdown_extensions:
   - mkautodoc
   - pymdownx.highlight:
       use_pygments: true
+  - attr_list
 repo_url: https://github.com/entailor/pytailor
