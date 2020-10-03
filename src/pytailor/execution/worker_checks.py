@@ -1,7 +1,8 @@
+import datetime
 import importlib
 import os
 import uuid
-from typing import Optional, List
+from typing import Optional, List, TextIO
 
 from pytailor.clients import RestClient
 from pytailor.common.rest_call_handler import handle_rest_client_call
@@ -22,81 +23,80 @@ def _get_all_tasks(dag_dict, all_tasks):
     return all_tasks
 
 
-def _check_all_function_imports_in_project(project_id):
+def _check_all_function_imports_in_project(project_id: str, log_file: TextIO):
     wf_defs_info = []
-    test_report = []
     tests_ok = True
     with RestClient() as client:
         wf_def_summaries = handle_rest_client_call(
             client.get_workflow_definition_summaries_project, project_id
         )
     for wf_def_info in wf_def_summaries:
-        test_report_string = "testing workflow definition: " + wf_def_info.name
-        test_report.extend("### " + test_report_string + "\n")
-        wf_def_check_summary = {"id": wf_def_info.id}
+        log_file.write(f"Checking workflow definition: "
+                       f"{wf_def_info.name} ({wf_def_info.id})\n\n")
+        wf_def_check_summary = {"id": wf_def_info.id, "name": wf_def_info.name}
         with RestClient() as client:
             wf_def = handle_rest_client_call(
                 client.get_workflow_definition_project, project_id, wf_def_info.id
             )
-        wf_df_ok, report_string = _check_import_functions_in_tasks(
-            _get_all_tasks(wf_def.dag, [])[1:]
+        wf_df_ok = _check_import_functions_in_tasks(
+            _get_all_tasks(wf_def.dag, [])[1:], log_file
         )
         wf_def_check_summary["test_ok"] = wf_df_ok
         wf_defs_info.append(wf_def_check_summary)
-        test_report.extend(report_string)
         if not wf_df_ok:
             tests_ok = False
-    return tests_ok, wf_defs_info, "".join(test_report)
+        log_file.write("\n")
+    return tests_ok, wf_defs_info
 
 
-def _check_import_functions_in_tasks(tasks_list):
+def _check_import_functions_in_tasks(tasks_list, log_file):
     test_ok = True
-    report_string = []
     for task in tasks_list:
-        print_string = "testing task: " + task["name"]
-        report_string.append(print_string + "\n\n")
+        log_file.write(f"Testing task: {task['name']}\n")
         if task.get("function"):
-            print_string = "trying to import function: " + task["function"]
-            report_string.append(print_string + "\n\n")
+            log_file.write(f"Trying to import function: {task['function']}\n")
             import_string = task["function"].rsplit(".", 1)
             try:
                 importlib.import_module(import_string[0], import_string[1])
-                print_string = "import ok"
-                report_string.append(print_string + "\n")
+                log_file.write("Import OK\n")
             except ModuleNotFoundError as error:
-                print(print_string + "\n")
-                print_string = error.__str__()
-                report_string.append(print_string + "\n")
+                log_file.write(f"Import NOT OK: {str(error)}\n")
                 test_ok = False
-                print(print_string)
         else:
-            print_string = "task has no function"
-            report_string.append(print_string + "\n")
+            log_file.write("Task has no function\n")
 
-    return test_ok, report_string
+    return test_ok
 
 
 def workflow_definition_compliance_test(project_ids: Optional[List[str]]):
-    """"""
+    """
+    Check that python functions referenced in workflow definitions are importable.
+    """
     wf_defs_info = []
     if not project_ids:
         with RestClient() as client:
             projects = handle_rest_client_call(client.get_projects)
 
-    for project in projects:
-        (
-            tests_ok,
-            wf_defs_info,
-            main_report_string,
-        ) = _check_all_function_imports_in_project(project.id)
-        if not tests_ok:
-            test_report_filename = f"test_report_{uuid.uuid1()}.MD"
-            with open(test_report_filename, "w") as f:
-                f.write(main_report_string)
-            print(
-                "Tests failed. See full report here:",
-                os.path.abspath(test_report_filename),
-            )
-        else:
-            print(f"Tests ran OK for workflow definitions in project {project.name}")
+    now_str = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
+    log_file_name = f"worker_check_{now_str}.log"
+    with open(log_file_name, "w") as log_file:
+
+        for project in projects:
+            log_file.write(f"Checking project: {project.name} ({project.id})\n\n")
+            (
+                tests_ok,
+                wf_defs_info_prj,
+            ) = _check_all_function_imports_in_project(project.id, log_file)
+            if not tests_ok:
+                print(
+                    f"Tests failed for project {project.name}. See log file for "
+                    f"details."
+                    # f"Removing unsupported workflow definitions from task "
+                    # f"checkout queries."
+                )
+            else:
+                print(f"Tests ran OK for workflow definitions in project {project.name}")
+            wf_defs_info.extend(wf_defs_info_prj)
+            log_file.write("\n")
+
     return wf_defs_info
