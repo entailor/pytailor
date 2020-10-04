@@ -23,7 +23,7 @@ class SerialRunner(APIBase):
         # checkout and run tasks
 
         checkout_query = TaskCheckout(
-            worker_capabilities=["python"],
+            worker_capabilities=["pytailor"],
             worker_name=self.worker_name,
             workflows=[self.workflow_id],
         )
