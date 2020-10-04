@@ -187,7 +187,9 @@ class Workflow(APIBase):
         if not distributed:
             # starts the SerialRunner
             # blocks until complete
-            runner = SerialRunner(self.project.id, worker_name, wf_model.id)
+            requirements = self.dag.get_all_requirements()
+            runner = SerialRunner(self.project.id, worker_name, wf_model.id,
+                                  capabilities=requirements)
             runner.run()
 
             # get the updated workflow and update self
