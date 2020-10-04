@@ -95,7 +95,7 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
 
 def run_worker(sleep, n_cores, worker_name, project_ids):
     checkout_query = TaskCheckout(
-        worker_capabilities=["python"],
+        worker_capabilities=["pytailor"],
         worker_name=worker_name,
         projects=project_ids or None,
     )
