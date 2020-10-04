@@ -1,7 +1,7 @@
 import asyncio
 import concurrent.futures
 import logging
-from typing import Optional
+from typing import Optional, List
 import httpx
 
 from pytailor.config import LOGGING_FORMAT
@@ -93,9 +93,11 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
         #       - or try to reset tasks for re-execution elsewhere
 
 
-def run_worker(sleep, n_cores, worker_name, project_ids):
+def run_worker(sleep, n_cores, worker_name, project_ids, capabilities: List[str]):
+    if "pytailor" not in capabilities:
+        capabilities.append("pytailor")
     checkout_query = TaskCheckout(
-        worker_capabilities=["pytailor"],
+        worker_capabilities=capabilities,
         worker_name=worker_name,
         projects=project_ids or None,
     )

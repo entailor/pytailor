@@ -39,15 +39,24 @@ def cli():
     "--checks-only", is_flag=True, help="Perform checks without starting the worker"
 )
 @click.option(
+    "--capability",
+    default=None,
+    type=str,
+    help="Specify a worker capability",
+    multiple=True,
+)
+@click.option(
     "--config",
     type=str,
     default=None,
     help="Use a worker configuration from the Tailor config file"
 )
-def worker(sleep, ncores, workername, project_id_filter, checks, checks_only, config):
+def worker(sleep, ncores, workername, project_id_filter, checks, checks_only,
+           capability, config):
     """Start a worker process."""
 
     project_ids = list(project_id_filter) if project_id_filter else []
+    capabilities = list(capability) if capability else []
 
     if config:
         worker_config = pytailor.config.worker_configurations.get(config)
@@ -56,6 +65,7 @@ def worker(sleep, ncores, workername, project_id_filter, checks, checks_only, co
             ncores = worker_config.get("ncores") or ncores
             workername = worker_config.get("workername") or workername
             project_ids += worker_config.get("project_ids") or []
+            capabilities += worker_config.get("capabilities") or []
         else:
             raise ValueError(f"No worker configuration found with name '{config}'")
 
@@ -67,7 +77,7 @@ def worker(sleep, ncores, workername, project_id_filter, checks, checks_only, co
     if checks_only:
         return
 
-    run_worker(sleep, ncores, workername, project_ids)
+    run_worker(sleep, ncores, workername, project_ids, capabilities)
 
 
 @cli.command()
@@ -89,6 +99,7 @@ def init():
                         "ncores": cpu_count() - 1,
                         "workername": "my_worker",
                         "project_ids": [],
+                        "capabilities": [],
                     }
                 },
             },
