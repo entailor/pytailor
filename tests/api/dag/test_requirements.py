@@ -14,13 +14,21 @@ def test_specify_requirements_at_dag_level():
                                 args=["test t3"],
                                 parents=t2)
 
-    target = ["asdf", "fdsa", "pytailor"]
-    assert dag.requirements == target
-    assert t1.requirements == target
-    assert branch.requirements == target
-    assert sub_dag.requirements == target
-    assert t2.requirements == target
-    assert t3.requirements == target
+    target1 = ["pytailor"]
+    target2 = ["asdf", "fdsa", "pytailor"]
+    assert dag.requirements == target2
+    assert t1.requirements == target2
+    assert branch.requirements == target2
+    assert sub_dag.requirements == target2
+    assert t2.requirements == target2
+    assert t3.requirements == target2
+
+    assert dag.get_all_requirements() == target2
+    assert t1.get_all_requirements() == target2
+    assert branch.get_all_requirements() == target2
+    assert sub_dag.get_all_requirements() == target2
+    assert t2.get_all_requirements() == target2
+    assert t3.get_all_requirements() == target2
 
 
 def test_specify_requirements_at_branch_level():
@@ -46,6 +54,13 @@ def test_specify_requirements_at_branch_level():
     assert t2.requirements == target2
     assert t3.requirements == target2
 
+    assert dag.get_all_requirements() == target2
+    assert t1.get_all_requirements() == target1
+    assert branch.get_all_requirements() == target2
+    assert sub_dag.get_all_requirements() == target2
+    assert t2.get_all_requirements() == target2
+    assert t3.get_all_requirements() == target2
+
 
 def test_specify_requirements_at_sub_dag_level():
     inputs = Inputs()
@@ -69,6 +84,14 @@ def test_specify_requirements_at_sub_dag_level():
     assert t2.requirements == target2
     assert t3.requirements == target2
 
+    assert dag.get_all_requirements() == target2
+    assert t1.get_all_requirements() == target1
+    assert branch.get_all_requirements() == target2
+    assert sub_dag.get_all_requirements() == target2
+    assert t2.get_all_requirements() == target2
+    assert t3.get_all_requirements() == target2
+
+
 def test_specify_requirements_at_task_level_1():
     inputs = Inputs()
     with DAG() as dag:
@@ -91,6 +114,13 @@ def test_specify_requirements_at_task_level_1():
     assert sub_dag.requirements == target1
     assert t2.requirements == target1
     assert t3.requirements == target1
+
+    assert dag.get_all_requirements() == target2
+    assert t1.get_all_requirements() == target2
+    assert branch.get_all_requirements() == target1
+    assert sub_dag.get_all_requirements() == target1
+    assert t2.get_all_requirements() == target1
+    assert t3.get_all_requirements() == target1
 
 
 def test_specify_requirements_at_task_level_2():
@@ -116,6 +146,13 @@ def test_specify_requirements_at_task_level_2():
     assert t2.requirements == target2
     assert t3.requirements == target1
 
+    assert dag.get_all_requirements() == target2
+    assert t1.get_all_requirements() == target1
+    assert branch.get_all_requirements() == target2
+    assert sub_dag.get_all_requirements() == target2
+    assert t2.get_all_requirements() == target2
+    assert t3.get_all_requirements() == target1
+
 
 def test_specify_requirements_at_task_level_3():
     inputs = Inputs()
@@ -139,3 +176,10 @@ def test_specify_requirements_at_task_level_3():
     assert sub_dag.requirements == target1
     assert t2.requirements == target1
     assert t3.requirements == target2
+
+    assert dag.get_all_requirements() == target2
+    assert t1.get_all_requirements() == target1
+    assert branch.get_all_requirements() == target2
+    assert sub_dag.get_all_requirements() == target2
+    assert t2.get_all_requirements() == target1
+    assert t3.get_all_requirements() == target2

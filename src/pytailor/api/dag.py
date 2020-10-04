@@ -166,6 +166,10 @@ class BaseTask(ABC):
     def _update_requirements(self, requirements):
         self.requirements = sorted(set(self.requirements).union(requirements))
 
+    @abstractmethod
+    def get_all_requirements(self) -> List[str]:
+        return NotImplemented
+
 
 class OwnerTask(BaseTask):
     """
@@ -323,6 +327,9 @@ class PythonTask(BaseTask):
         """
         return PythonTask.from_dict(self.to_dict())
 
+    def get_all_requirements(self) -> List[str]:
+        return self.requirements
+
 
 class BranchTask(OwnerTask):
     """
@@ -409,6 +416,12 @@ class BranchTask(OwnerTask):
                 "Cannot register task with BrachTask. " "A task is already registered."
             )
         self.task = task
+
+    def get_all_requirements(self) -> List[str]:
+        requirements = set(self.requirements)
+        if self.task:
+            requirements.update(self.task.get_all_requirements())
+        return sorted(requirements)
 
 
 class DAG(OwnerTask):
@@ -551,3 +564,9 @@ class DAG(OwnerTask):
             )
         self.tasks.append(task)
         self.__refresh_links()
+
+    def get_all_requirements(self) -> List[str]:
+        requirements = set(self.requirements)
+        for task in self.tasks:
+            requirements.update(task.get_all_requirements())
+        return sorted(requirements)
