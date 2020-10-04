@@ -15,6 +15,7 @@ mocked_worker_config = {
         "ncores": 2,
         "workername": "asdf",
         "project_ids": ["prj_id_1", "prj_id_2"],
+        "capabilities": ["capability1", "capability2"],
     }
 }
 
@@ -26,7 +27,8 @@ def test_worker_no_args(wf_def_check, run_worker):
     result = runner.invoke(cli, ["worker"])
 
     assert result.exit_code == 0
-    run_worker.assert_called_once_with(3, cpu_count() - 1, default_worker_name(), [])
+    run_worker.assert_called_once_with(
+        3, cpu_count() - 1, default_worker_name(), [], [])
     wf_def_check.assert_called_once_with([])
 
 
@@ -39,10 +41,13 @@ def test_worker_with_args(wf_def_check, run_worker):
                                  "--ncores", 2,
                                  "--workername", "asdf",
                                  "--project-id-filter", "prj_id_1",
-                                 "--project-id-filter", "prj_id_2"
+                                 "--project-id-filter", "prj_id_2",
+                                 "--capability", "capability1",
+                                 "--capability", "capability2"
                                  ])
     assert result.exit_code == 0
-    run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"])
+    run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"],
+                                       ["capability1", "capability2"])
     wf_def_check.assert_called_once_with(["prj_id_1", "prj_id_2"])
 
 
@@ -54,7 +59,8 @@ def test_worker_no_checks(wf_def_check, run_worker):
                                  "--no-checks"
                                  ])
     assert result.exit_code == 0
-    run_worker.assert_called_once_with(3, cpu_count() - 1, default_worker_name(), [])
+    run_worker.assert_called_once_with(
+        3, cpu_count() - 1, default_worker_name(), [], [])
     assert not wf_def_check.called
 
 
@@ -79,7 +85,8 @@ def test_worker_config_only(wf_def_check, run_worker):
                                  "--config", "my_config"
                                  ])
     assert result.exit_code == 0
-    run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"])
+    run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"],
+                                       ["capability1", "capability2"])
     wf_def_check.assert_called_once_with(["prj_id_1", "prj_id_2"])
 
 
@@ -94,11 +101,14 @@ def test_worker_config_and_args(wf_def_check, run_worker):
                                  "--ncores", 3,  # will be overwritten by config
                                  "--workername", "fdsa",  # will be overwritten
                                  "--project-id-filter", "prj_id_3",  # will be added
-                                 "--project-id-filter", "prj_id_4"  # will be added
+                                 "--project-id-filter", "prj_id_4",  # will be added
+                                 "--capability", "capability3",  # will be added
+                                 "--capability", "capability4"  # will be added
                                  ])
     assert result.exit_code == 0
     run_worker.assert_called_once_with(
-        1, 2, "asdf", ["prj_id_3", "prj_id_4", "prj_id_1", "prj_id_2"])
+        1, 2, "asdf", ["prj_id_3", "prj_id_4", "prj_id_1", "prj_id_2"],
+    ["capability3", "capability4", "capability1", "capability2"])
     wf_def_check.assert_called_once_with(
         ["prj_id_3", "prj_id_4", "prj_id_1", "prj_id_2"])
 
