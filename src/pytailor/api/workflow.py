@@ -217,7 +217,7 @@ class Workflow(APIBase):
         if self.__wf_def_id:
             create_data.from_definition_id = self.__wf_def_id
         else:
-            create_data.dag = dict_keys_int_to_str(self.dag.to_dict()),
+            create_data.dag = dict_keys_int_to_str(self.dag.to_dict())
 
         # add workflow to backend
         with RestClient() as client:
