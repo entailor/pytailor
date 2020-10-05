@@ -17,9 +17,11 @@ def cli():
 
 @cli.command()
 @click.option(
-    "--sleep", default=3, help="sleep time between each task checkout request (secs)"
+    "--sleep", default=3.0, type=float,
+    help="sleep time between each task checkout request (secs)"
 )
-@click.option("--ncores", default=cpu_count() - 1, help="max number of parallel jobs")
+@click.option("--ncores", default=cpu_count() - 1, type=int,
+              help="max number of parallel jobs")
 @click.option(
     "--workername", default=default_worker_name(), help="Provide a worker name"
 )
