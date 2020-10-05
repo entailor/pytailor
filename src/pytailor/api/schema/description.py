@@ -1,4 +1,6 @@
 import importlib
+import inspect
+import sys
 
 
 class Description:
@@ -95,7 +97,6 @@ class Description:
 
         """
 
-
         all_tasks = cls.get_all_tasks(dag.to_dict(), [])
 
         if wf_def_description:
@@ -123,23 +124,17 @@ class Description:
         for task in all_tasks[1:]:
             name = task.get("name", "task name missing")
             task_type = task["type"]
-            readme.append(f"### {task_type}: {name}\n\n")
+            my_class = cls.get_class(task_type)
+            readme.append(f"### {name} ({task_type} type)\n\n")
             readme.append(f"#### Task implementation:\n\n")
             for key, value in task.items():
-                if key == "args":
-                    readme.append(f"    args: {value}\n")
-                if key == "kwargs":
-                    readme.append(f"    kwargs: {value}\n")
-                if key == "download":
-                    readme.append(f"    download: {value}\n")
-                if key == "branch_data":
-                    readme.append(f"    branch_data: {value}\n")
-                if key == "branch_files":
-                    readme.append(f"    branch_files: {value}\n")
-                if key == "function":
-                    readme.append(f"    function: {value}\n")
-                    readme.append(f"#### Function docstring:\n\n")
-                    readme.append(cls.get_docstring(value) + "\n\n")
+                for annotation in my_class.__init__.__annotations__.keys():
+                    if key == annotation:
+                        if key not in ["name", "task"]:
+                            readme.append(f"    {key}: {value}\n")
+                            if key == "function":
+                                readme.append(f"#### Function docstring:\n\n")
+                                readme.append(cls.get_docstring(value) + "\n\n")
 
         return cls(wf_def_name, "".join(readme))
 
@@ -170,3 +165,16 @@ class Description:
             return docstring
         else:
             return f"\nNo docstring provided for function {function}\n"
+
+    @staticmethod
+    def get_class(task_type):
+        cls_members = inspect.getmembers(
+            sys.modules["pytailor.api.dag"], inspect.isclass
+        )
+        for cls_member in cls_members:
+            if cls_member[1].__dict__.get("TYPE"):
+                try:
+                    if cls_member[1].TYPE.name.lower() == task_type.lower():
+                        return cls_member[1]
+                except AttributeError:
+                    pass

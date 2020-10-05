@@ -4,7 +4,9 @@ from pathlib import Path
 import toml
 
 from pytailor.utils import default_worker_name
-from pytailor.execution.worker import run_worker, test_worker
+from pytailor.execution.worker import run_worker
+from pytailor.execution.worker_checks import workflow_definition_compliance_test
+import pytailor.config
 
 
 @click.group()
@@ -28,19 +30,45 @@ def cli():
     help="Add a project filter",
     multiple=True,
 )
-def worker(sleep, ncores, workername, project_id_filter):
-    """Start a worker process."""
-    # wf_defs_info = test_worker(project_id_filter)
-    run_worker(sleep, ncores, workername, project_id_filter)
-
-
-@cli.command()
 @click.option(
-    "--projectname", help="Provide a project name", type=str,
+    "--checks/--no-checks",
+    default=True,
+    help="Perform checks to validate the worker environment before starting the worker"
 )
-def testworker(projectname):
-    """Start only the test worker process."""
-    wf_defs_info = test_worker(projectname)
+@click.option(
+    "--checks-only", is_flag=True, help="Perform checks without starting the worker"
+)
+@click.option(
+    "--config",
+    type=str,
+    default=None,
+    help="Use a worker configuration from the Tailor config file"
+)
+def worker(sleep, ncores, workername, project_id_filter, checks, checks_only, config):
+    """Start a worker process."""
+
+    project_ids = list(project_id_filter) if project_id_filter else []
+
+    if config:
+        worker_config = pytailor.config.worker_configurations.get(config)
+        if worker_config:
+            sleep = worker_config.get("sleep") or sleep
+            ncores = worker_config.get("ncores") or ncores
+            workername = worker_config.get("workername") or workername
+            project_ids += worker_config.get("project_ids") or []
+        else:
+            raise ValueError(f"No worker configuration found with name '{config}'")
+
+    if checks:
+        # check compliance with project wf defs
+        wf_defs_info = workflow_definition_compliance_test(project_ids)
+        # TODO: create a wf_def_filter based on wf_defs_info ?
+
+    if checks_only:
+        return
+
+    run_worker(sleep, ncores, workername, project_ids)
+
 
 @cli.command()
 def init():
@@ -60,10 +88,7 @@ def init():
                         "sleep": 3,
                         "ncores": cpu_count() - 1,
                         "workername": "my_worker",
-                        "capabilities": ["python"],
                         "project_ids": [],
-                        "workflow_definition_ids": [],
-                        "workflow_ids": [],
                     }
                 },
             },

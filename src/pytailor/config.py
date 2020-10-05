@@ -27,10 +27,10 @@ def check_config_names(config_dict):
         raise ValueError(error_msg)
 
 
-def load_config_from_file() -> dict:
+def load_config_from_file(heading: str) -> dict:
     config_file = Path.home() / ".tailor" / "config.toml"
     if config_file.exists():
-        return toml.load(str(config_file))["pytailor"]
+        return toml.load(str(config_file))[heading]
     else:
         return {}
 
@@ -43,7 +43,7 @@ def load_config_from_env() -> dict:
     return env_cfg
 
 
-file_config = load_config_from_file()
+file_config = load_config_from_file("pytailor")
 env_config = load_config_from_env()
 
 config.update(file_config)
@@ -54,3 +54,6 @@ check_config_names(config)
 # put all config names directly under current namespace (tailor.config)
 for k, v in config.items():
     globals()[k] = v
+
+# load worker configurations
+worker_configurations = load_config_from_file("worker")
