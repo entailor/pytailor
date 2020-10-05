@@ -53,7 +53,9 @@ class FileSet(APIBase):
         with FileClient() as client:
             client.upload_files(files, fileset_model)
 
-    def download(self, task_id: str = None, tags: List[str] = None, use_storage_dirs: bool = True):
+    def download(
+        self, task_id: str = None, tags: List[str] = None, use_storage_dirs: bool = True
+    ):
         """Download files with specified filenames, task_id and/or tags. If use_storage_dirs=False all files are downloaded to
         the current directory"""
 
@@ -89,7 +91,7 @@ class FileSet(APIBase):
             files_in_tag = []
             for link in tags.links:
                 files_in_tag.append(link.filename)
-            files.append({'tag': tags.tag_name, 'filenames': files_in_tag})
+            files.append({"tag": tags.tag_name, "filenames": files_in_tag})
         return files
 
     @classmethod
