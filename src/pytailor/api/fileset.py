@@ -91,3 +91,9 @@ class FileSet(APIBase):
                 files_in_tag.append(link.filename)
             files.append({'tag': tags.tag_name, 'filenames': files_in_tag})
         return files
+
+    @classmethod
+    def from_workflow(cls, wf):
+        fileset_id = wf._Workflow__fileset
+        prj = wf.project
+        return cls(prj, fileset_id)
