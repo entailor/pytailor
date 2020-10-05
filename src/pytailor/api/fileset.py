@@ -56,8 +56,11 @@ class FileSet(APIBase):
     def download(
         self, task_id: str = None, tags: List[str] = None, use_storage_dirs: bool = True
     ):
-        """Download files with specified filenames, task_id and/or tags. If use_storage_dirs=False all files are downloaded to
-        the current directory"""
+        """
+        Download files with specified filenames, task_id and/or tags.
+
+        If use_storage_dirs=False all files are downloaded to the current directory
+        """
 
         fileset_download = FileSetDownload(task_id=task_id, tags=tags)
 
