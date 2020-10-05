@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from typing import Optional
 import uuid
 from collections import defaultdict
+from typing import Optional
 
-from pytailor.models import Workflow as WorkflowModel, WorkflowCreate
 from pytailor.clients import RestClient
-from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
-from pytailor.common.state import State
-from pytailor.execution import SerialRunner
 from pytailor.common.base import APIBase
+from pytailor.common.state import State
 from pytailor.exceptions import BackendResourceError
-from .project import Project
-from .fileset import FileSet
+from pytailor.execution import SerialRunner
+from pytailor.models import Workflow as WorkflowModel, WorkflowCreate
+from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
+
 from .dag import DAG
+from .fileset import FileSet
+from .project import Project
 
 
 class Workflow(APIBase):
@@ -21,7 +22,9 @@ class Workflow(APIBase):
     The Workflow class is used to create new workflows or operate on existing workflows.
 
     **Instantiation patterns:**
-    - To create a new workflow use the default constructor
+    - To create a new workflow from a DAG use the default constructor
+    - To create a new workflow from a workflow definition use
+    *Workflow.from_definition_id()*
     - To retrieve a workflow from the backend use *Workflow.from_project_and_id()*
 
     """
@@ -29,7 +32,6 @@ class Workflow(APIBase):
     # new workflows are instantiated with __init__
     # existing workflows are instantiated with:
     # - Workflow.from_project_and_id()
-    # - Workflow.from_model()
 
     def __init__(
         self,
@@ -66,6 +68,7 @@ class Workflow(APIBase):
         self.__outputs = {}
         self.__id = None
         self.__model = None
+        self.__wf_def_id = None
 
     @property
     def project(self):
@@ -95,6 +98,17 @@ class Workflow(APIBase):
     def id(self):
         return self.__id
 
+    @property
+    def wf_def_id(self):
+        return self.__wf_def_id
+
+    @wf_def_id.setter
+    def wf_def_id(self, wf_def_id: str):
+        if not self.__wf_def_id:
+            self.__wf_def_id = wf_def_id
+        else:
+            raise AttributeError("wf_def_id already set")
+
     def __str__(self):
         self.refresh()
         return self.__pretty_printed()
@@ -105,6 +119,7 @@ class Workflow(APIBase):
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
         self.__id = wf_model.id
+        self.__wf_def_id = wf_model.from_definition_id
         self.__model = wf_model
 
     def refresh(self) -> None:
@@ -143,6 +158,33 @@ class Workflow(APIBase):
         wf.__update_from_backend(wf_model)
         return wf
 
+    @classmethod
+    def from_definition_id(cls, project: Project,
+                           wf_def_id: str,
+                           name: Optional[str] = None,
+                           inputs: Optional[dict] = None,
+                           fileset: Optional[FileSet] = None
+                           ) -> Workflow:
+        """
+        Create a new workflow from an existing workflow definition.
+        """
+        with RestClient() as client:
+            wf_def_model = cls._handle_rest_client_call(
+                client.get_workflow_definition_project,
+                project.id,
+                wf_def_id,
+                error_msg="Error while fetching workflow definition.",
+            )
+        wf = Workflow(
+            project=project,
+            dag=DAG.from_dict(dict_keys_str_to_int(wf_def_model.dag)),
+            name=name,
+            inputs=inputs,
+            fileset=fileset
+        )
+        wf.wf_def_id = wf_def_id
+        return wf
+
     def run(self, distributed: bool = False, worker_name: Optional[str] = None) -> None:
         """
         Start the workflow.
@@ -155,8 +197,7 @@ class Workflow(APIBase):
         the database, and tasks will be executed in parallel on one or more workers.
         - **worker_name** (str, Optional) A worker name can be provided to control which
         worker(s) will execute the workflow's tasks. This parameter is ignored for
-        *mode='here_and_now'*
-
+        *distributed=False*
         """
 
         if self.__state != State.PRE:
@@ -167,12 +208,16 @@ class Workflow(APIBase):
 
         # create data model
         create_data = WorkflowCreate(
-            dag=dict_keys_int_to_str(self.dag.to_dict()),
             name=self.name,
             inputs=self.inputs,
             fileset_id=self.__fileset.id,
             worker_name_restriction=worker_name,
         )
+
+        if self.__wf_def_id:
+            create_data.from_definition_id = self.__wf_def_id
+        else:
+            create_data.dag = dict_keys_int_to_str(self.dag.to_dict()),
 
         # add workflow to backend
         with RestClient() as client:
@@ -223,17 +268,17 @@ class Workflow(APIBase):
         row = "|" + tf + "|" + n1 + "|" + p1 + "|" + typ + "|" + s + "|\n"
         top = "+" + "-" * 77 + "+" + "\n"
         vsep = (
-            "+"
-            + "-" * 6
-            + "+"
-            + "-" * 21
-            + "+"
-            + "-" * 22
-            + "+"
-            + "-" * 12
-            + "+"
-            + "-" * 12
-            + "+\n"
+                "+"
+                + "-" * 6
+                + "+"
+                + "-" * 21
+                + "+"
+                + "-" * 22
+                + "+"
+                + "-" * 12
+                + "+"
+                + "-" * 12
+                + "+\n"
         )
         header = f"| Workflow {self.id}: {self.name}"
         header = header + " " * (78 - len(header)) + "|\n"
