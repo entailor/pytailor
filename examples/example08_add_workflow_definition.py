@@ -12,7 +12,6 @@ This example introduces the following NEW concepts:
 
 """
 
-
 from pytailor import PythonTask, DAG, WorkflowDefinition, Account, Project, \
     InputsSchema, FilesSchema, Description, Files, Outputs, Inputs, Workflow, FileSet
 
@@ -26,7 +25,6 @@ outputs = Outputs()
 inputs = Inputs()
 
 with DAG(name="dag") as dag:
-
     t1 = PythonTask(
         function=glob.glob,
         name="task 1",
@@ -71,7 +69,6 @@ description = Description.from_dag(dag,
                                                'definition',
                                    wf_def_description=wf_def_description)
 
-
 # create the workflow definition
 
 wf_def = WorkflowDefinition(
@@ -98,7 +95,6 @@ prj.add_workflow_definition(wf_def.id)
 # if you want ...
 prj.list_available_workflow_definitions()
 
-
 wf_def = WorkflowDefinition.from_project_and_id(prj, wf_def.id)
 fileset = FileSet(prj)
 fileset.upload(
@@ -106,17 +102,18 @@ fileset.upload(
     inpfile=["testfiles/testfile_03.txt"],
 )
 
-wf = Workflow(project=prj,
-              dag=wf_def.dag,
-              name="my workflow",
-              inputs=example_inputs,
-              fileset=fileset)
+# wf = Workflow(project=prj,
+#               dag=wf_def.dag,
+#               name="my workflow",
+#               inputs=example_inputs,
+#               fileset=fileset)
 
-# not yet implemented:
-# Workflow.from_definition(wf_def.id,
-#                          name="my workflow",
-#                          inputs=example_inputs,
-#                          fileset=fileset)
+# a workflow can also be instantiated from a workflow definition id
+wf = Workflow.from_definition_id(project=prj,
+                                 wf_def_id=wf_def.id,
+                                 name="my workflow",
+                                 inputs=example_inputs,
+                                 fileset=fileset)
 
 wf.run()
 

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 import httpx
 
 from pytailor.utils import get_logger
@@ -9,11 +9,13 @@ from .taskrunner import run_task
 
 
 class SerialRunner(APIBase):
-    def __init__(self, project_id: str, worker_name: str, workflow_id: int):
+    def __init__(self, project_id: str, worker_name: str, workflow_id: int,
+                 capabilities: List[str] = None):
 
         self.project_id = project_id
         self.worker_name = worker_name
         self.workflow_id = workflow_id
+        self.capabilities = capabilities or ["pytailor"]
 
     def run(self):
 
@@ -23,7 +25,7 @@ class SerialRunner(APIBase):
         # checkout and run tasks
 
         checkout_query = TaskCheckout(
-            worker_capabilities=["python"],
+            worker_capabilities=self.capabilities,
             worker_name=self.worker_name,
             workflows=[self.workflow_id],
         )

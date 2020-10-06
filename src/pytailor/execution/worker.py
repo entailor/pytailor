@@ -1,7 +1,7 @@
 import asyncio
 import concurrent.futures
 import logging
-from typing import Optional
+from typing import Optional, List
 import httpx
 
 from pytailor.config import LOGGING_FORMAT
@@ -45,7 +45,6 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
         for aio_task in list(aio_tasks):
             if aio_task.done():
                 aio_tasks.remove(aio_task)
-                print("Task finished", aio_task.result())
 
     # go into loop with process pool
     with concurrent.futures.ProcessPoolExecutor(max_workers=n_cores) as pool:
@@ -71,7 +70,6 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
                             async_run_task(pool, task_exec_data)
                         )
                         asyncio_tasks.add(asyncio_task)
-                        await asyncio.sleep(0.3)  # needed?
                         handle_finished(asyncio_tasks)
 
                     else:
@@ -93,14 +91,16 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
         #       - or try to reset tasks for re-execution elsewhere
 
 
-def run_worker(sleep, n_cores, worker_name, project_ids):
+def run_worker(sleep, n_cores, worker_name, project_ids, capabilities: List[str]):
+    if "pytailor" not in capabilities:
+        capabilities.append("pytailor")
     checkout_query = TaskCheckout(
-        worker_capabilities=["python"],
+        worker_capabilities=capabilities,
         worker_name=worker_name,
         projects=project_ids or None,
     )
 
     try:
-        asyncio.run(run_manager(checkout_query, int(n_cores), int(sleep)))
+        asyncio.run(run_manager(checkout_query, n_cores, sleep))
     except KeyboardInterrupt:
         print("CTRL-C pressed, exiting...")

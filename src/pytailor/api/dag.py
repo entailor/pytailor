@@ -134,15 +134,19 @@ class BaseTask(ABC):
         name: str = None,
         parents: Optional[Union[List[BaseTask], BaseTask]] = None,
         owner: Optional[OwnerTask] = None,
+        requirements: Optional[List[str]] = None
     ):
         self.name: str = name or "Unnamed"
         parents = [parents] if isinstance(parents, (BaseTask, int)) else parents
         self.parents: list = parents if parents else []
+        self.requirements = ['pytailor']
+        self._update_requirements(requirements or [])
         if not owner and _CONTEXT_MANAGER_OWNER:
             owner = _CONTEXT_MANAGER_OWNER
         if owner:
             self.owner = owner
             self.owner.register(self)
+            self._update_requirements(owner.requirements)
 
     @property
     @classmethod
@@ -159,6 +163,13 @@ class BaseTask(ABC):
     def from_dict(cls, d: dict) -> BaseTask:
         return NotImplemented
 
+    def _update_requirements(self, requirements):
+        self.requirements = sorted(set(self.requirements).union(requirements))
+
+    @abstractmethod
+    def get_all_requirements(self) -> List[str]:
+        return NotImplemented
+
 
 class OwnerTask(BaseTask):
     """
@@ -170,8 +181,10 @@ class OwnerTask(BaseTask):
         name: Optional[str] = None,
         parents: Optional[Union[List[BaseTask], BaseTask]] = None,
         owner: Optional[BaseTask] = None,
+        requirements: Optional[List[str]] = None
     ):
-        super().__init__(name=name, parents=parents, owner=owner)
+        super().__init__(name=name, parents=parents, owner=owner,
+                         requirements=requirements)
         self._old_context_manager_owners = []
 
     @abstractmethod
@@ -263,9 +276,11 @@ class PythonTask(BaseTask):
         kwargs: Optional[Union[Dict[str, Any], str, Parameterization]] = None,
         output_to: Optional[Union[str, Parameterization]] = None,
         output_extraction: Optional[dict] = None,
-        use_storage_dirs: Optional[bool] = True
+        use_storage_dirs: Optional[bool] = True,
+        requirements: Optional[List[str]] = None
     ):
-        super().__init__(name=name, parents=parents, owner=owner)
+        super().__init__(name=name, parents=parents, owner=owner,
+                         requirements=requirements)
         self.function = function
         self.kwargs = kwargs or {}
         self.args = args or []
@@ -312,6 +327,9 @@ class PythonTask(BaseTask):
         """
         return PythonTask.from_dict(self.to_dict())
 
+    def get_all_requirements(self) -> List[str]:
+        return self.requirements
+
 
 class BranchTask(OwnerTask):
     """
@@ -350,11 +368,14 @@ class BranchTask(OwnerTask):
         owner: Optional[OwnerTask] = None,
         branch_data: Union[list, str, Parameterization] = None,
         branch_files: Union[list, str, Parameterization] = None,
+        requirements: Optional[List[str]] = None
     ):
-        super().__init__(name=name, parents=parents, owner=owner)
+        super().__init__(name=name, parents=parents, owner=owner,
+                         requirements=requirements)
         self.task = task
         if task:
             task.owner = self
+            task._update_requirements(self.requirements)
 
         # either branch_data of branch_files must be not None
         if branch_data is None and branch_files is None:
@@ -396,6 +417,12 @@ class BranchTask(OwnerTask):
             )
         self.task = task
 
+    def get_all_requirements(self) -> List[str]:
+        requirements = set(self.requirements)
+        if self.task:
+            requirements.update(self.task.get_all_requirements())
+        return sorted(requirements)
+
 
 class DAG(OwnerTask):
     """
@@ -427,12 +454,15 @@ class DAG(OwnerTask):
         parents: Union[List[BaseTask], BaseTask] = None,
         owner: Optional[OwnerTask] = None,
         links: dict = None,
+        requirements: Optional[List[str]] = None
     ):
-        super().__init__(name=name, parents=parents, owner=owner)
+        super().__init__(name=name, parents=parents, owner=owner,
+                         requirements=requirements)
         if tasks:
             self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
             for task in tasks:
                 task.owner = self
+                task._update_requirements(self.requirements)
         else:
             self.tasks = []
         self.links = links or {}
@@ -534,3 +564,9 @@ class DAG(OwnerTask):
             )
         self.tasks.append(task)
         self.__refresh_links()
+
+    def get_all_requirements(self) -> List[str]:
+        requirements = set(self.requirements)
+        for task in self.tasks:
+            requirements.update(task.get_all_requirements())
+        return sorted(requirements)
