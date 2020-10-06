@@ -144,8 +144,6 @@ Bu clicking on the *Details* link the workflow can be further inspected in the d
 
 Head over to the [Getting started](documentation/getting_started.md) section for instructions on how to setup pyTailor.
 
-Once you are setup and are able to run the basic examples you can start working through the [tutorials]().
+Once you are setup and are able to run the basic examples you can start working through the [tutorials](tutorials/example01_hello_world.md).
 
-At any time you can visit the [Concepts](documentation/concepts.md) section to read about the core concepts of Tailor.
-
-You can also consult the [API Reference]() for documentation of the pyTailor API.
+You can also consult the [API Reference](api/taskdefs.md) for documentation of the pyTailor API.

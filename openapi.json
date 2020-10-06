@@ -3,7 +3,7 @@
   "info": {
     "title": "Tailor.wf REST API",
     "description": "Tailor Workflow System",
-    "version": "0.9.0"
+    "version": "1.0.0"
   },
   "paths": {
     "/projects/{project_id}": {
