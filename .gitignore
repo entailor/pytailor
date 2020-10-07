@@ -55,3 +55,6 @@ venv.bak/
 # Idea / Pycharm
 .idea/
 *.iml
+
+# Logging
+*.log
