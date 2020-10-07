@@ -122,7 +122,6 @@ class Workflow(APIBase):
         # workflow
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
-        self.__fileset = FileSet.from_workflow(self)
         self.__id = wf_model.id
         self.__wf_def_id = wf_model.from_definition_id
         self.__model = wf_model
