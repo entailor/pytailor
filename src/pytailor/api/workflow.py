@@ -91,6 +91,10 @@ class Workflow(APIBase):
         return self.__state.name
 
     @property
+    def fileset(self):
+        return self.__fileset
+
+    @property
     def outputs(self):
         return self.__outputs
 
@@ -118,6 +122,7 @@ class Workflow(APIBase):
         # workflow
         self.__state = State[wf_model.state]
         self.__outputs = wf_model.outputs
+        self.__fileset = FileSet.from_workflow(self)
         self.__id = wf_model.id
         self.__wf_def_id = wf_model.from_definition_id
         self.__model = wf_model
@@ -153,7 +158,7 @@ class Workflow(APIBase):
             dag=DAG.from_dict(dict_keys_str_to_int(wf_model.dag)),
             name=wf_model.name,
             inputs=wf_model.inputs,
-            fileset=wf_model.fileset_id,
+            fileset=FileSet(Project(wf_model.project_id), wf_model.fileset_id)
         )
         wf.__update_from_backend(wf_model)
         return wf

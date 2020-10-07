@@ -99,6 +99,6 @@ class FileSet(APIBase):
 
     @classmethod
     def from_workflow(cls, wf):
-        fileset_id = wf._Workflow__fileset
+        fileset = wf._Workflow__fileset
         prj = wf.project
-        return cls(prj, fileset_id)
+        return cls(prj, fileset.id)
