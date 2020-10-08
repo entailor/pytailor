@@ -1,4 +1,5 @@
 import asyncio
+import random
 import time
 from typing import Callable, Any, Union, List, Optional, Awaitable
 from pydantic import BaseModel
@@ -12,8 +13,6 @@ from pytailor.utils import get_logger
 logger = get_logger("APICallHandler")
 
 retry_http_codes = [httpx.codes.BAD_GATEWAY]
-
-# TODO: use exponential backoff with jitter for retry timing
 
 
 def _handle_exception(exc, return_none_on, error_msg):
@@ -31,6 +30,10 @@ def _handle_exception(exc, return_none_on, error_msg):
         raise BackendResponseError(error_msg)
     else:
         raise
+
+
+def _get_sleep_time(n):
+    return (2 ** n) + (random.randint(0, 300) / 100)
 
 
 def handle_rest_client_call(
@@ -51,10 +54,11 @@ def handle_rest_client_call(
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code in retry_http_codes:
                     retries += 1
+                    sleep_time = _get_sleep_time(retries)
                     logger.warn(
-                        f"Got error: {exc} Retrying in 2 secs, attempt {retries}"
+                        f"Got error: {exc} Retrying in {sleep_time} secs, attempt {retries}"
                     )
-                    time.sleep(2)
+                    time.sleep(sleep_time)
                     if retries >= REQUEST_RETRY_COUNT:
                         raise
                 else:
@@ -81,10 +85,11 @@ async def async_handle_rest_client_call(
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code in retry_http_codes:
                     retries += 1
+                    sleep_time = _get_sleep_time(retries)
                     logger.warn(
-                        f"Got error: {exc} Retrying in 2 secs, attempt {retries}"
+                        f"Got error: {exc} Retrying in {sleep_time} secs, attempt {retries}"
                     )
-                    await asyncio.sleep(2)
+                    await asyncio.sleep(sleep_time)
                     if retries >= REQUEST_RETRY_COUNT:
                         raise
                 else:
