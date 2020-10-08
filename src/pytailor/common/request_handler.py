@@ -38,7 +38,7 @@ def _handle_retry(exc, no_of_retries):
     elif isinstance(exc, (httpx.ConnectError, httpx.ConnectTimeout)):
         retry = True
     if retry:
-        logger.warn(msg)
+        logger.warning(msg)
     return retry, no_of_retries, sleep_time
 
 
