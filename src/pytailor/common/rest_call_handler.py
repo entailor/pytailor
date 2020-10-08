@@ -13,6 +13,8 @@ logger = get_logger("APICallHandler")
 
 retry_http_codes = [httpx.codes.BAD_GATEWAY]
 
+# TODO: use exponential backoff with jitter for retry timing
+
 
 def _handle_exception(exc, return_none_on, error_msg):
 
