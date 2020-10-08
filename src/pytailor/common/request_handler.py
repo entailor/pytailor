@@ -13,8 +13,7 @@ from pytailor.utils import get_logger
 
 logger = get_logger("RequestHandler")
 
-RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY,
-                    httpx.codes.FORBIDDEN]
+RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY]
 
 
 def _get_sleep_time(n):
