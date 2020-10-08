@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import httpx
 
 from pytailor.exceptions import BackendResponseError
-from pytailor.config import API_CALL_RETRY_COUNT
+from pytailor.config import REQUEST_RETRY_COUNT
 from pytailor.utils import get_logger
 
 
@@ -55,7 +55,7 @@ def handle_rest_client_call(
                         f"Got error: {exc} Retrying in 2 secs, attempt {retries}"
                     )
                     time.sleep(2)
-                    if retries >= API_CALL_RETRY_COUNT:
+                    if retries >= REQUEST_RETRY_COUNT:
                         raise
                 else:
                     raise
@@ -85,7 +85,7 @@ async def async_handle_rest_client_call(
                         f"Got error: {exc} Retrying in 2 secs, attempt {retries}"
                     )
                     await asyncio.sleep(2)
-                    if retries >= API_CALL_RETRY_COUNT:
+                    if retries >= REQUEST_RETRY_COUNT:
                         raise
                 else:
                     raise
