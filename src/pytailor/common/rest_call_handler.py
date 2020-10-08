@@ -61,6 +61,7 @@ def handle_rest_client_call(
                     time.sleep(sleep_time)
                     if retries >= REQUEST_RETRY_COUNT:
                         raise
+                    # TODO also retry on TimeoutException and NetworkError
                 else:
                     raise
 
