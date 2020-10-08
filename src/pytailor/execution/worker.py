@@ -10,12 +10,12 @@ from pytailor.models import TaskCheckout, TaskExecutionData
 from pytailor.utils import get_logger
 from pytailor.clients import AsyncRestClient
 from pytailor.exceptions import BackendResponseError
-from pytailor.common.rest_call_handler import async_handle_rest_client_call
+from pytailor.common.request_handler import async_handle_request
 
 
 async def do_checkout(checkout_query: TaskCheckout) -> Optional[TaskExecutionData]:
     async with AsyncRestClient() as client:
-        return await async_handle_rest_client_call(
+        return await async_handle_request(
             client.checkout_task,
             checkout_query
         )

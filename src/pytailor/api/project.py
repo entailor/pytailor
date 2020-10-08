@@ -20,7 +20,7 @@ class Project(APIBase):
     def __init__(self, project_id: str):
         self.id = project_id
         with RestClient() as client:
-            self.__project_model = self._handle_rest_client_call(
+            self.__project_model = self._handle_request(
                 client.get_project,
                 self.id,
                 error_msg=f"Could not find project with id {project_id}.",
@@ -31,7 +31,7 @@ class Project(APIBase):
     def from_name(cls, project_name: str) -> Project:
         """Get project with name *project_name*."""
         with RestClient() as client:
-            projects = cls._handle_rest_client_call(
+            projects = cls._handle_request(
                 client.get_projects, error_msg=f"Error while fetching projects."
             )
             for prj in projects:
@@ -42,7 +42,7 @@ class Project(APIBase):
     @classmethod
     def list_projects_names(cls):
         with RestClient() as client:
-            projects = cls._handle_rest_client_call(
+            projects = cls._handle_request(
                 client.get_projects, error_msg=f"Error while fetching projects."
             )
             return [prj.name for prj in projects]
@@ -51,7 +51,7 @@ class Project(APIBase):
         """Add workflow definition with id *workflow_defninition_id* to project."""
         permission_change = PermissionChange(add=[workflow_definition_id])
         with RestClient() as client:
-            permission_list: PermissionList = self._handle_rest_client_call(
+            permission_list: PermissionList = self._handle_request(
                 client.update_workflow_definitions_for_project,
                 self.id,
                 permission_change,
@@ -63,7 +63,7 @@ class Project(APIBase):
         """Remove workflow definition with id *workflow_defninition_id* from project."""
         permission_change = PermissionChange(delete=[workflow_definition_id])
         with RestClient() as client:
-            permission_list: PermissionList = self._handle_rest_client_call(
+            permission_list: PermissionList = self._handle_request(
                 client.update_workflow_definitions_for_project,
                 self.id,
                 permission_change,
@@ -76,7 +76,7 @@ class Project(APIBase):
         Retrieve a list of all available workflow definitions as summary dicts.
         """
         with RestClient() as client:
-            wf_def_models = self._handle_rest_client_call(
+            wf_def_models = self._handle_request(
                 client.get_workflow_definition_summaries_project,
                 self.id,
                 error_msg="Could not retrieve workflow definition summaries.",
@@ -88,7 +88,7 @@ class Project(APIBase):
         Retrieve a list of all available workflows as summary dicts.
         """
         with RestClient() as client:
-            wf_models = self._handle_rest_client_call(
+            wf_models = self._handle_request(
                 client.get_workflows,
                 self.id,
                 error_msg="Could not retrieve workflows.",
