@@ -17,8 +17,8 @@ RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY,
                     httpx.codes.SERVICE_UNAVAILABLE,
                     httpx.codes.GATEWAY_TIMEOUT]
 
-RETRY_ERRORS = (httpx.ConnectError,
-                httpx.ConnectTimeout)
+RETRY_ERRORS = (httpx.TimeoutException,
+                httpx.NetworkError)
 
 
 def _get_sleep_time(n):
