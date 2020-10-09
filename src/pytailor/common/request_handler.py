@@ -13,7 +13,12 @@ from pytailor.utils import get_logger
 
 logger = get_logger("RequestHandler")
 
-RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY]
+RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY,
+                    httpx.codes.SERVICE_UNAVAILABLE,
+                    httpx.codes.GATEWAY_TIMEOUT]
+
+RETRY_ERRORS = (httpx.ConnectError,
+                httpx.ConnectTimeout)
 
 
 def _get_sleep_time(n):
@@ -35,7 +40,7 @@ def _handle_retry(exc, no_of_retries):
             # sleep_time = 0.
             # msg = "Token expired, reauthenticating
             pass
-    elif isinstance(exc, (httpx.ConnectError, httpx.ConnectTimeout)):
+    elif isinstance(exc, RETRY_ERRORS):
         retry = True
     if retry:
         logger.warning(msg)
