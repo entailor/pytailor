@@ -94,3 +94,16 @@ class Project(APIBase):
                 error_msg="Could not retrieve workflows.",
             )
         return [wf_model.dict() for wf_model in wf_models]
+
+    def delete_workflow(self, workflow_id: str) -> str:
+        """
+        Delete a workflow and corresponding files by workflow id
+        """
+        with RestClient() as client:
+            self._handle_rest_client_call(
+                client.delete_workflow,
+                self.id,
+                workflow_id,
+                error_msg="Could not delete workflow.",
+            )
+        return f'deleted workflow {workflow_id}'

@@ -102,6 +102,14 @@ class RestClient(httpx.Client):
         else:
             response.raise_for_status()
 
+    def delete_workflow(self, project_id: str, wf_id: str):
+        url = f"projects/{project_id}/workflows/{wf_id}"
+        response = self.delete(url)
+        if response.status_code == httpx.codes.OK:
+            return response
+        else:
+            response.raise_for_status()
+
     # workflow definitions
 
     def get_workflow_definition_project(
