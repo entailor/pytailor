@@ -36,7 +36,7 @@ wf = Workflow(
 )
 
 # run the workflow
-wf.run(distributed=True)
+wf.run()
 
 # check the status of the workflow run
 print("The workflow finished with state:")
@@ -44,9 +44,9 @@ print(wf.state)
 
 ### workflow retrieval ###
 
-# wf2 = Workflow.from_project_and_id(prj, wf.id)
+wf2 = Workflow.from_project_and_id(prj, wf.id)
 
-# assert wf.id == wf2.id
+assert wf.id == wf2.id
 
 # pretty print the workflow
-# print(wf)
+print(wf)
