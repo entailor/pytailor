@@ -54,3 +54,22 @@ def test_handle_exception_retry(_get_sleep_time_seconds, caplog):
     total_retries = REQUEST_RETRY_COUNT * len(RETRY_ERRORS)
     assert _get_sleep_time_seconds.call_count == total_retries
     assert len(caplog.messages) == total_retries
+
+
+def test_handle_non_retry_error():
+    with pytest.raises(BackendResponseError) as e:
+        handle_request(
+            get_http_status_raising_func(httpx.codes.NOT_FOUND),
+            "http://test_url"
+        )
+        assert str(httpx.codes.NOT_FOUND) in str(e)
+
+
+def test_handle_none_on_error():
+    code = httpx.codes.NOT_FOUND
+    response = handle_request(
+        get_http_status_raising_func(code),
+        "http://test_url",
+        return_none_on=[code]
+    )
+    assert response is None
