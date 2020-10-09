@@ -1,12 +1,11 @@
-from unittest.mock import patch ,MagicMock
+from unittest.mock import patch, MagicMock
 
 import httpx
 import pytest
-
 from pytailor.common.request_handler import handle_request, RETRY_HTTP_CODES, \
     RETRY_ERRORS
-from pytailor.exceptions import BackendResponseError
 from pytailor.config import REQUEST_RETRY_COUNT
+from pytailor.exceptions import BackendResponseError
 
 
 def get_http_status_raising_func(error_code):
