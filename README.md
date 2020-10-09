@@ -5,8 +5,7 @@
 # pyTailor - A python client for Tailor.wf
 
 ## Get started
-To get started with pyTailor please visit the [documentation]() (this link is not working
-yet) pages.
+To get started with pyTailor please visit the [documentation](https://entailor.github.io/pytailor/)
 
 ## Installation
 
