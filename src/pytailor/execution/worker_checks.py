@@ -5,7 +5,7 @@ import uuid
 from typing import Optional, List, TextIO
 
 from pytailor.clients import RestClient
-from pytailor.common.rest_call_handler import handle_rest_client_call
+from pytailor.common.request_handler import handle_request
 
 
 def _get_all_tasks(dag_dict, all_tasks):
@@ -27,7 +27,7 @@ def _check_all_function_imports_in_project(project_id: str, log_file: TextIO):
     wf_defs_info = []
     tests_ok = True
     with RestClient() as client:
-        wf_def_summaries = handle_rest_client_call(
+        wf_def_summaries = handle_request(
             client.get_workflow_definition_summaries_project, project_id
         )
     if not wf_def_summaries:
@@ -37,7 +37,7 @@ def _check_all_function_imports_in_project(project_id: str, log_file: TextIO):
                        f"{wf_def_info.name} ({wf_def_info.id})\n")
         wf_def_check_summary = {"id": wf_def_info.id, "name": wf_def_info.name}
         with RestClient() as client:
-            wf_def = handle_rest_client_call(
+            wf_def = handle_request(
                 client.get_workflow_definition_project, project_id, wf_def_info.id
             )
         wf_df_ok = _check_import_functions_in_tasks(
@@ -77,7 +77,7 @@ def workflow_definition_compliance_test(project_ids: Optional[List[str]]):
     wf_defs_info = []
     if not project_ids:
         with RestClient() as client:
-            projects = handle_rest_client_call(client.get_projects)
+            projects = handle_request(client.get_projects)
 
     now_str = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
     log_file_name = f"worker_check_{now_str}.log"

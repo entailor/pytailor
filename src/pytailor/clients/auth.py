@@ -1,6 +1,6 @@
-import httpx
+import uuid
 
-from pytailor.config import AUTH_KEY
+import httpx
 
 
 class TailorAuth(httpx.Auth):
@@ -8,6 +8,8 @@ class TailorAuth(httpx.Auth):
         self.token = token
 
     def auth_flow(self, request):
-        # Send the request, with an `Authorization` header.
+        # Add Oauth2 authorization header
         request.headers["Authorization"] = "Bearer " + self.token
+        # Add AWS correlation ID in order to trace requests through the network
+        request.headers["X-Amzn-Trace-Id"] = str(uuid.uuid4())
         yield request
