@@ -3,13 +3,11 @@ import random
 import time
 from typing import Callable, Any, Union, List, Optional, Awaitable
 
-from pydantic import BaseModel
 import httpx
-
-from pytailor.exceptions import BackendResponseError
+from pydantic import BaseModel
 from pytailor.config import REQUEST_RETRY_COUNT
+from pytailor.exceptions import BackendResponseError
 from pytailor.utils import get_logger
-
 
 logger = get_logger("RequestHandler")
 
@@ -20,16 +18,20 @@ RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY,
 RETRY_ERRORS = (httpx.TimeoutException,
                 httpx.NetworkError)
 
+MAX_SLEEP_TIME = 900
 
-def _get_sleep_time(n):
-    return (2 ** n) + (random.randint(0, 300) / 100)
+
+def _get_sleep_time_seconds(n):
+    exp_backoff = 2 ** n
+    jitter = random.randint(0, 300) / 100
+    return min(exp_backoff + jitter, MAX_SLEEP_TIME)
 
 
 def _handle_retry(exc, no_of_retries):
     """Handle errors which qualify for retry"""
     retry = False
     no_of_retries += 1
-    sleep_time = _get_sleep_time(no_of_retries)
+    sleep_time = _get_sleep_time_seconds(no_of_retries)
     msg = f"Got error: {exc} Retrying in {sleep_time} secs, attempt {no_of_retries}"
     if isinstance(exc, httpx.HTTPStatusError):
         if exc.response.status_code in RETRY_HTTP_CODES:
@@ -62,12 +64,11 @@ def _handle_exception(exc, return_none_on, error_msg):
 
 
 def handle_request(
-    client_method: Callable[..., Union[BaseModel, List[BaseModel]]],
-    *args,
-    error_msg: str = "Error.",
-    return_none_on: Optional[List[httpx.codes]] = None,
+        client_method: Callable[..., Union[BaseModel, List[BaseModel]]],
+        *args,
+        error_msg: str = "Error.",
+        return_none_on: Optional[List[httpx.codes]] = None,
 ) -> Any:
-
     if return_none_on is None:
         return_none_on = []
 

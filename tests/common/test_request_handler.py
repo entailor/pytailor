@@ -26,9 +26,9 @@ def get_http_exception_raising_func(exception):
     return request_func
 
 
-@patch("pytailor.common.request_handler._get_sleep_time",
+@patch("pytailor.common.request_handler._get_sleep_time_seconds",
        side_effect=len(RETRY_HTTP_CODES) * REQUEST_RETRY_COUNT * [0])
-def test_handle_http_status_retry(_get_sleep_time, caplog):
+def test_handle_http_status_retry(_get_sleep_time_seconds, caplog):
     for error_code in RETRY_HTTP_CODES:
         with pytest.raises(BackendResponseError) as e:
             handle_request(
@@ -37,13 +37,13 @@ def test_handle_http_status_retry(_get_sleep_time, caplog):
             )
         assert str(error_code) in str(e)
     total_retries = REQUEST_RETRY_COUNT * len(RETRY_HTTP_CODES)
-    assert _get_sleep_time.call_count == total_retries
+    assert _get_sleep_time_seconds.call_count == total_retries
     assert len(caplog.messages) == total_retries
 
 
-@patch("pytailor.common.request_handler._get_sleep_time",
+@patch("pytailor.common.request_handler._get_sleep_time_seconds",
        side_effect=len(RETRY_HTTP_CODES) * REQUEST_RETRY_COUNT * [0])
-def test_handle_exception_retry(_get_sleep_time, caplog):
+def test_handle_exception_retry(_get_sleep_time_seconds, caplog):
     for exception in RETRY_ERRORS:
         with pytest.raises(BackendResponseError) as e:
             handle_request(
@@ -52,5 +52,5 @@ def test_handle_exception_retry(_get_sleep_time, caplog):
             )
         assert exception.__name__ in str(e)
     total_retries = REQUEST_RETRY_COUNT * len(RETRY_ERRORS)
-    assert _get_sleep_time.call_count == total_retries
+    assert _get_sleep_time_seconds.call_count == total_retries
     assert len(caplog.messages) == total_retries
