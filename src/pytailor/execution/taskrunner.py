@@ -64,7 +64,7 @@ class TaskRunner(APIBase):
             task_id=self.__task.id, state=State.RUNNING.name, run_dir=str(self.run_dir)
         )
         with RestClient() as client:
-            exec_data = self._handle_rest_client_call(
+            exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
         self.__set_exec_data(exec_data)
@@ -90,7 +90,7 @@ class TaskRunner(APIBase):
                 failure_summary=failure_summary,
             )
             with RestClient() as client:
-                exec_data = self._handle_rest_client_call(
+                exec_data = self._handle_request(
                     client.checkin_task,
                     task_update,
                     error_msg="Could not check in task.",
@@ -108,7 +108,7 @@ class TaskRunner(APIBase):
                 state=state.name,
             )
             with RestClient() as client:
-                exec_data = self._handle_rest_client_call(
+                exec_data = self._handle_request(
                     client.checkin_task,
                     task_update,
                     error_msg="Could not check in task.",
@@ -172,7 +172,7 @@ class TaskRunner(APIBase):
                 )
                 # get upload links
                 with RestClient() as client:
-                    fileset = self._handle_rest_client_call(
+                    fileset = self._handle_request(
                         client.get_upload_urls,
                         self.__project_id,
                         self.__fileset_id,
@@ -209,7 +209,7 @@ class TaskRunner(APIBase):
             run_id=self.__run_id, task_id=self.__task.id, outputs=outputs
         )
         with RestClient() as client:
-            exec_data = self._handle_rest_client_call(
+            exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
         self.__set_exec_data(exec_data)
@@ -255,7 +255,7 @@ class TaskRunner(APIBase):
             fileset_download = FileSetDownload(task_id=self.__task.id, tags=download)
             # get download links
             with RestClient() as client:
-                fileset = self._handle_rest_client_call(
+                fileset = self._handle_request(
                     client.get_download_urls,
                     self.__project_id,
                     self.__fileset_id,
@@ -317,7 +317,7 @@ class TaskRunner(APIBase):
             run_id=self.__run_id, task_id=self.__task.id, perform_branching=True
         )
         with RestClient() as client:
-            exec_data = self._handle_rest_client_call(
+            exec_data = self._handle_request(
                 client.checkin_task,
                 task_update,
                 error_msg="Could not perform branching.",

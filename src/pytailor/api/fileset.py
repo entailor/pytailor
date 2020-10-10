@@ -16,7 +16,7 @@ class FileSet(APIBase):
     def __init__(self, project: Project, fileset_id: str = None):
         if fileset_id is None:
             with RestClient() as client:
-                fileset_model = self._handle_rest_client_call(
+                fileset_model = self._handle_request(
                     client.new_fileset,
                     project.id,
                     error_msg="An error occurred during fileset creation.",
@@ -24,7 +24,7 @@ class FileSet(APIBase):
         else:
             fileset_download = FileSetDownload()
             with RestClient() as client:
-                fileset_model = self._handle_rest_client_call(
+                fileset_model = self._handle_request(
                     client.get_download_urls,
                     project.id,
                     fileset_id,
@@ -42,7 +42,7 @@ class FileSet(APIBase):
         fileset_upload = FileSetUpload(tags=file_basenames)
 
         with RestClient() as client:
-            fileset_model = self._handle_rest_client_call(
+            fileset_model = self._handle_request(
                 client.get_upload_urls,
                 self.project.id,
                 self.id,
@@ -65,7 +65,7 @@ class FileSet(APIBase):
         fileset_download = FileSetDownload(task_id=task_id, tags=tags)
 
         with RestClient() as client:
-            fileset_model = self._handle_rest_client_call(
+            fileset_model = self._handle_request(
                 client.get_download_urls,
                 self.project.id,
                 self.id,
@@ -82,7 +82,7 @@ class FileSet(APIBase):
         fileset_download = FileSetDownload(task_id=task_id, tags=tags)
 
         with RestClient() as client:
-            fileset_model = self._handle_rest_client_call(
+            fileset_model = self._handle_request(
                 client.get_download_urls,
                 self.project.id,
                 self.id,
