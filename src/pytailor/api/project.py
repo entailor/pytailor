@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
+import httpx
 from pytailor.common.base import APIBase
 from pytailor.clients import RestClient
 from pytailor.models import PermissionList, PermissionChange
@@ -100,10 +101,13 @@ class Project(APIBase):
         Delete a workflow and corresponding files by workflow id
         """
         with RestClient() as client:
-            self._handle_rest_client_call(
+            response = self._handle_request(
                 client.delete_workflow,
                 self.id,
                 workflow_id,
                 error_msg="Could not delete workflow.",
+                return_none_on=[httpx.codes.NOT_FOUND]
             )
-        return f'deleted workflow {workflow_id}'
+            if response is None:
+                return f'Could not delete workflow {workflow_id}'
+        return f'Deleted workflow {workflow_id}'

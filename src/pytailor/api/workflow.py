@@ -114,7 +114,7 @@ class Workflow(APIBase):
             raise AttributeError("wf_def_id already set")
 
     def __str__(self):
-        self.refresh()
+        # self.refresh()
         return self.__pretty_printed()
 
     def __update_from_backend(self, wf_model: WorkflowModel):
@@ -242,13 +242,7 @@ class Workflow(APIBase):
             runner.run()
 
             # get the updated workflow and update self
-            wf_model = self._handle_request(
-                client.get_workflow,
-                self.__project.id,
-                self.__id,
-                error_msg="Could not fetch workflow.",
-            )
-            self.__update_from_backend(wf_model)
+            self.refresh()
 
         # else:
         #     # launches to backend and returns
