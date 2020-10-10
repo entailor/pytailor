@@ -126,12 +126,34 @@ class Workflow(APIBase):
         self.__wf_def_id = wf_model.from_definition_id
         self.__model = wf_model
 
+    def restart_task(self, task_id) -> dict:
+        """Update with latest data from backend."""
+        if self.__state == State.PRE:
+            raise BackendResourceError(
+                "This workflow has not been run yet and can "
+                "therefore not be refreshed."
+            )
+        with RestClient() as client:
+            task_summary = self._handle_rest_client_call(
+                client.restart_task,
+                self.id,
+                self.project.id,
+                task_id,
+                error_msg=f"Could not restart task {task_id}",
+            )
+
     def refresh(self) -> None:
         """Update with latest data from backend."""
         if self.__state == State.PRE:
             raise BackendResourceError(
                 "This workflow has not been run yet and can "
                 "therefore not be refreshed."
+            )
+        with RestClient() as client:
+            wf_models = self._handle_rest_client_call(
+                client.get_workflows,
+                self.id,
+                error_msg="Could not retrieve workflows.",
             )
         wf_model = self.__fetch_model(self.project.id, self.id)
         self.__update_from_backend(wf_model)
