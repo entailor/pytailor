@@ -218,6 +218,65 @@
         ]
       }
     },
+    "/projects/{project_id}/permissions/users": {
+      "post": {
+        "tags": [
+          "project"
+        ],
+        "summary": "Change the available users",
+        "operationId": "update_project_users_projects__project_id__permissions_users_post",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PermissionChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/projects/{project_id}/workflows/{wf_id}": {
       "get": {
         "tags": [
@@ -257,6 +316,62 @@
                 "schema": {
                   "$ref": "#/components/schemas/Workflow"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "workflow"
+        ],
+        "summary": "Delete a workflow and associated files and tasks",
+        "operationId": "delete_workflow_projects__project_id__workflows__wf_id__delete",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          },
+          {
+            "description": "Workflow ID",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "string",
+              "description": "Workflow ID"
+            },
+            "name": "wf_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -1286,6 +1401,115 @@
         ]
       }
     },
+    "/accounts/{account_id}/apikey": {
+      "post": {
+        "tags": [
+          "worker"
+        ],
+        "summary": "Creates a new API Key for the given account",
+        "operationId": "create_accounts__account_id__apikey_post",
+        "parameters": [
+          {
+            "description": "Account id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string",
+              "description": "Account id"
+            },
+            "name": "account_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKey"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/accounts/{account_id}/users/{user_id}/apikey": {
+      "post": {
+        "tags": [
+          "worker"
+        ],
+        "summary": "Creates a new API Key for the given user",
+        "operationId": "create_accounts__account_id__users__user_id__apikey_post",
+        "parameters": [
+          {
+            "description": "Account id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string",
+              "description": "Account id"
+            },
+            "name": "account_id",
+            "in": "path"
+          },
+          {
+            "description": "User id",
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "string",
+              "description": "User id"
+            },
+            "name": "user_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKey"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/admin/accounts": {
       "get": {
         "tags": [
@@ -1385,6 +1609,63 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/accounts/{account_id}/permissions/admins": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Add or remove admin users from account",
+        "operationId": "update_account_admins_admin_accounts__account_id__permissions_admins_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string"
+            },
+            "name": "account_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PermissionChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionList"
                 }
               }
             }
@@ -1704,6 +1985,13 @@
               "type": "string"
             }
           },
+          "admin_users": {
+            "title": "the users who are a account admins of this account, by id",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "workflow_definitions_owned": {
             "title": "the workflow definitions owned by this account, by id",
             "type": "array",
@@ -1717,6 +2005,24 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "ApiKey": {
+        "title": "ApiKey",
+        "required": [
+          "api_client_id",
+          "api_key"
+        ],
+        "type": "object",
+        "properties": {
+          "api_client_id": {
+            "title": "Api Client Id",
+            "type": "string"
+          },
+          "api_key": {
+            "title": "Api Key",
+            "type": "string"
           }
         }
       },
@@ -1864,7 +2170,7 @@
             "default": []
           },
           "delete": {
-            "title": "Ids to add",
+            "title": "Ids to remove",
             "type": "array",
             "items": {
               "type": "string"
