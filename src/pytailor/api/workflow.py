@@ -114,7 +114,6 @@ class Workflow(APIBase):
             raise AttributeError("wf_def_id already set")
 
     def __str__(self):
-        # self.refresh()
         return self.__pretty_printed()
 
     def __update_from_backend(self, wf_model: WorkflowModel):
