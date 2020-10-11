@@ -170,10 +170,10 @@ class RestClient(httpx.Client):
         else:
             response.raise_for_status()
 
-    def restart_task(self, wf_id: str, project_id: str, task_id: str) -> TaskSummary:
-        url = f"projects/{project_id}/workflows/{wf_id}/tasks/{task_id}" \
-              f"/operations/restart"
-        response = self.post(url)
+    def reset_task(self, wf_id: str, project_id: str, task_id: str,
+                   task_update: TaskUpdate) -> TaskSummary:
+        url = f"projects/{project_id}/workflows/{wf_id}/tasks/{task_id}"
+        response = self.patch(url, data=task_update.json())
         if response.status_code == httpx.codes.OK:
             return TaskSummary.parse_obj(response.json())
         else:
