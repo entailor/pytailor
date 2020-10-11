@@ -133,7 +133,7 @@ class Workflow(APIBase):
                 "therefore not be refreshed."
             )
         with RestClient() as client:
-            task_summary = self._handle_rest_client_call(
+            task_summary = self._handle_request(
                 client.restart_task,
                 self.id,
                 self.project.id,
@@ -147,12 +147,6 @@ class Workflow(APIBase):
             raise BackendResourceError(
                 "This workflow has not been run yet and can "
                 "therefore not be refreshed."
-            )
-        with RestClient() as client:
-            wf_models = self._handle_rest_client_call(
-                client.get_workflows,
-                self.id,
-                error_msg="Could not retrieve workflows.",
             )
         wf_model = self.__fetch_model(self.project.id, self.id)
         self.__update_from_backend(wf_model)
