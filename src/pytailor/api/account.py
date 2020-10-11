@@ -29,7 +29,7 @@ class Account(APIBase):
     def get_my_accounts(cls) -> List[Account]:
         """Get list of all my accounts."""
         with RestClient() as client:
-            account_models = cls._handle_rest_client_call(
+            account_models = cls._handle_request(
                 client.get_accounts, error_msg=f"Error while fetching accounts."
             )
         accounts = []

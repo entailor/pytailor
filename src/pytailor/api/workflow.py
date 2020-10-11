@@ -114,7 +114,6 @@ class Workflow(APIBase):
             raise AttributeError("wf_def_id already set")
 
     def __str__(self):
-        self.refresh()
         return self.__pretty_printed()
 
     def __update_from_backend(self, wf_model: WorkflowModel):
@@ -161,7 +160,7 @@ class Workflow(APIBase):
     @classmethod
     def __fetch_model(cls, project_id: str, wf_id: str) -> WorkflowModel:
         with RestClient() as client:
-            return cls._handle_rest_client_call(
+            return cls._handle_request(
                 client.get_workflow,
                 project_id,
                 wf_id,
@@ -195,7 +194,7 @@ class Workflow(APIBase):
         Create a new workflow from an existing workflow definition.
         """
         with RestClient() as client:
-            wf_def_model = cls._handle_rest_client_call(
+            wf_def_model = cls._handle_request(
                 client.get_workflow_definition_project,
                 project.id,
                 wf_def_id,
@@ -247,7 +246,7 @@ class Workflow(APIBase):
 
         # add workflow to backend
         with RestClient() as client:
-            wf_model = self._handle_rest_client_call(
+            wf_model = self._handle_request(
                 client.new_workflow,
                 self.__project.id,
                 create_data,
@@ -264,13 +263,7 @@ class Workflow(APIBase):
             runner.run()
 
             # get the updated workflow and update self
-            wf_model = self._handle_rest_client_call(
-                client.get_workflow,
-                self.__project.id,
-                self.__id,
-                error_msg="Could not fetch workflow.",
-            )
-            self.__update_from_backend(wf_model)
+            self.refresh()
 
         # else:
         #     # launches to backend and returns

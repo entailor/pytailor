@@ -10,17 +10,15 @@ from pytailor.models import TaskCheckout, TaskExecutionData
 from pytailor.utils import get_logger
 from pytailor.clients import AsyncRestClient
 from pytailor.exceptions import BackendResponseError
+from pytailor.common.request_handler import async_handle_request
 
 
 async def do_checkout(checkout_query: TaskCheckout) -> Optional[TaskExecutionData]:
     async with AsyncRestClient() as client:
-        try:
-            exec_data = await client.checkout_task(checkout_query)
-        except httpx.HTTPError as exc:
-            raise BackendResponseError(
-                f"Error while checking out task. The response " f"was: {str(exc)}."
-            )
-    return exec_data
+        return await async_handle_request(
+            client.checkout_task,
+            checkout_query
+        )
 
 
 async def async_run_task(pool, task_execution_data: TaskExecutionData):

@@ -42,7 +42,7 @@ class SerialRunner(APIBase):
 
     def do_checkout(self, checkout_query: TaskCheckout) -> Optional[TaskExecutionData]:
         with RestClient() as client:
-            return self._handle_rest_client_call(
+            return self._handle_request(
                 client.checkout_task,
                 checkout_query,
                 error_msg="Error during task checkout.",

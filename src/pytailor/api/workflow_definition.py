@@ -80,7 +80,7 @@ class WorkflowDefinition(APIBase):
 
         # make rest call
         with RestClient() as client:
-            wf_def_model = self._handle_rest_client_call(
+            wf_def_model = self._handle_request(
                 client.new_workflow_definition,
                 account.id,
                 wf_def_create,
@@ -99,7 +99,7 @@ class WorkflowDefinition(APIBase):
         """
         # get workflow definition model
         with RestClient() as client:
-            wf_def_model = cls._handle_rest_client_call(
+            wf_def_model = cls._handle_request(
                 client.get_workflow_definition_project,
                 project.id,
                 wf_def_id,
