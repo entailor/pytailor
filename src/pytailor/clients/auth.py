@@ -21,14 +21,13 @@ COGNITO_HEADERS = {
 TOKENS_FILE_PATH = Path.home() / ".tailor" / "tokens"
 
 # keep access and refresh tokens as global variables
-access_token: Optional[str] = None
-refresh_token: Optional[str] = None
+access_token: Optional[str] = ""
+refresh_token: Optional[str] = ""
 
 logger = get_logger("Auth")
 
 
 def refresh_tokens():
-
     # refresh/load tokens with the following efforts in order:
     # 1. load tokens from file if they have not already been loaded
     # 2. Try to refresh access token with server using refresh token
@@ -37,7 +36,7 @@ def refresh_tokens():
     global access_token, refresh_token
 
     # 1. try to load from file
-    if access_token is None:
+    if not access_token:
         access_token, refresh_token = __load_tokens_from_file()
         if access_token:
             logger.info("Access token loaded from file")
@@ -62,7 +61,7 @@ def __load_tokens_from_file():
         with open(TOKENS_FILE_PATH, "rb") as f:
             return pickle.load(f)
     else:
-        return None, None
+        return "", ""
 
 
 def __write_tokens_to_file(access_token, refresh_token):
@@ -107,5 +106,9 @@ class TailorAuth(httpx.Auth):
         yield request
 
 
-# call refresh_tokens() when module is loaded
-refresh_tokens()
+# try to call refresh_tokens() when module is loaded
+try:
+    refresh_tokens()
+except:
+    # credential not configured (expected during unit tests)
+    logger.error("Could not refresh access token. Check configuration.")
