@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from pytailor.config import REQUEST_RETRY_COUNT
 from pytailor.exceptions import BackendResponseError
 from pytailor.utils import get_logger
+from pytailor.clients.auth import refresh_tokens
+
 
 logger = get_logger("RequestHandler")
 
@@ -37,11 +39,10 @@ def _handle_retry(exc, no_of_retries):
         if exc.response.status_code in RETRY_HTTP_CODES:
             retry = True
         elif exc.response.status_code == httpx.codes.UNAUTHORIZED:
-            # TODO: reauthenticate on expired token
-            # retry = True
-            # sleep_time = 0.
-            # msg = "Token expired, reauthenticating
-            pass
+            refresh_tokens()
+            retry = True
+            sleep_time = 0.
+            msg = "Invalid access token, re-authenticating."
     elif isinstance(exc, RETRY_ERRORS):
         retry = True
     if retry:

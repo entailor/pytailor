@@ -2,7 +2,6 @@ import httpx
 from pytailor.models import *
 from pytailor.config import (
     API_BASE_URL,
-    AUTH_KEY,
     SYNC_REQUEST_TIMEOUT,
     SYNC_CONNECT_TIMEOUT,
 )
@@ -15,7 +14,7 @@ class RestClient(httpx.Client):
             timeout=SYNC_REQUEST_TIMEOUT, connect=SYNC_CONNECT_TIMEOUT
         )
         super().__init__(
-            base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY), timeout=timeout
+            base_url=API_BASE_URL, auth=TailorAuth(), timeout=timeout
         )
 
     # accounts
