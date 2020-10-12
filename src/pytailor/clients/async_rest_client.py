@@ -2,7 +2,6 @@ import httpx
 from pytailor.models import *
 from pytailor.config import (
     API_BASE_URL,
-    AUTH_KEY,
     ASYNC_REQUEST_TIMEOUT,
     ASYNC_CONNECT_TIMEOUT,
 )
@@ -15,7 +14,7 @@ class AsyncRestClient(httpx.AsyncClient):
             timeout=ASYNC_REQUEST_TIMEOUT, connect=ASYNC_CONNECT_TIMEOUT
         )
         super().__init__(
-            base_url=API_BASE_URL, auth=TailorAuth(AUTH_KEY), timeout=timeout
+            base_url=API_BASE_URL, auth=TailorAuth(), timeout=timeout
         )
 
     async def checkout_task(
