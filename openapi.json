@@ -393,6 +393,66 @@
         ]
       }
     },
+    "/projects/{project_id}/workflows/{wf_id}/tasks/{task_id}/operations/restart": {
+      "post": {
+        "tags": [
+          "workflow"
+        ],
+        "summary": "Details about the specified task",
+        "operationId": "restart_task_projects__project_id__workflows__wf_id__tasks__task_id__operations_restart_post",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          },
+          {
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string",
+              "description": "Task ID"
+            },
+            "name": "task_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/projects/{project_id}/workflows/{wf_id}/tasks": {
       "get": {
         "tags": [
@@ -598,6 +658,87 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskExecutionData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/workflows/{wf_id}/tasks/{task_id}/operations": {
+      "post": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Details about the specified task",
+        "operationId": "task_operations_projects__project_id__workflows__wf_id__tasks__task_id__operations_post",
+        "parameters": [
+          {
+            "description": "Project id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string",
+              "description": "Project id"
+            },
+            "name": "project_id",
+            "in": "path"
+          },
+          {
+            "description": "Workflow ID",
+            "required": true,
+            "schema": {
+              "title": "Wf Id",
+              "type": "string",
+              "description": "Workflow ID"
+            },
+            "name": "wf_id",
+            "in": "path"
+          },
+          {
+            "description": "Task ID",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string",
+              "description": "Task ID"
+            },
+            "name": "task_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskOperation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSummary"
                 }
               }
             }
@@ -2364,6 +2505,23 @@
             "type": "string"
           }
         }
+      },
+      "TaskOperation": {
+        "title": "TaskOperation",
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TaskOperationType"
+          }
+        }
+      },
+      "TaskOperationType": {
+        "title": "TaskOperationType",
+        "enum": [
+          "RESET"
+        ],
+        "type": "string",
+        "description": "An enumeration."
       },
       "TaskRun": {
         "title": "TaskRun",
