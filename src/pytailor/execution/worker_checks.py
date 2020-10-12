@@ -78,7 +78,7 @@ def workflow_definition_compliance_test(project_ids: Optional[List[str]]):
 
     with RestClient() as client:
         projects = handle_request(client.get_projects)
-    if not project_ids:
+    if project_ids:
         projects = [project for project in projects if project.id in project_ids]
 
     now_str = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
