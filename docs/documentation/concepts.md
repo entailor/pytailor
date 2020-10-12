@@ -1,4 +1,4 @@
-# Tailor concepts
+# Building blocks
 
 ## DAGs
 
@@ -63,7 +63,6 @@ stored on the Tailor backend under a given [Project](#tailor-projects).
 - worker requirements
 
 In Pytailor, workflows are represented by the [Workflow]() class
-
 
 
 ## Tasks

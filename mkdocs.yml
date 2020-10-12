@@ -2,9 +2,10 @@ site_name: pyTailor
 nav:
   - Home: index.md
   - Getting started: documentation/getting_started.md
-  - Concepts: documentation/concepts.md
-  - Contexts: documentation/contexts.md
-  - Tailor Account: documentation/account_management.md
+  - Concepts:
+    - Building blocks: documentation/concepts.md
+    - Contexts: documentation/contexts.md
+    - Tailor Account: documentation/account_management.md
   - API reference:
       - Task definition classes: api/taskdefs.md
       - Parameterization classes: api/parameterization.md
