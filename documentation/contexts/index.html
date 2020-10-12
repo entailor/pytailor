@@ -1,7 +1,4 @@
 
-
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -12,7 +9,7 @@
       
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.13">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.2">
     
     
       
@@ -20,15 +17,17 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.077507d7.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.38780c08.min.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ff0a5ce4.min.css">
-      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f72e892.min.css">
+        
       
     
     
     
       
+        
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
@@ -46,9 +45,11 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
-  
     
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+      
+  
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
@@ -139,8 +140,6 @@
     
     <div class="md-container" data-md-component="container">
       
-        
-      
       
         
       
@@ -183,7 +182,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Home" class="md-nav__link">
+    <a href="../.." class="md-nav__link">
       Home
     </a>
   </li>
@@ -195,7 +194,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../getting_started/" title="Getting started" class="md-nav__link">
+    <a href="../getting_started/" class="md-nav__link">
       Getting started
     </a>
   </li>
@@ -205,19 +204,21 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
-      API reference
+      Concepts
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="API reference" data-md-level="1">
+    <nav class="md-nav" aria-label="Concepts" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        API reference
+        Concepts
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -228,8 +229,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/taskdefs/" title="Task definition classes" class="md-nav__link">
-      Task definition classes
+    <a href="../concepts/" class="md-nav__link">
+      Programming workflows
     </a>
   </li>
 
@@ -240,9 +241,66 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/parameterization/" title="Parameterization classes" class="md-nav__link">
-      Parameterization classes
+    <a href="../workers/" class="md-nav__link">
+      Workers
     </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Contexts
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Contexts
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fileset" class="md-nav__link">
+    Fileset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scoped-contexts" class="md-nav__link">
+    Scoped contexts
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -252,8 +310,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/schema/" title="Schema definition classes" class="md-nav__link">
-      Schema definition classes
+    <a href="../account_management/" class="md-nav__link">
+      Tailor backend
     </a>
   </li>
 
@@ -273,11 +331,97 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
+      API reference
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="API reference" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        API reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/taskdefs/" class="md-nav__link">
+      Task definition classes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/parameterization/" class="md-nav__link">
+      Parameterization classes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/schema/" class="md-nav__link">
+      Schema definition classes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/workflow/" class="md-nav__link">
+      Workflow class
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/workflow_definition/" class="md-nav__link">
+      Workflow definition class
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
       Tutorials
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
         Tutorials
       </label>
@@ -290,7 +434,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example01_hello_world/" title="Tutorial 1" class="md-nav__link">
+    <a href="../../tutorials/example01_hello_world/" class="md-nav__link">
       Tutorial 1
     </a>
   </li>
@@ -302,7 +446,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example02_kwargs/" title="Tutorial 2" class="md-nav__link">
+    <a href="../../tutorials/example02_kwargs/" class="md-nav__link">
       Tutorial 2
     </a>
   </li>
@@ -314,7 +458,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example03_inputs/" title="Tutorial 3" class="md-nav__link">
+    <a href="../../tutorials/example03_inputs/" class="md-nav__link">
       Tutorial 3
     </a>
   </li>
@@ -326,7 +470,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example04_outputs/" title="Tutorial 4" class="md-nav__link">
+    <a href="../../tutorials/example04_outputs/" class="md-nav__link">
       Tutorial 4
     </a>
   </li>
@@ -338,7 +482,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example05_files/" title="Tutorial 5" class="md-nav__link">
+    <a href="../../tutorials/example05_files/" class="md-nav__link">
       Tutorial 5
     </a>
   </li>
@@ -350,7 +494,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example06_branch_task/" title="Tutorial 6" class="md-nav__link">
+    <a href="../../tutorials/example06_branch_task/" class="md-nav__link">
       Tutorial 6
     </a>
   </li>
@@ -362,7 +506,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example07_branch_dag/" title="Tutorial 7" class="md-nav__link">
+    <a href="../../tutorials/example07_branch_dag/" class="md-nav__link">
       Tutorial 7
     </a>
   </li>
@@ -374,8 +518,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example08_add_workflow_definition/" title="Tutorial 8" class="md-nav__link">
+    <a href="../../tutorials/example08_add_workflow_definition/" class="md-nav__link">
       Tutorial 8
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/example09_add_workflow_definition/" class="md-nav__link">
+      Tutorial 9
     </a>
   </li>
 
@@ -409,8 +565,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context-queries" class="md-nav__link">
-    Context queries
+  <a href="#fileset" class="md-nav__link">
+    Fileset
   </a>
   
 </li>
@@ -439,9 +595,6 @@
                   </a>
                 
                 
-                  
-                
-                
                 <h1 id="contexts">Contexts</h1>
 <p>Contexts represents the data and files associated with a workflow. The context consist of three datastructures:</p>
 <ul>
@@ -449,34 +602,47 @@
 <li><strong>outputs</strong></li>
 <li><strong>files</strong></li>
 </ul>
-<p><em>inputs</em> are provided by the user during workflow specification, e.g.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">tailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">WorkflowSpec</span>
+<p><em>inputs</em> are provided by the user during workflow creation, e.g.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">Inputs</span>
 
-<span class="c1"># a task definition</span>
-<span class="n">t1</span> <span class="o">=</span> <span class="n">Pythontask</span><span class="p">(</span>
-    <span class="n">function</span><span class="o">=</span><span class="s1">&#39;builtins.abs&#39;</span><span class="p">,</span>
-    <span class="n">args</span><span class="o">=</span><span class="s1">&#39;&lt;% $.inputs.input_number %&gt;&#39;</span>
-<span class="p">)</span>
-<span class="n">t2</span> <span class="o">=</span> <span class="n">Pythontask</span><span class="p">(</span>
-    <span class="n">function</span><span class="o">=</span><span class="s1">&#39;builtins.abs&#39;</span><span class="p">,</span>
-    <span class="n">args</span><span class="o">=</span><span class="s1">&#39;&lt;% $.inputs.input_number %&gt;&#39;</span>
-<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
-<span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">input_number</span><span class="p">:</span> <span class="o">-</span><span class="mi">123</span>
-<span class="p">}</span>
+<span class="c1">### workflow definition ###</span>
 
-<span class="n">wf_spec</span> <span class="o">=</span> <span class="n">WorkflowSpec</span><span class="p">(</span>
 
-<span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dag&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
+        <span class="n">function</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 1&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">inputs</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sleep_time</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
+        <span class="n">function</span><span class="o">=</span><span class="nb">print</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 2&quot;</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Slept for&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">],</span>
+        <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sep&quot;</span><span class="p">:</span> <span class="n">inputs</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">},</span>
+        <span class="n">parents</span><span class="o">=</span><span class="n">t1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="c1">### run workflow ###</span>
+
+<span class="c1"># open a project</span>
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+
+<span class="c1"># define inputs</span>
+<span class="n">wf_inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;sleep_time&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">]},</span>
+             <span class="s2">&quot;sep&quot;</span><span class="p">:</span> <span class="s2">&quot;   &quot;</span><span class="p">}</span>
+
+<span class="c1"># create a workflow:</span>
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span> <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inputs workflow&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">wf_inputs</span><span class="p">)</span>
 </code></pre></div>
-
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The <em>inputs</em> and <em>outputs</em> datastructures must be JSON-serializable, which limits the data <a href="https://www.geeksforgeeks.org/json-data-types/">types</a> which can be used. In the future more sophisticated serialization may be applied to allow other object types, e.g. numpy arrays. For data that is not JSON-compatible you can serialize the data to file and use the file-piping mechanisms to send the data to your tasks.</p>
 </div>
-<h2 id="context-queries">Context queries</h2>
-<p>Contexts can be queried using the YAQL query language. <em>Context queries</em> can be used in task definitions as a means to parameterize inputs. When jobs are executed, the queries are performed on the context associated with the current workflow run. Context queries, when used in task definitions, are specified using a special syntax: <code>'&lt;% query-expression %&gt;'</code>. This syntax tells tailor to </p>
+<h2 id="fileset">Fileset</h2>
+<p>A fileset represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run</p>
 <h2 id="scoped-contexts">Scoped contexts</h2>
 <p>Scoped contexts arise when tasks are duplicated.</p>
 <p>Consider the following DAG, consisting of two PythonTasks:
@@ -505,6 +671,41 @@ When this DAG is duplicated with a BranchTask</p>
         
 <footer class="md-footer">
   
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../workers/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Workers
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../account_management/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Tailor backend
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-footer-copyright">
@@ -521,15 +722,15 @@ When this DAG is duplicated with a BranchTask</p>
       
     </div>
     
-      <script src="../../assets/javascripts/vendor.2d1db4bd.min.js"></script>
-      <script src="../../assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../../assets/javascripts/vendor.77e55a48.min.js"></script>
+      <script src="../../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "../..",
           features: [],
           search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.5eca75d3.min.js"
+            worker: "../../assets/javascripts/worker/search.4ac00218.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

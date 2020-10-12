@@ -13,7 +13,7 @@
     
     
       
-        <title>Example04 outputs parameterization - pyTailor</title>
+        <title>Workflow class - pyTailor</title>
       
     
     
@@ -56,7 +56,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pytailor-tutorial-4" class="md-skip">
+        <a href="#workflow-class" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +84,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Example04 outputs parameterization
+              Workflow class
             
           </span>
         </div>
@@ -278,10 +278,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
     
     <label class="md-nav__link" for="nav-4">
       API reference
@@ -301,7 +303,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/taskdefs/" class="md-nav__link">
+    <a href="../taskdefs/" class="md-nav__link">
       Task definition classes
     </a>
   </li>
@@ -313,7 +315,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/parameterization/" class="md-nav__link">
+    <a href="../parameterization/" class="md-nav__link">
       Parameterization classes
     </a>
   </li>
@@ -325,7 +327,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/schema/" class="md-nav__link">
+    <a href="../schema/" class="md-nav__link">
       Schema definition classes
     </a>
   </li>
@@ -335,11 +337,49 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../api/workflow/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Workflow class
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       Workflow class
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    Workflow
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -349,7 +389,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/workflow_definition/" class="md-nav__link">
+    <a href="../workflow_definition/" class="md-nav__link">
       Workflow definition class
     </a>
   </li>
@@ -387,7 +427,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example01_hello_world/" class="md-nav__link">
+    <a href="../../tutorials/example01_hello_world/" class="md-nav__link">
       Tutorial 1
     </a>
   </li>
@@ -399,7 +439,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example02_kwargs/" class="md-nav__link">
+    <a href="../../tutorials/example02_kwargs/" class="md-nav__link">
       Tutorial 2
     </a>
   </li>
@@ -411,7 +451,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example03_inputs/" class="md-nav__link">
+    <a href="../../tutorials/example03_inputs/" class="md-nav__link">
       Tutorial 3
     </a>
   </li>
@@ -423,7 +463,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example04_outputs/" class="md-nav__link">
+    <a href="../../tutorials/example04_outputs/" class="md-nav__link">
       Tutorial 4
     </a>
   </li>
@@ -435,7 +475,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example05_files/" class="md-nav__link">
+    <a href="../../tutorials/example05_files/" class="md-nav__link">
       Tutorial 5
     </a>
   </li>
@@ -447,7 +487,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example06_branch_task/" class="md-nav__link">
+    <a href="../../tutorials/example06_branch_task/" class="md-nav__link">
       Tutorial 6
     </a>
   </li>
@@ -459,7 +499,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example07_branch_dag/" class="md-nav__link">
+    <a href="../../tutorials/example07_branch_dag/" class="md-nav__link">
       Tutorial 7
     </a>
   </li>
@@ -471,7 +511,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example08_add_workflow_definition/" class="md-nav__link">
+    <a href="../../tutorials/example08_add_workflow_definition/" class="md-nav__link">
       Tutorial 8
     </a>
   </li>
@@ -483,7 +523,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../example09_add_workflow_definition/" class="md-nav__link">
+    <a href="../../tutorials/example09_add_workflow_definition/" class="md-nav__link">
       Tutorial 9
     </a>
   </li>
@@ -508,6 +548,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -516,8 +558,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pytailor-tutorial-4" class="md-nav__link">
-    pyTailor Tutorial 4
+  <a href="#workflow" class="md-nav__link">
+    Workflow
   </a>
   
 </li>
@@ -534,69 +576,36 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/entailor/pytailor/edit/master/docs/tutorials/example04_outputs_parameterization.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/entailor/pytailor/edit/master/docs/api/workflow.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Example04 outputs parameterization</h1>
-                
-                <h3 id="pytailor-tutorial-4">pyTailor Tutorial 4</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">Outputs</span>
-
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-
-<span class="c1">### workflow definition ###</span>
-
-<span class="n">outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">()</span>
-
-<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dag&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
-
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 1&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;../*.py&quot;</span><span class="p">],</span>
-        <span class="n">output_to</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">parentdir_content</span><span class="p">,</span>  <span class="c1"># form 1: single string</span>
-    <span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 2&quot;</span><span class="p">,</span>
-        <span class="n">output_extraction</span><span class="o">=</span><span class="p">{</span><span class="n">outputs</span><span class="o">.</span><span class="n">curdir</span><span class="p">:</span> <span class="s2">&quot;&lt;% $ %&gt;&quot;</span><span class="p">},</span>  <span class="c1"># form 2: (tag: query) dict</span>
-    <span class="p">)</span>
-    <span class="n">t3</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="nb">print</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 3&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">&quot;Python files in parent dir (as list):&quot;</span><span class="p">,</span>
-            <span class="n">outputs</span><span class="o">.</span><span class="n">parentdir_content</span><span class="p">,</span>
-            <span class="s2">&quot;Current working dir:&quot;</span><span class="p">,</span>
-            <span class="n">outputs</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span>
-        <span class="p">],</span>
-        <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sep&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">},</span>
-        <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">],</span>
-    <span class="p">)</span>
-
-<span class="c1">### run workflow ###</span>
-
-<span class="c1"># open a project</span>
-<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
-
-<span class="c1"># create a workflow:</span>
-<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span> <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;outputs workflow&quot;</span><span class="p">)</span>
-
-<span class="c1"># run the workflow</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-
-<span class="c1"># check the status of the workflow</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The workflow finished with state:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
-
-<span class="c1"># outputs are available on the run object</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outputs are:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
-</code></pre></div>
+                <h1 id="workflow-class">Workflow class</h1>
+<h2 id="workflow">Workflow</h2>
+<div class="autodoc">
+<div class="autodoc-signature"><em>class </em><code>pytailor.<strong>Workflow</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">project</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">dag</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">name=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">inputs=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">fileset=None</em><span class="autodoc-punctuation">)</span></div>
+<div class="autodoc-docstring"><p>The Workflow class is used to create new workflows or operate on existing workflows.</p>
+<p><strong>Instantiation patterns:</strong>
+- To create a new workflow from a DAG use the default constructor
+- To create a new workflow from a workflow definition use
+<em>Workflow.from_definition_id()</em>
+- To retrieve a workflow from the backend use <em>Workflow.from_project_and_id()</em></p></div>
+<div class="autodoc-members">
+<div class="autodoc-signature"><code><strong>run</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">self</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">distributed=False</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">worker_name=None</em><span class="autodoc-punctuation">)</span></div>
+<div class="autodoc-docstring"><p>Start the workflow.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong>distributed</strong> (bool, Optional) If False (default) the workflow is executed
+immediately in the current python process one task at a time. Useful for
+development and debugging. If True the workflow will be launched to
+the database, and tasks will be executed in parallel on one or more workers.</li>
+<li><strong>worker_name</strong> (str, Optional) A worker name can be provided to control which
+worker(s) will execute the workflow's tasks. This parameter is ignored for
+<em>distributed=False</em></li>
+</ul></div>
+</div>
+</div>
                 
               
               
@@ -611,6 +620,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../schema/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Schema definition classes
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../workflow_definition/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Workflow definition class
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

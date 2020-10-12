@@ -13,7 +13,7 @@
     
     
       
-        <title>Example04 outputs parameterization - pyTailor</title>
+        <title>Tutorial 9 - pyTailor</title>
       
     
     
@@ -56,7 +56,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pytailor-tutorial-4" class="md-skip">
+        <a href="#pytailor-tutorial-9" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +84,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Example04 outputs parameterization
+              Tutorial 9
             
           </span>
         </div>
@@ -364,10 +364,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
     <label class="md-nav__link" for="nav-5">
       Tutorials
@@ -481,11 +483,45 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../example09_add_workflow_definition/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Tutorial 9
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       Tutorial 9
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pytailor-tutorial-9" class="md-nav__link">
+    pyTailor Tutorial 9
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -516,8 +552,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pytailor-tutorial-4" class="md-nav__link">
-    pyTailor Tutorial 4
+  <a href="#pytailor-tutorial-9" class="md-nav__link">
+    pyTailor Tutorial 9
   </a>
   
 </li>
@@ -534,68 +570,76 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/entailor/pytailor/edit/master/docs/tutorials/example04_outputs_parameterization.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/entailor/pytailor/edit/master/docs/tutorials/example09_add_workflow_definition.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Example04 outputs parameterization</h1>
+                  <h1>Tutorial 9</h1>
                 
-                <h3 id="pytailor-tutorial-4">pyTailor Tutorial 4</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">Outputs</span>
+                <h3 id="pytailor-tutorial-9">pyTailor Tutorial 9</h3>
+<p>This example introduces nested inputs as an example of how a complex input schema is rendered in the web interface</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">BranchTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">WorkflowDefinition</span><span class="p">,</span> <span class="n">Account</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> \
+    <span class="n">InputsSchema</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">Inputs</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">builtins</span>
 
+<span class="c1"># a modified dag description with parametrization from example 5</span>
 
-<span class="c1">### workflow definition ###</span>
-
-<span class="n">outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">()</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dag&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">BranchTask</span><span class="p">(</span><span class="n">branch_data</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">panels</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;branch on panels&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">panel_branch</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">BranchTask</span><span class="p">(</span><span class="n">branch_data</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">panels</span><span class="o">.</span><span class="n">SN_curves</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;branch on s/n-curves&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sn_curve_branch</span><span class="p">:</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
+                <span class="n">function</span><span class="o">=</span><span class="n">builtins</span><span class="o">.</span><span class="n">print</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 1&quot;</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">inputs</span><span class="o">.</span><span class="n">panels</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">panels</span><span class="o">.</span><span class="n">SN_curves</span><span class="p">]</span>
+            <span class="p">)</span>
 
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 1&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;../*.py&quot;</span><span class="p">],</span>
-        <span class="n">output_to</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">parentdir_content</span><span class="p">,</span>  <span class="c1"># form 1: single string</span>
-    <span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 2&quot;</span><span class="p">,</span>
-        <span class="n">output_extraction</span><span class="o">=</span><span class="p">{</span><span class="n">outputs</span><span class="o">.</span><span class="n">curdir</span><span class="p">:</span> <span class="s2">&quot;&lt;% $ %&gt;&quot;</span><span class="p">},</span>  <span class="c1"># form 2: (tag: query) dict</span>
-    <span class="p">)</span>
-    <span class="n">t3</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="nb">print</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 3&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">&quot;Python files in parent dir (as list):&quot;</span><span class="p">,</span>
-            <span class="n">outputs</span><span class="o">.</span><span class="n">parentdir_content</span><span class="p">,</span>
-            <span class="s2">&quot;Current working dir:&quot;</span><span class="p">,</span>
-            <span class="n">outputs</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span>
-        <span class="p">],</span>
-        <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sep&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">},</span>
-        <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">],</span>
-    <span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;panels&#39;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;panel1&#39;</span><span class="p">,</span> <span class="s1">&#39;SN_curves&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;panel2&#39;</span><span class="p">,</span> <span class="s1">&#39;SN_curves&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;panel3&#39;</span><span class="p">,</span> <span class="s1">&#39;SN_curves&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]}]}</span>
 
-<span class="c1">### run workflow ###</span>
 
-<span class="c1"># open a project</span>
+<span class="c1"># define inputsschema</span>
+<span class="n">inputs_schema</span> <span class="o">=</span> <span class="n">InputsSchema</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">)</span>
+<span class="n">inputs_schema</span><span class="o">.</span><span class="n">add_defaults</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+
+<span class="n">wf_def_description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">This workflow definition has the following steps:</span>
+
+<span class="s2">    - prints the inputs.print argument</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">description</span> <span class="o">=</span> <span class="n">Description</span><span class="o">.</span><span class="n">from_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span>
+                                   <span class="n">wf_def_name</span><span class="o">=</span><span class="s1">&#39;Example 9 Two level branch workflow &#39;</span>
+                                               <span class="s1">&#39;definition&#39;</span><span class="p">,</span>
+                                   <span class="n">wf_def_description</span><span class="o">=</span><span class="n">wf_def_description</span><span class="p">)</span>
+
+
+<span class="c1"># create the workflow definition</span>
+
+<span class="n">wf_def</span> <span class="o">=</span> <span class="n">WorkflowDefinition</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">description</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+    <span class="n">inputs_schema</span><span class="o">=</span><span class="n">inputs_schema</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+<span class="p">)</span>
+
+<span class="c1"># get an account and add wf_def to account</span>
+<span class="c1"># (requires account admin privileges)</span>
+<span class="n">account</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">get_my_accounts</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">wf_def</span><span class="o">.</span><span class="n">add_to_account</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+
+<span class="c1"># wf_def has now gotten an id</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<span class="c1"># the workflow definition can now be added to a project</span>
+<span class="c1"># (requires account admin privileges)</span>
 <span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
-
-<span class="c1"># create a workflow:</span>
-<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span> <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;outputs workflow&quot;</span><span class="p">)</span>
-
-<span class="c1"># run the workflow</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-
-<span class="c1"># check the status of the workflow</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The workflow finished with state:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
-
-<span class="c1"># outputs are available on the run object</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outputs are:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+<span class="n">prj</span><span class="o">.</span><span class="n">add_workflow_definition</span><span class="p">(</span><span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </code></pre></div>
                 
               
@@ -611,6 +655,27 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../example08_add_workflow_definition/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Tutorial 8
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

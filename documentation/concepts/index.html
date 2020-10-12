@@ -1,7 +1,4 @@
 
-
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -12,23 +9,25 @@
       
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.13">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.2">
     
     
       
-        <title>Tailor concepts - pyTailor</title>
+        <title>Programming workflows - pyTailor</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.077507d7.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.38780c08.min.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ff0a5ce4.min.css">
-      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f72e892.min.css">
+        
       
     
     
     
       
+        
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
@@ -46,16 +45,18 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
-  
     
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+      
+  
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
         
-        <a href="#tailor-concepts" class="md-skip">
+        <a href="#programming-workflows" class="md-skip">
           Skip to content
         </a>
       
@@ -83,7 +84,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Tailor concepts
+              Programming workflows
             
           </span>
         </div>
@@ -139,8 +140,6 @@
     
     <div class="md-container" data-md-component="container">
       
-        
-      
       
         
       
@@ -183,7 +182,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Home" class="md-nav__link">
+    <a href="../.." class="md-nav__link">
       Home
     </a>
   </li>
@@ -195,7 +194,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../getting_started/" title="Getting started" class="md-nav__link">
+    <a href="../getting_started/" class="md-nav__link">
       Getting started
     </a>
   </li>
@@ -205,19 +204,21 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
-      API reference
+      Concepts
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="API reference" data-md-level="1">
+    <nav class="md-nav" aria-label="Concepts" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        API reference
+        Concepts
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -226,10 +227,88 @@
           
           
 
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Programming workflows
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Programming workflows
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dags" class="md-nav__link">
+    DAGs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-definitions" class="md-nav__link">
+    Task definitions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflows" class="md-nav__link">
+    Workflows
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    Tasks
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-definitions" class="md-nav__link">
+    Workflow definitions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
 
   <li class="md-nav__item">
-    <a href="../../api/taskdefs/" title="Task definition classes" class="md-nav__link">
-      Task definition classes
+    <a href="../workers/" class="md-nav__link">
+      Workers
     </a>
   </li>
 
@@ -240,8 +319,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/parameterization/" title="Parameterization classes" class="md-nav__link">
-      Parameterization classes
+    <a href="../contexts/" class="md-nav__link">
+      Contexts
     </a>
   </li>
 
@@ -252,8 +331,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/schema/" title="Schema definition classes" class="md-nav__link">
-      Schema definition classes
+    <a href="../account_management/" class="md-nav__link">
+      Tailor backend
     </a>
   </li>
 
@@ -273,11 +352,97 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
+      API reference
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="API reference" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        API reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/taskdefs/" class="md-nav__link">
+      Task definition classes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/parameterization/" class="md-nav__link">
+      Parameterization classes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/schema/" class="md-nav__link">
+      Schema definition classes
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/workflow/" class="md-nav__link">
+      Workflow class
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/workflow_definition/" class="md-nav__link">
+      Workflow definition class
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
       Tutorials
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
+      <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
         Tutorials
       </label>
@@ -290,7 +455,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example01_hello_world/" title="Tutorial 1" class="md-nav__link">
+    <a href="../../tutorials/example01_hello_world/" class="md-nav__link">
       Tutorial 1
     </a>
   </li>
@@ -302,7 +467,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example02_kwargs/" title="Tutorial 2" class="md-nav__link">
+    <a href="../../tutorials/example02_kwargs/" class="md-nav__link">
       Tutorial 2
     </a>
   </li>
@@ -314,7 +479,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example03_inputs/" title="Tutorial 3" class="md-nav__link">
+    <a href="../../tutorials/example03_inputs/" class="md-nav__link">
       Tutorial 3
     </a>
   </li>
@@ -326,7 +491,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example04_outputs/" title="Tutorial 4" class="md-nav__link">
+    <a href="../../tutorials/example04_outputs/" class="md-nav__link">
       Tutorial 4
     </a>
   </li>
@@ -338,7 +503,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example05_files/" title="Tutorial 5" class="md-nav__link">
+    <a href="../../tutorials/example05_files/" class="md-nav__link">
       Tutorial 5
     </a>
   </li>
@@ -350,7 +515,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example06_branch_task/" title="Tutorial 6" class="md-nav__link">
+    <a href="../../tutorials/example06_branch_task/" class="md-nav__link">
       Tutorial 6
     </a>
   </li>
@@ -362,7 +527,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example07_branch_dag/" title="Tutorial 7" class="md-nav__link">
+    <a href="../../tutorials/example07_branch_dag/" class="md-nav__link">
       Tutorial 7
     </a>
   </li>
@@ -374,8 +539,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../../tutorials/example08_add_workflow_definition/" title="Tutorial 8" class="md-nav__link">
+    <a href="../../tutorials/example08_add_workflow_definition/" class="md-nav__link">
       Tutorial 8
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../tutorials/example09_add_workflow_definition/" class="md-nav__link">
+      Tutorial 9
     </a>
   </li>
 
@@ -443,27 +620,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#workflow-subscriptions" class="md-nav__link">
-    Workflow subscriptions
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tailor-accounts" class="md-nav__link">
-    Tailor Accounts
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tailor-projects" class="md-nav__link">
-    Tailor Projects
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -481,34 +637,51 @@
                   </a>
                 
                 
-                  
-                
-                
-                <h1 id="tailor-concepts">Tailor concepts</h1>
+                <h1 id="programming-workflows">Programming workflows</h1>
 <h2 id="dags">DAGs</h2>
 <p>DAGs are used to define relationships between tasks in a Workflow in the form of a
-Directed Acyclic Graph.</p>
+Directed Acyclic Graph. </p>
+<p>That the DAG is "Directed" means that the parent task is 
+computed before the child task. </p>
+<p>That the DAG is "Acyclic" means that there is no way to start at any task <em>t</em> and follow a consistently-directed 
+sequence of tasks that eventually loops back to <em>t</em> again. In other words there are no loops in 
+the workflow. This means that strictly speaking an iteration loop (while loop) is not allowed in
+a Tailor workflow. Since iteration loops are a necessary part of many engineering workflows, 
+we are currently developing a WhileTask. A WhileTask has an internal loop that runs until a condition is met. 
+The child of the WhileTask only "sees" the resulting output and thus the WhileTask behaves just as 
+any other task in the workflow.</p>
 <h2 id="task-definitions">Task definitions</h2>
 <p>Task <em>definitions</em> are parameterized and reusable blueprints for computing tasks.</p>
 <p>In Pytailor, tasks definitions are created using the
 <a href="../../api/taskdefs/">task definition classes</a></p>
 <p>The available task definition classes are:</p>
 <ul>
-<li><strong>PythonTask</strong>
-    This is the basic building block. Used to define the execution of a
-    single Python function (callable).</li>
-<li><strong>BranchTask</strong>
-    ...</li>
+<li>
+<p><strong>PythonTask</strong></p>
+<p>This is the basic building block, used to define the execution of a
+single Python function (callable).</p>
+</li>
+<li>
+<p><strong>BranchTask</strong></p>
+<p>This is the basic branching building block. It creates branches based on files or data. </p>
+</li>
+<li>
+<p><strong>WhileTask</strong> (in development)</p>
+<p>This is the basic iteration building block. It runs the same task over and over with updated input data until a 
+condition is met. </p>
+</li>
 </ul>
 <p>By combining the different task types, arbitrary complex tasks can be defined.
 A non-trivial task definition will typically consist of a DAG at the top-level,
-which in turn consist of other task definitions as illustrated in ...</p>
+which in turn consist of other task definitions as illustrated in tutorials 
+<a href="../../tutorials/example06_branch_task/">6</a>, <a href="../../tutorials/example07_branch_dag/">7</a> 
+and <a href="../../tutorials/example09_add_workflow_definition/">9</a>.</p>
 <details class="note" open="open"><summary>Note</summary><p>Tailor is still in development and more task definition classes are likely to be
 introduced in the future to extend functionality.</p>
 </details>
 <h2 id="workflows">Workflows</h2>
 <p>Workflows are instantiated DAGs with a given set of inputs and files.  Workflows are
-stored on the Tailor backend under a given <a href="#tailor-projects">Project</a>.</p>
+stored on the Tailor backend under a given <a href="../account_management/">Project</a>.</p>
 <ul>
 <li>dag</li>
 <li>project</li>
@@ -516,17 +689,13 @@ stored on the Tailor backend under a given <a href="#tailor-projects">Project</a
 <li>files (inputs files)</li>
 <li>worker requirements</li>
 </ul>
-<p>In Pytailor, workflows are represented by the <a href="">Workflow</a> class</p>
+<p>In Pytailor, workflows are represented by the <a href="../../api/workflow/">Workflow</a>  class</p>
 <h2 id="tasks">Tasks</h2>
 <p>Tasks are instantiated <em>task definitions</em>. Belongs to a <em>Workflow</em>.</p>
 <h2 id="workflow-definitions">Workflow definitions</h2>
 <p>Workflow <em>definitions</em> are used to store a DAG along with requirements (schema) for inputs
 and files. Workflow definitions are stored in the backend and can be made available for
 other users. </p>
-<h2 id="workflow-subscriptions">Workflow subscriptions</h2>
-<p>Workflow definitions can be shared between users with Workflow <em>subscriptions</em>.</p>
-<h2 id="tailor-accounts">Tailor Accounts</h2>
-<h2 id="tailor-projects">Tailor Projects</h2>
                 
               
               
@@ -541,6 +710,41 @@ other users. </p>
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../getting_started/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Getting started
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../workers/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Workers
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -558,15 +762,15 @@ other users. </p>
       
     </div>
     
-      <script src="../../assets/javascripts/vendor.2d1db4bd.min.js"></script>
-      <script src="../../assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../../assets/javascripts/vendor.77e55a48.min.js"></script>
+      <script src="../../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "../..",
           features: [],
           search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.5eca75d3.min.js"
+            worker: "../../assets/javascripts/worker/search.4ac00218.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
