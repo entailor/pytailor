@@ -75,9 +75,11 @@ def workflow_definition_compliance_test(project_ids: Optional[List[str]]):
     Check that python functions referenced in workflow definitions are importable.
     """
     wf_defs_info = []
+
+    with RestClient() as client:
+        projects = handle_request(client.get_projects)
     if not project_ids:
-        with RestClient() as client:
-            projects = handle_request(client.get_projects)
+        projects = [project for project in projects if project.id in project_ids]
 
     now_str = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
     log_file_name = f"worker_check_{now_str}.log"
