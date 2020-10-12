@@ -54,7 +54,7 @@ and [9](../tutorials/example09_add_workflow_definition.md).
 ## Workflows
 
 Workflows are instantiated DAGs with a given set of inputs and files.  Workflows are
-stored on the Tailor backend under a given [Project](#tailor-projects).
+stored on the Tailor backend under a given [Project](account_management.md).
 
 - dag
 - project
@@ -62,7 +62,7 @@ stored on the Tailor backend under a given [Project](#tailor-projects).
 - files (inputs files)
 - worker requirements
 
-In Pytailor, workflows are represented by the [Workflow]() class
+In Pytailor, workflows are represented by the [Workflow](../api/workflow.md)  class
 
 ## Tasks
 Tasks are instantiated _task definitions_. Belongs to a _Workflow_.

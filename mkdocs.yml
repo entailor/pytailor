@@ -6,7 +6,7 @@ nav:
     - Programming workflows: documentation/concepts.md
     - Workers: documentation/workers.md
     - Contexts: documentation/contexts.md
-    - Tailor Server: documentation/account_management.md
+    - Tailor backend: documentation/account_management.md
   - API reference:
       - Task definition classes: api/taskdefs.md
       - Parameterization classes: api/parameterization.md
