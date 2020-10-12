@@ -2,7 +2,7 @@
 
 ## What is pyTailor?
 
-pyTailor is a python client for the Tailor automation and collaboration platform. See [Tailor.wf](https://test.tailor.wf) for more information.
+pyTailor is a python client for the Tailor automation and collaboration platform. See [Tailor.wf](https://tailor.wf) for more information.
 
 With the pyTailor API you can:
 
