@@ -39,35 +39,26 @@ This command generates a config file `.tailor/config.toml` under your home direc
 the following content:
 
 ``` toml
-API_KEY = <API KEY GOES HERE>
-API_BASE_URL = <URL FOR THE BACKEND REST API GOES HERE>
+[pytailor]
+API_BASE_URL = "<API BASE URL HERE>"
+API_CLIENT_ID = "<API CLIENT ID HERE>"
+API_WORKER_ID = "<API WORKER ID HERE>"
+API_KEY = "<API KEY HERE>"
+API_IDP_URL = "<API IDP URL HERE>"
+
+[worker.my_config]
+sleep = 3
+ncores = 7
+workername = "my_worker"
+project_ids = []
+capabilities = []
+
 ```
 
 ???+ note
     It is also possible to configure pytailor with environmental variables by prefixing
-    the environmental variables with `PYTAILOR_`. E.g. to set the API, key put it in an
+    the environmental variables with `PYTAILOR_`. E.g. to set the API key, put it in an
     environmental variable called `PYTAILOR_API_KEY`.
 
-
-### Update Pytailor
-
-
-
-
-## Basic usage
-
-With Pytailor installed and a backend properly configured you should be able to run the
-following example:
-
-``` python
-
-from tailor import PythonTask, DAG
-
-```
-
-In this example, several key concepts are illustrated:
-
-... walk through code...
-
-
-Please consult the Consepts page...
+#### 3. Testing
+Once you are setup you can start working through the [tutorials](tutorials/example01_hello_world.md).
