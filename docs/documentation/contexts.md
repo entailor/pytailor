@@ -48,6 +48,10 @@ wf = Workflow(project=prj, dag=dag, name="inputs workflow", inputs=wf_inputs)
     The _inputs_ and _outputs_ datastructures must be JSON-serializable, which limits the data [types](https://www.geeksforgeeks.org/json-data-types/) which can be used. In the future more sophisticated serialization may be applied to allow other object types, e.g. numpy arrays. For data that is not JSON-compatible you can serialize the data to file and use the file-piping mechanisms to send the data to your tasks.
 
 
+## Fileset
+A fileset represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run
+
+
 ## Scoped contexts
 
 Scoped contexts arise when tasks are duplicated.

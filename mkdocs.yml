@@ -3,9 +3,10 @@ nav:
   - Home: index.md
   - Getting started: documentation/getting_started.md
   - Concepts:
-    - Building blocks: documentation/concepts.md
+    - Programming workflows: documentation/concepts.md
+    - Workers: documentation/workers.md
     - Contexts: documentation/contexts.md
-    - Tailor Account: documentation/account_management.md
+    - Tailor Server: documentation/account_management.md
   - API reference:
       - Task definition classes: api/taskdefs.md
       - Parameterization classes: api/parameterization.md
