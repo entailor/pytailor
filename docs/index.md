@@ -80,11 +80,11 @@ A key feature in this DAG is the use of [BranchTask](api/taskdefs.md#branchtask)
 
 The [Inputs](api/parameterization.md#inputs), [Outputs](api/parameterization.md#outputs) and [Files](api/parameterization.md#files) objects are helper-objects for *parameterization*. When we e.g. say `kwargs={"parameters": inputs.pre_proc_data}` we are specifying that the value for the "parameters" keyword argument is parameterized and shall be looked up from the *pre_proc_data* name in the workflow's *inputs* when the task is executed. The concept of parameterization becomes clearer when we see how *inputs*, *outputs* and *files* are defined when we run a Workflow below.
 
-We now have a *parameterized* DAG describing the *recipe* of how we want to perform our computing workflow. Based on this definition we can *run* a [Workflow](), and we have sereral options:
+We now have a *parameterized* DAG describing the *recipe* of how we want to perform our computing workflow. Based on this definition we can *run* a [Workflow](api/workflow.md), and we have sereral options:
 
 - run it directly
 - run it distributed (i.e in parallel, and optionally on several worker machines)
-- Store it as a [WorkflowDefinition]() so that it can be executed directly from the Tailor Webapp.
+- Store it as a [WorkflowDefinition](api/workflow_definition.md) so that it can be executed directly from the Tailor Webapp.
 
 For this example we're just going to run the workflow directly:
 
@@ -124,12 +124,12 @@ wf.run()
 
 Here we have introduced three new classes from the pyTailor API:
 
-- [Project](). A Tailor workflow has to be run in the context of a project.
-- [FileSet](). Represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run.
-- [Workflow](). Represents a single workflow *run*. In order to run a workflow we first instantiate the Workflow object, and then we call the `Workflow.run` method, which will start executing the workflow in the current python process.
+- [Project](documentation/account_management.md#Projects). A Tailor workflow has to be run in the context of a project.
+- [FileSet](documentation/contexts.md#Fileset). Represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run.
+- [Workflow](api/workflow.md). Represents a single workflow *run*. In order to run a workflow we first instantiate the Workflow object, and then we call the `Workflow.run` method, which will start executing the workflow in the current python process.
 
 ???+ note
-    The direct mode of execution used here is handy when developing new workflows and for testing and debugging of new DAGs. For production workflow runs, *distributed* mode is suitable. See the [worker tutorial]() for more information.
+    The direct mode of execution used here is handy when developing new workflows and for testing and debugging of new DAGs. For production workflow runs, *distributed* mode is suitable. See the [worker tutorial](documentation/workers.md) for more information.
 
 Once the workflow has been started it can be monitored from the Tailor webapp. Below is shown how the workflow can be found in the list of workflows for the specific project by searching for the workflow name. When the worklfow is selected the workflow files appear on the right side for inspection and direct download.
 
@@ -144,6 +144,6 @@ Bu clicking on the *Details* link the workflow can be further inspected in the d
 
 Head over to the [Getting started](documentation/getting_started.md) section for instructions on how to setup pyTailor.
 
-Once you are setup and are able to run the basic examples you can start working through the [tutorials](tutorials/example01_hello_world.md).
+Once you are setup you can start working through the [tutorials](tutorials/example01_hello_world.md).
 
 You can also consult the [API Reference](api/taskdefs.md) for documentation of the pyTailor API.
