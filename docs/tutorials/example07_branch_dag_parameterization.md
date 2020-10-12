@@ -1,4 +1,4 @@
-### pyTailor Example 7
+### pyTailor Tutorial 7
 This example introduces the following NEW concepts:
 
 - Use BranchTask to "branch out" a DAG

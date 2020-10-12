@@ -1,4 +1,4 @@
-### pyTailor Example 4
+### pyTailor Tutorial 4
 This example introduces the following NEW concepts:
 
 - For PythonTask definitions:

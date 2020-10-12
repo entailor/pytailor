@@ -5,37 +5,47 @@ Contexts represents the data and files associated with a workflow. The context c
 *  **outputs**
 *  **files**
 
-_inputs_ are provided by the user during workflow specification, e.g.
+_inputs_ are provided by the user during workflow creation, e.g.
 
 ``` python
-from tailor import PythonTask, WorkflowSpec
+from pytailor import PythonTask, DAG, Workflow, Project, Inputs
 
-# a task definition
-t1 = Pythontask(
-    function='builtins.abs',
-    args='<% $.inputs.input_number %>'
-)
-t2 = Pythontask(
-    function='builtins.abs',
-    args='<% $.inputs.input_number %>'
-)
+import time
 
-inputs = {
-    input_number: -123
-}
+### workflow definition ###
 
-wf_spec = WorkflowSpec(
 
-)
+inputs = Inputs()
+
+with DAG(name="dag") as dag:
+
+    t1 = PythonTask(
+        function=time.sleep, name="task 1", args=[inputs.data.sleep_time[0]]
+    )
+    t2 = PythonTask(
+        function=print,
+        name="task 2",
+        args=["\nSlept for", inputs.data, "second"],
+        kwargs={"sep": inputs.sep, "end": "\n\n"},
+        parents=t1,
+    )
+
+### run workflow ###
+
+# open a project
+prj = Project.from_name("Test")
+
+# define inputs
+wf_inputs = {"data": {"sleep_time": [1.5]},
+             "sep": "   "}
+
+# create a workflow:
+wf = Workflow(project=prj, dag=dag, name="inputs workflow", inputs=wf_inputs)
 
 ```
 
 !!! note
     The _inputs_ and _outputs_ datastructures must be JSON-serializable, which limits the data [types](https://www.geeksforgeeks.org/json-data-types/) which can be used. In the future more sophisticated serialization may be applied to allow other object types, e.g. numpy arrays. For data that is not JSON-compatible you can serialize the data to file and use the file-piping mechanisms to send the data to your tasks.
-
-## Context queries
-
-Contexts can be queried using the YAQL query language. _Context queries_ can be used in task definitions as a means to parameterize inputs. When jobs are executed, the queries are performed on the context associated with the current workflow run. Context queries, when used in task definitions, are specified using a special syntax: `'<% query-expression %>'`. This syntax tells tailor to 
 
 
 ## Scoped contexts

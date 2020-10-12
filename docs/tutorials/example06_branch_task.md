@@ -1,4 +1,4 @@
-### pyTailor Example 6
+### pyTailor Tutorial 6
 This example introduces the following NEW concepts:
 
 - Use BranchTask to "branch out" a single PythonTask

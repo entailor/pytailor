@@ -2,10 +2,15 @@ site_name: pyTailor
 nav:
   - Home: index.md
   - Getting started: documentation/getting_started.md
+  - Concepts: documentation/concepts.md
+  - Contexts: documentation/contexts.md
+  - Tailor Account: documentation/account_management.md
   - API reference:
       - Task definition classes: api/taskdefs.md
       - Parameterization classes: api/parameterization.md
       - Schema definition classes: api/schema.md
+      - Workflow class: api/workflow.md
+      - Workflow definition class: api/workflow_definition.md
   - Tutorials:
       - Tutorial 1: tutorials/example01_hello_world.md
       - Tutorial 2: tutorials/example02_kwargs.md
@@ -15,6 +20,7 @@ nav:
       - Tutorial 6: tutorials/example06_branch_task.md
       - Tutorial 7: tutorials/example07_branch_dag.md
       - Tutorial 8: tutorials/example08_add_workflow_definition.md
+      - Tutorial 9: tutorials/example09_add_workflow_definition.md
 
 theme:
   name: material

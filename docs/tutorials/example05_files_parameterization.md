@@ -1,4 +1,4 @@
-### pyTailor Example 5
+### pyTailor Tutorial 5
 ``` python 
 from pytailor import PythonTask, DAG, Workflow, Project, FileSet, Outputs, Files
 

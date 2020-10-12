@@ -1,4 +1,4 @@
-### pyTailor Example 1
+### pyTailor Tutorial 1
 This is the Hello world example for pyTailor.
 
 This example introduces the following NEW concepts:

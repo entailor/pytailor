@@ -260,6 +260,12 @@ class PythonTask(BaseTask):
         parts of the return value of the callable. The keys of the dict are used as
         names for storing in the workflow *outputs* which becomes available for
         downstream tasks.
+    - use_storage_dirs: (boolean, Optional)
+        If True (default) files downloaded from storage are stored in a folder
+        structure mirroring the storage
+        If False files downloaded from storage are stored "flat" in the current directory
+    - requirements: (list, optional)
+        A list of requirements this task places on the worker environment
     """
 
     TYPE = TaskType.PYTHON
@@ -356,6 +362,8 @@ class BranchTask(OwnerTask):
     branch_files : list or str, optional
         Files to be used as basis for branching. Accepts a file tag or a list of
         file tags.
+    requirements: (list, optional)
+        A list of requirements this task places on the worker environment
     """
 
     TYPE = TaskType.BRANCH
@@ -413,7 +421,7 @@ class BranchTask(OwnerTask):
     def register(self, task: BaseTask) -> None:
         if self.task:
             raise DAGError(
-                "Cannot register task with BrachTask. " "A task is already registered."
+                "Cannot register task with BranchTask. " "A task is already registered."
             )
         self.task = task
 
@@ -431,7 +439,7 @@ class DAG(OwnerTask):
     Parameters
     ----------
     tasks : BaseTask or List[BaseTask]
-        Python, Duplicate or WorkflowSpec objects.
+        PythonTask, BranchTask or DAG objects.
     name : str, optional
         A default name is used if not provided.
     parents : BaseTask or List[BaseTask], optional
@@ -443,6 +451,8 @@ class DAG(OwnerTask):
         be indices (ints) into *tasks* or BaseTask instances. Note that links
         may also be defined on task  objects with the *parents* argument instead of
         using links: (parents=[parent_def1, parent_def2])
+    requirements: (list, optional)
+        A list of requirements this task places on the worker environment
     """
 
     TYPE = TaskType.DAG

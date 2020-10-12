@@ -1,4 +1,4 @@
-### pyTailor Example 8
+### pyTailor Tutorial 8
 This example introduces the following NEW concepts:
     Create WorkflowDefinition
     For WorkflowDefinition:
