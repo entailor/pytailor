@@ -77,7 +77,7 @@ def __refresh_access_token_from_idp(refresh_token):
         "AuthFlow": "REFRESH_TOKEN_AUTH",
         "ClientId": API_CLIENT_ID
     }
-    resp = httpx.post(API_IDP_URL, data=body, headers=COGNITO_HEADERS)
+    resp = httpx.post(API_IDP_URL, data=json.dumps(body), headers=COGNITO_HEADERS)
     return resp.json()["AuthenticationResult"]["AccessToken"]
 
 
