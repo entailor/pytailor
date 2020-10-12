@@ -169,3 +169,12 @@ class RestClient(httpx.Client):
             return TaskExecutionData.parse_obj(response.json())
         else:
             response.raise_for_status()
+
+    def perform_task_operation(self, wf_id: str, project_id: str, task_id: str,
+                               task_operation: TaskOperation) -> TaskSummary:
+        url = f"projects/{project_id}/workflows/{wf_id}/tasks/{task_id}/operations"
+        response = self.post(url, data=task_operation.json())
+        if response.status_code == httpx.codes.OK:
+            return TaskSummary.parse_obj(response.json())
+        else:
+            response.raise_for_status()

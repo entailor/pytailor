@@ -9,7 +9,8 @@ from pytailor.common.base import APIBase
 from pytailor.common.state import State
 from pytailor.exceptions import BackendResourceError
 from pytailor.execution import SerialRunner
-from pytailor.models import Workflow as WorkflowModel, WorkflowCreate
+from pytailor.models import Workflow as WorkflowModel, WorkflowCreate, TaskUpdate, \
+    TaskOperation, TaskOperationType
 from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 
 from .dag import DAG
@@ -125,13 +126,25 @@ class Workflow(APIBase):
         self.__wf_def_id = wf_model.from_definition_id
         self.__model = wf_model
 
+    def reset_task(self, task_id: str):
+        """Reset task."""
+        self.__assert_not_state_pre()
+        task_operation = TaskOperation(
+            type=TaskOperationType.RESET,
+        )
+        with RestClient() as client:
+            self._handle_request(
+                client.perform_task_operation,
+                self.id,
+                self.project.id,
+                task_id,
+                task_operation,
+                error_msg=f"Could not reset task {task_id}"
+            )
+
     def refresh(self) -> None:
         """Update with latest data from backend."""
-        if self.__state == State.PRE:
-            raise BackendResourceError(
-                "This workflow has not been run yet and can "
-                "therefore not be refreshed."
-            )
+        self.__assert_not_state_pre()
         wf_model = self.__fetch_model(self.project.id, self.id)
         self.__update_from_backend(wf_model)
 
@@ -248,8 +261,11 @@ class Workflow(APIBase):
         #     # no actions needed here
         #     raise NotImplementedError
 
-    def __add_to_backend(self):
-        pass
+    def __assert_not_state_pre(self):
+        if self.__state == State.PRE:
+            raise BackendResourceError(
+                "This workflow has not been run yet."
+            )
 
     def __pretty_printed(self):
         lines = []
