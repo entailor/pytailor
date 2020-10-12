@@ -75,14 +75,16 @@ def workflow_definition_compliance_test(project_ids: Optional[List[str]]):
     Check that python functions referenced in workflow definitions are importable.
     """
     wf_defs_info = []
-    if not project_ids:
-        with RestClient() as client:
-            projects = handle_request(client.get_projects)
+
+    with RestClient() as client:
+        projects = handle_request(client.get_projects)
+    if project_ids:
+        projects = [project for project in projects if project.id in project_ids]
 
     now_str = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f")
     log_file_name = f"worker_check_{now_str}.log"
+    compliance = True
     with open(log_file_name, "w") as log_file:
-
         for project in projects:
             log_file.write(f"Checking project: {project.name} ({project.id})\n\n")
             (
@@ -91,14 +93,14 @@ def workflow_definition_compliance_test(project_ids: Optional[List[str]]):
             ) = _check_all_function_imports_in_project(project.id, log_file)
             if not tests_ok:
                 print(
-                    f"Tests failed for project {project.name}. See log file for "
-                    f"details."
-                    # f"Removing unsupported workflow definitions from task "
-                    # f"checkout queries."
+                    f"Tests failed for workflow definitions in project {project.name}. "
+                    f"See log file for details."
                 )
-            else:
-                print(f"Tests ran OK for workflow definitions in project {project.name}")
+                compliance = False
             wf_defs_info.extend(wf_defs_info_prj)
             log_file.write("\n")
+
+    if compliance:
+        os.remove(log_file_name)
 
     return wf_defs_info
