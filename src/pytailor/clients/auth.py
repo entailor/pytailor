@@ -66,6 +66,7 @@ def __load_tokens_from_file():
 
 def __write_tokens_to_file(access_token, refresh_token):
     with open(TOKENS_FILE_PATH, "wb") as f:
+        TOKENS_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
         pickle.dump((access_token, refresh_token), f)
 
 

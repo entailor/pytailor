@@ -11,7 +11,6 @@ config = {
     "API_WORKER_ID": "",
     "API_KEY": "",
     "API_IDP_URL": "",
-    "AUTH_KEY": "",
     "SYNC_REQUEST_TIMEOUT": 30.0,
     "SYNC_CONNECT_TIMEOUT": 60.0,
     "ASYNC_REQUEST_TIMEOUT": 30.0,

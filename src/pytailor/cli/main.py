@@ -89,10 +89,10 @@ def init():
     if config_file.exists():
         print(f"A pyTailor config file already exists at {config_file}")
     else:
+        config_file.parent.mkdir(parents=True, exist_ok=True)
         toml.dump(
             {
                 "pytailor": {
-                    "AUTH_KEY": "<PUT YOUR AUTH-KEY HERE>",
                     "API_BASE_URL": "<API BASE URL HERE>",
                     "API_CLIENT_ID": "<API CLIENT ID HERE>",
                     "API_WORKER_ID": "<API WORKER ID HERE>",
