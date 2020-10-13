@@ -1,9 +1,11 @@
-from pytailor.clients import RestClient
+from unittest.mock import patch
 
+from pytailor.clients import RestClient
 from ..data import *
 from pytailor.models import *
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_accounts(httpx_mock):
     httpx_mock.add_response(json=data_accounts)
     with RestClient() as client:
@@ -13,6 +15,7 @@ def test_get_accounts(httpx_mock):
             assert model == Account(**data_accounts[i])
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_projects(httpx_mock):
     httpx_mock.add_response(json=data_projects)
     with RestClient() as client:
@@ -22,6 +25,7 @@ def test_get_projects(httpx_mock):
             assert model == Project(**data_projects[i])
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_project(httpx_mock):
     project_id = "a_project_id"
     httpx_mock.add_response(json=data_project)
@@ -31,6 +35,7 @@ def test_get_project(httpx_mock):
         assert model == Project(**data_project)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_new_fileset(httpx_mock):
     project_id = "a_project_id"
     httpx_mock.add_response(json=data_empty_fileset)
@@ -40,6 +45,7 @@ def test_new_fileset(httpx_mock):
     assert model == FileSet(**data_empty_fileset)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_download_urls_empty_payload(httpx_mock):
     project_id = "a_project_id"
     fileset_id = "a_filset_id"
@@ -51,6 +57,7 @@ def test_get_download_urls_empty_payload(httpx_mock):
     assert model == FileSet(**data_empty_fileset)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_download_urls(httpx_mock):
     project_id = "a_project_id"
     fileset_id = "a_filset_id"
@@ -62,6 +69,7 @@ def test_get_download_urls(httpx_mock):
     assert model == FileSet(**data_fileset)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_upload_urls(httpx_mock):
     project_id = "a_project_id"
     fileset_id = "a_filset_id"
@@ -73,6 +81,7 @@ def test_get_upload_urls(httpx_mock):
     assert model == FileSet(**data_fileset)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_workflow(httpx_mock):
     project_id = "a_project_id"
     workflow_id = "1"
@@ -83,6 +92,7 @@ def test_get_workflow(httpx_mock):
         assert model == Workflow(**data_workflow)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_new_workflow_from_dag(httpx_mock):
     project_id = "a_project_id"
     workflow_create = WorkflowCreate(**data_workflow_create_dag)
@@ -93,5 +103,6 @@ def test_new_workflow_from_dag(httpx_mock):
     assert model == Workflow(**data_workflow)
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_new_workflow_from_def(httpx_mock):
     pass

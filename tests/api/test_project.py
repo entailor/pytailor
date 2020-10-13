@@ -19,6 +19,7 @@ def test_get_project_from_id(mocked_method):
     mocked_method.assert_called_once()
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_project_from_bad_id(httpx_mock):
     httpx_mock.add_response(status_code=403)
     with pytest.raises(BackendResponseError):
@@ -35,6 +36,7 @@ def test_get_project_from_name(mocked_method1, mocked_method2):
     mocked_method2.assert_called_once()
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_project_from_bad_name(httpx_mock):
     httpx_mock.add_response(json=data_projects)
     with pytest.raises(ValueError):

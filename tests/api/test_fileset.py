@@ -25,6 +25,7 @@ def test_get_existing_fileset(mocked_method):
     mocked_method.assert_called_once()
 
 
+@patch("pytailor.clients.auth.access_token", "asdf")
 def test_get_non_existing_fileset(httpx_mock):
     httpx_mock.add_response(status_code=404)
     with pytest.raises(BackendResponseError):
