@@ -72,3 +72,15 @@ def test_handle_none_on_error():
         return_none_on=[code]
     )
     assert response is None
+
+
+@patch("pytailor.common.request_handler.refresh_tokens")
+def test_handle_unauthorized(refresh_tokens, caplog):
+    code = httpx.codes.UNAUTHORIZED
+    with pytest.raises(BackendResponseError) as e:
+        response = handle_request(
+            get_http_status_raising_func(code),
+            "http://test_url",
+        )
+    assert str(code) in str(e)
+    assert refresh_tokens.call_count == REQUEST_RETRY_COUNT
