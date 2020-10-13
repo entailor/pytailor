@@ -43,7 +43,7 @@ the following content:
 API_BASE_URL = "<API BASE URL HERE>"
 API_CLIENT_ID = "<API CLIENT ID HERE>"
 API_WORKER_ID = "<API WORKER ID HERE>"
-API_KEY = "<API KEY HERE>"
+API_SECRET_KEY = "<API KEY HERE>"
 API_IDP_URL = "<API IDP URL HERE>"
 
 [worker.my_config]
@@ -58,7 +58,7 @@ capabilities = []
 ???+ note
     It is also possible to configure pytailor with environmental variables by prefixing
     the environmental variables with `PYTAILOR_`. E.g. to set the API key, put it in an
-    environmental variable called `PYTAILOR_API_KEY`.
+    environmental variable called `PYTAILOR_API_SECRET_KEY`.
 
 #### 3. Testing
 Once you are setup you can start working through the [tutorials](tutorials/example01_hello_world.md).

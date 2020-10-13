@@ -11,7 +11,7 @@ from pytailor.config import (
     API_IDP_URL,
     API_CLIENT_ID,
     API_WORKER_ID,
-    API_KEY
+    API_SECRET_KEY
 )
 
 COGNITO_HEADERS = {
@@ -91,7 +91,7 @@ def __authenticate_with_idp():
     body = {
         "AuthParameters": {
             "USERNAME": API_WORKER_ID,
-            "PASSWORD": API_KEY
+            "PASSWORD": API_SECRET_KEY
         },
         "AuthFlow": "USER_PASSWORD_AUTH",
         "ClientId": API_CLIENT_ID
