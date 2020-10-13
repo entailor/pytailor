@@ -18,11 +18,11 @@ COGNITO_HEADERS = {
     "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
     "Content-Type": "application/x-amz-json-1.1",
 }
-TOKENS_FILE_PATH = Path.home() / ".tailor" / "tokens"
+TOKENS_FILE_PATH = Path.home() / ".tailor" / "refresh_token"
 
 # keep access and refresh tokens as global variables
-access_token: Optional[str] = ""
-refresh_token: Optional[str] = ""
+access_token: str = ""
+refresh_token: str = ""
 
 logger = get_logger("Auth")
 
@@ -35,39 +35,44 @@ def refresh_tokens():
 
     global access_token, refresh_token
 
-    # 1. try to load from file
+    # no access token in memory
     if not access_token:
-        access_token, refresh_token = __load_tokens_from_file()
-        if access_token:
-            logger.info("Access token loaded from file")
-            return
+        refresh_token = __load_refresh_token_from_file()
+        if refresh_token:
+            try:
+                access_token = __refresh_access_token_from_idp(refresh_token)
+                logger.info("Access token refreshed from idp-server")
+                return
+            except:
+                pass
 
-    # 2. try to refresh access token
+    # Access token in memory, try to refresh access token
     if refresh_token:
-        access_token = __refresh_access_token_from_idp(refresh_token)
-        if access_token:
-            __write_tokens_to_file(access_token, refresh_token)
-            logger.info("Access token refreshed from server")
+        try:
+            access_token = __refresh_access_token_from_idp(refresh_token)
+            logger.info("Access token refreshed from idp-server")
             return
+        except:
+            pass
 
     # 3. (Re-) authenticate
     access_token, refresh_token = __authenticate_with_idp()
-    __write_tokens_to_file(access_token, refresh_token)
-    logger.info("Authenticated with server")
+    __write_refresh_token_to_file(refresh_token)
+    logger.info("Authenticated with idp-server")
 
 
-def __load_tokens_from_file():
+def __load_refresh_token_from_file():
     if TOKENS_FILE_PATH.exists():
         with open(TOKENS_FILE_PATH, "rb") as f:
             return pickle.load(f)
     else:
-        return "", ""
+        return ""
 
 
-def __write_tokens_to_file(access_token, refresh_token):
+def __write_refresh_token_to_file(refresh_token):
     with open(TOKENS_FILE_PATH, "wb") as f:
         TOKENS_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
-        pickle.dump((access_token, refresh_token), f)
+        pickle.dump((refresh_token), f)
 
 
 def __refresh_access_token_from_idp(refresh_token):
