@@ -61,4 +61,4 @@ capabilities = []
     environmental variable called `PYTAILOR_API_SECRET_KEY`.
 
 #### 3. Testing
-Once you are setup you can start working through the [tutorials](tutorials/example01_hello_world.md).
+Once you are setup you can start working through the [tutorials](../tutorials/example01_hello_world.md).

@@ -17,9 +17,9 @@ is stored.
 For the basic user registration two default projects are created for you:
  
  - Project *Test* is your private project, set up to let you experiment on your own
- - Project *Demo* is set up to allow users on the same account to collaborate. 
+ - Project *Prod* is set up to allow users on the same account to collaborate. 
  
-[Workers](concepts/workers.md) may also be set up to only run 
+[Workers](workers.md) may also be set up to only run 
 tasks that belong to a specific project.  
 
 ## Accounts
