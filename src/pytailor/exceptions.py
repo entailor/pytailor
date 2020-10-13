@@ -16,3 +16,7 @@ class DAGError(PytailorBaseError):
 
 class ParameterizationError(PytailorBaseError):
     pass
+
+
+class AuthenticationError(PytailorBaseError):
+    pass

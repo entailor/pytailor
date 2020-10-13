@@ -7,6 +7,7 @@ from typing import Optional
 import httpx
 
 from pytailor.utils import get_logger
+from pytailor.exceptions import AuthenticationError
 from pytailor.config import (
     API_IDP_URL,
     API_CLIENT_ID,
@@ -27,13 +28,15 @@ refresh_token: str = ""
 logger = get_logger("Auth")
 
 
-def refresh_tokens():
+def refresh_tokens(reset_refresh_token: bool = True):
     # refresh/load tokens with the following efforts in order:
     # 1. load tokens from file if they have not already been loaded
     # 2. Try to refresh access token with server using refresh token
     # 3. (Re-) authenticate with server using credentials
 
     global access_token, refresh_token
+    if reset_refresh_token:
+        refresh_token = ""
 
     # no access token in memory
     if not access_token:
@@ -98,6 +101,11 @@ def __authenticate_with_idp():
     }
     resp = httpx.post(API_IDP_URL, data=json.dumps(body), headers=COGNITO_HEADERS)
     payload = resp.json()
+    if "AuthenticationResult" not in payload:
+        msg = "Could not authenticate."
+        if "__type" in payload:
+            msg += f" {payload['__type']}: {payload['message']}"
+        raise AuthenticationError(msg)
     return (payload["AuthenticationResult"]["AccessToken"],
             payload["AuthenticationResult"]["RefreshToken"])
 
@@ -106,15 +114,19 @@ class TailorAuth(httpx.Auth):
 
     def auth_flow(self, request):
         # Add Oauth2 authorization header
-        request.headers["Authorization"] = "Bearer " + access_token
-        # Add AWS correlation ID in order to trace requests through the network
-        request.headers["X-Amzn-Trace-Id"] = str(uuid.uuid4())
-        yield request
+        if access_token:
+            request.headers["Authorization"] = "Bearer " + access_token
+            # Add AWS correlation ID in order to trace requests through the network
+            request.headers["X-Amzn-Trace-Id"] = str(uuid.uuid4())
+            yield request
+        else:
+            raise AuthenticationError("Could not get access token")
 
 
 # try to call refresh_tokens() when module is loaded
 try:
     refresh_tokens()
-except:
+except AuthenticationError as e:
     # credential not configured (expected during unit tests)
     logger.error("Could not refresh access token. Check configuration.")
+    logger.error(str(e))

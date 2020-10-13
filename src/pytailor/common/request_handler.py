@@ -39,9 +39,9 @@ def _handle_retry(exc, no_of_retries):
         if exc.response.status_code in RETRY_HTTP_CODES:
             retry = True
         elif exc.response.status_code == httpx.codes.UNAUTHORIZED:
-            refresh_tokens()
+            refresh_tokens(no_of_retries > 1)
             retry = True
-            sleep_time = 0.
+            sleep_time = 1.
             msg = "Invalid access token, re-authenticating."
     elif isinstance(exc, RETRY_ERRORS):
         retry = True
