@@ -39,7 +39,7 @@ t2 = PythonTask(
 dag = DAG(tasks=[t1, t2], name="dag")
 
 # open a project
-prj = Project.from_name("Prod")
+prj = Project.from_name("Test")
 
 ### workflow execution ###
 
