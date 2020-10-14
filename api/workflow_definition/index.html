@@ -587,20 +587,22 @@
 <div class="autodoc-signature"><em>class </em><code>pytailor.<strong>WorkflowDefinition</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">name</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">description</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">dag</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">inputs_schema=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">outputs_schema=None</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">files_schema=None</em><span class="autodoc-punctuation">)</span></div>
 <div class="autodoc-docstring"><p>Create a new workflow definition.
 Workflow Definitions are parameterized and reusable blueprints for computing workflows.</p>
-<h2>Parameters</h2>
-<p>name : str, optional
-    Provide a name for this workflow definition.
-dag : DAG
-    Provide a dag object for this workflow definition.
-inputs_schema : dict, optional
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong>name</strong> str, optional
+    Provide a name for this workflow definition.</li>
+<li><strong>dag</strong> : DAG
+    Provide a dag object for this workflow definition.</li>
+<li><strong>inputs_schema</strong> dict, optional
     JSON-schema for rendering of inputs in the react web app and validating the structure and data typing of the
-    input parameters (dict)
-outputs_schema : dict, optional
+    input parameters (dict)</li>
+<li><strong>outputs_schema</strong> dict, optional
     JSON-schema for validating the structure and data typing of the
-    output parameters (dict)
-files_schema : dict, optional
+    output parameters (dict)</li>
+<li><strong>files_schema</strong> dict, optional
     JSON-file for rendering of file upload tab in the react web app and
-    validating file extensions etc.</p></div>
+    validating file extensions etc.</li>
+</ul></div>
 <div class="autodoc-members">
 <div class="autodoc-signature"><code><strong>add_to_account</strong></code><span class="autodoc-punctuation">(</span><em class="autodoc-param">self</em><span class="autodoc-punctuation">, </span><em class="autodoc-param">account</em><span class="autodoc-punctuation">)</span></div>
 <div class="autodoc-docstring"></div>
