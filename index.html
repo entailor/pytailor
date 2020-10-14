@@ -214,7 +214,7 @@
       
         <li class="md-nav__item">
   <a href="#what-is-pytailor" class="md-nav__link">
-    What is pyTailor?
+    What is pytailor?
   </a>
   
 </li>
@@ -571,7 +571,7 @@
       
         <li class="md-nav__item">
   <a href="#what-is-pytailor" class="md-nav__link">
-    What is pyTailor?
+    What is pytailor?
   </a>
   
 </li>
@@ -608,9 +608,9 @@
                 
                 
                 <h1 id="welcome-to-the-pytailor-documentation">Welcome to the pyTailor documentation</h1>
-<h2 id="what-is-pytailor">What is pyTailor?</h2>
-<p>pyTailor is a python client for the Tailor automation and collaboration platform. See <a href="https://tailor.wf">Tailor.wf</a> for more information.</p>
-<p>With the pyTailor API you can:</p>
+<h2 id="what-is-pytailor">What is pytailor?</h2>
+<p>Pytailor is a python client for the Tailor automation and collaboration platform. See <a href="https://tailor.wf">tailor.wf</a> for more information.</p>
+<p>With the pytailor API you can:</p>
 <ul>
 <li>Turn your existing python code into parameterized and reusable workflows.</li>
 <li>Run workflows locally in your computer or distributed to dedicated worker nodes.</li>
@@ -644,7 +644,7 @@
 </ul>
 </li>
 </ol>
-<p>With pyTailor you can wrap these functions into <a href="api/taskdefs/#pythontask">PythonTasks</a>, and then use a <a href="api/taskdefs/#dag">DAG</a> to define how these tasks relate to each other:</p>
+<p>With pytailor you can wrap these functions into <a href="api/taskdefs/#pythontask">PythonTasks</a>, and then use a <a href="api/taskdefs/#dag">DAG</a> to define how these tasks relate to each other:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">BranchTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Inputs</span><span class="p">,</span> <span class="n">Outputs</span><span class="p">,</span> <span class="n">Files</span>
 <span class="kn">import</span> <span class="nn">engineering_tasks</span>
 
@@ -681,15 +681,31 @@
         <span class="n">parents</span><span class="o">=</span><span class="n">branch</span>
     <span class="p">)</span>
 </code></pre></div>
-<p>The DAG object represents the recipe for how the the computations shall be performed. By instantiating a DAG no computations are performed, note that we are just <em>referencing</em> the functions we want to use, we are not <em>calling</em> them. DAG is short for <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">Directed Asyclic Graph</a>, a term used to describe the logical flow of computations in a workflow. The DAG defined above is visualized below:</p>
+<p>The DAG object represents the recipe for how the the computations shall be performed. 
+By instantiating a DAG no computations are performed, note that we are just <em>referencing</em> 
+the functions we want to use, we are not <em>calling</em> them. DAG is short for 
+<a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">Directed Asyclic Graph</a>, 
+a term used to describe the logical flow of computations in a workflow. 
+The DAG defined above is visualized below:</p>
 <p><img alt="DAG" src="DAG.png" /></p>
-<p>A key feature in this DAG is the use of <a href="api/taskdefs/#branchtask">BranchTask</a> to achieve parallelization or "fan-out" functionality. The term <em>branching</em> is used to describe this functionality, where one branch is created for each simulation.</p>
-<p>The <a href="api/parameterization/#inputs">Inputs</a>, <a href="api/parameterization/#outputs">Outputs</a> and <a href="api/parameterization/#files">Files</a> objects are helper-objects for <em>parameterization</em>. When we e.g. say <code>kwargs={"parameters": inputs.pre_proc_data}</code> we are specifying that the value for the "parameters" keyword argument is parameterized and shall be looked up from the <em>pre_proc_data</em> name in the workflow's <em>inputs</em> when the task is executed. The concept of parameterization becomes clearer when we see how <em>inputs</em>, <em>outputs</em> and <em>files</em> are defined when we run a Workflow below.</p>
-<p>We now have a <em>parameterized</em> DAG describing the <em>recipe</em> of how we want to perform our computing workflow. Based on this definition we can <em>run</em> a <a href="api/workflow/">Workflow</a>, and we have sereral options:</p>
+<p>A key feature in this DAG is the use of <a href="api/taskdefs/#branchtask">BranchTask</a> 
+to achieve parallelization or "fan-out" functionality. The term <em>branching</em> is used 
+to describe this functionality, where one branch is created for each simulation.</p>
+<p>The <a href="api/parameterization/#inputs">Inputs</a>, <a href="api/parameterization/#outputs">Outputs</a> 
+and <a href="api/parameterization/#files">Files</a> objects are helper-objects for 
+<em>parameterization</em>. When we e.g. say <code>kwargs={"parameters": inputs.pre_proc_data}</code> 
+we are specifying that the value for the "parameters" keyword argument is parameterized 
+and shall be looked up from the <em>pre_proc_data</em> name in the workflow's <em>inputs</em> when 
+the task is executed. The concept of parameterization becomes clearer when we see 
+how <em>inputs</em>, <em>outputs</em> and <em>files</em> are defined when we run a Workflow below.</p>
+<p>We now have a <em>parameterized</em> DAG describing the <em>recipe</em> of how we want to perform 
+our computing workflow. Based on this definition we can <em>run</em> a 
+<a href="api/workflow/">Workflow</a>, and we have several options:</p>
 <ul>
 <li>run it directly</li>
 <li>run it distributed (i.e in parallel, and optionally on several worker machines)</li>
-<li>Store it as a <a href="api/workflow_definition/">WorkflowDefinition</a> so that it can be executed directly from the Tailor Webapp.</li>
+<li>store it as a <a href="api/workflow_definition/">WorkflowDefinition</a> so that it can 
+be executed directly from the Tailor Webapp.</li>
 </ul>
 <p>For this example we're just going to run the workflow directly:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">FileSet</span><span class="p">,</span> <span class="n">Workflow</span>
@@ -723,22 +739,32 @@
 <span class="c1"># run the workflow</span>
 <span class="n">wf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </code></pre></div>
-<p>Here we have introduced three new classes from the pyTailor API:</p>
+<p>Here we have introduced three new classes from the pytailor API:</p>
 <ul>
-<li><a href="documentation/account_management/#Projects">Project</a>. A Tailor workflow has to be run in the context of a project.</li>
-<li><a href="documentation/contexts/#Fileset">FileSet</a>. Represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run.</li>
-<li><a href="api/workflow/">Workflow</a>. Represents a single workflow <em>run</em>. In order to run a workflow we first instantiate the Workflow object, and then we call the <code>Workflow.run</code> method, which will start executing the workflow in the current python process.</li>
+<li><a href="documentation/account_management/#Projects">Project</a>. A Tailor workflow has to be 
+run in the context of a project.</li>
+<li><a href="documentation/contexts/#Fileset">FileSet</a>. Represents an isolated file storage 
+area in the Tailor backend and is associated with a specific workflow run.</li>
+<li><a href="api/workflow/">Workflow</a>. Represents a single workflow <em>run</em>. In order to run a 
+workflow we first instantiate the Workflow object, and then we call the 
+<code>Workflow.run</code> method, which will start executing the workflow in the current python process.</li>
 </ul>
-<details class="note" open="open"><summary>Note</summary><p>The direct mode of execution used here is handy when developing new workflows and for testing and debugging of new DAGs. For production workflow runs, <em>distributed</em> mode is suitable. See the <a href="documentation/workers/">worker tutorial</a> for more information.</p>
+<details class="note" open="open"><summary>Note</summary><p>The direct mode of execution used here is handy when developing new workflows and 
+for testing and debugging of new DAGs. For production workflow runs, <em>distributed</em> 
+mode is suitable. See the <a href="documentation/workers/">worker tutorial</a> for more information.</p>
 </details>
-<p>Once the workflow has been started it can be monitored from the Tailor webapp. Below is shown how the workflow can be found in the list of workflows for the specific project by searching for the workflow name. When the worklfow is selected the workflow files appear on the right side for inspection and direct download.</p>
+<p>Once the workflow has been started it can be monitored from the Tailor webapp. 
+Below is shown how the workflow can be found in the list of workflows for the specific 
+project by searching for the workflow name. When the workflow is selected the workflow 
+files appear on the right side for inspection and direct download.</p>
 <p><img alt="List" src="List.png" /></p>
-<p>Bu clicking on the <em>Details</em> link the workflow can be further inspected in the details view.</p>
+<p>By clicking on the <em>Details</em> link the workflow can be further inspected in the details view.</p>
 <p><img alt="List" src="Details.png" /></p>
 <h2 id="get-started-with-pytailor">Get started with pyTailor</h2>
-<p>Head over to the <a href="documentation/getting_started/">Getting started</a> section for instructions on how to setup pyTailor.</p>
+<p>Head over to the <a href="documentation/getting_started/">Getting started</a> section for 
+instructions on how to setup pytailor.</p>
 <p>Once you are setup you can start working through the <a href="tutorials/example01_hello_world/">tutorials</a>.</p>
-<p>You can also consult the <a href="api/taskdefs/">API Reference</a> for documentation of the pyTailor API.</p>
+<p>You can also consult the <a href="api/taskdefs/">API Reference</a> for documentation of the pytailor API.</p>
                 
               
               

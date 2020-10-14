@@ -55,11 +55,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#pytailor-tutorial-5" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -443,36 +438,9 @@
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
     
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Tutorial 5
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
     <a href="./" class="md-nav__link md-nav__link--active">
       Tutorial 5
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pytailor-tutorial-5" class="md-nav__link">
-    pyTailor Tutorial 5
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
     
   </li>
 
@@ -537,34 +505,6 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pytailor-tutorial-5" class="md-nav__link">
-    pyTailor Tutorial 5
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -577,8 +517,7 @@
                 
                   <h1>Tutorial 5</h1>
                 
-                <h3 id="pytailor-tutorial-5">pyTailor Tutorial 5</h3>
-<p>This example introduces the following NEW concepts:</p>
+                <p>This example introduces the following NEW concepts:</p>
 <ul>
 <li>
 <p>For task definitions:</p>
@@ -598,23 +537,25 @@
 <p>The <em>download</em> argument to task can be a single file tag (str) or a list of file
 tags. These file tags refer to files in the fileset associated with
 the workflow.</p>
-<p>To send input files into a workflow the following steps are taken:
-    1. Instantiate a FileSet object
-    2. Upload files to the fileset with an associated tag
-    3. Pass the fileset along when instantiating the workflow
-    4. Tasks will now download files by referencing the file tags.</p>
+<p>To send input files into a workflow the following steps are taken:</p>
+<ul>
+<li>instantiate a FileSet object</li>
+<li>upload files to the fileset with an associated tag</li>
+<li>pass the fileset along when instantiating the workflow</li>
+<li>tasks will now download files by referencing the file tags</li>
+</ul>
 <p>The <em>upload</em> argument to Task is used to specify files to send back to the
 fileset after a task has been run. <em>upload</em> must be a dict of (tag: val),
-where val can be:
-    1. one or more query expressions(str and list of str) which is applied
+where val can be:</p>
+<ul>
+<li>one or more query expressions(str and list of str) which is applied
        to the function output. The query result is then searched for actual files,
-       these files are then uploaded to storage under the given tag.</p>
-<ol>
+       these files are then uploaded to storage under the given tag.</li>
 <li>one or more glob-style strings (str and list of str) which is applied
        in the task's working dir. Matching files are uploaded under the
        given tag.</li>
-</ol>
-<p>File <em>names</em> can be accessed with queries: "&lt;% $.files.<tag> %&gt;" which is useful when e.g
+</ul>
+<p>File <em>names</em> can be accessed with queries: <code>"&lt;% $.files.&lt;tag&gt; %&gt;"</code> which is useful when e.g
 file name(s) are input to functions.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">FileSet</span>
 

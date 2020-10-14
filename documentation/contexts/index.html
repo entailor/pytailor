@@ -290,13 +290,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#scoped-contexts" class="md-nav__link">
-    Scoped contexts
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -571,13 +564,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#scoped-contexts" class="md-nav__link">
-    Scoped contexts
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -596,7 +582,8 @@
                 
                 
                 <h1 id="contexts">Contexts</h1>
-<p>Contexts represents the data and files associated with a workflow. The context consist of three datastructures:</p>
+<p>Contexts represents the data and files associated with a workflow. 
+The context consist of three data structures:</p>
 <ul>
 <li><strong>inputs</strong></li>
 <li><strong>outputs</strong></li>
@@ -639,13 +626,20 @@
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <em>inputs</em> and <em>outputs</em> datastructures must be JSON-serializable, which limits the data <a href="https://www.geeksforgeeks.org/json-data-types/">types</a> which can be used. In the future more sophisticated serialization may be applied to allow other object types, e.g. numpy arrays. For data that is not JSON-compatible you can serialize the data to file and use the file-piping mechanisms to send the data to your tasks.</p>
+<p>The <em>inputs</em> and <em>outputs</em> data structures must be JSON-serializable, 
+which limits the data <a href="https://www.geeksforgeeks.org/json-data-types/">types</a> which can be used. 
+In the future more sophisticated serialization may be applied to allow other 
+object types, e.g. numpy arrays. For data that is not JSON-compatible you can 
+serialize the data to file and use the file-piping mechanisms to send the data to your tasks.</p>
 </div>
 <h2 id="fileset">Fileset</h2>
-<p>A fileset represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run</p>
-<h2 id="scoped-contexts">Scoped contexts</h2>
-<p>Scoped contexts arise when tasks are duplicated.</p>
-<p>Consider the following DAG, consisting of two PythonTasks:
+<p>A fileset represents an isolated file storage area in the Tailor backend and is 
+associated with a specific workflow run.</p>
+<!---
+## Scoped contexts
+Scoped contexts arise when tasks are duplicated.
+
+Consider the following DAG, consisting of two PythonTasks:
 <div class="highlight"><pre><span></span><code>              <span class="o">+---+</span>
               <span class="o">|</span><span class="n">t1</span> <span class="o">|</span>  <span class="n">PythonTask</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">output_to</span><span class="o">=</span><span class="s1">&#39;out&#39;</span><span class="p">)</span>
               <span class="o">+-+-+</span>
@@ -655,7 +649,8 @@
               <span class="o">|</span><span class="n">t2</span> <span class="o">|</span>  <span class="n">PythonTask</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="s1">&#39;&lt;% $.outputs.out %&gt;&#39;</span><span class="p">)</span>
               <span class="o">+---+</span>
 </code></pre></div>
-When this DAG is duplicated with a BranchTask</p>
+When this DAG is duplicated with a BranchTask
+-->
                 
               
               

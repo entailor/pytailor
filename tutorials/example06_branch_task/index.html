@@ -55,11 +55,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#pytailor-tutorial-6" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -455,36 +450,9 @@
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
     
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Tutorial 6
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
     <a href="./" class="md-nav__link md-nav__link--active">
       Tutorial 6
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pytailor-tutorial-6" class="md-nav__link">
-    pyTailor Tutorial 6
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
     
   </li>
 
@@ -537,34 +505,6 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pytailor-tutorial-6" class="md-nav__link">
-    pyTailor Tutorial 6
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -577,8 +517,7 @@
                 
                   <h1>Tutorial 6</h1>
                 
-                <h3 id="pytailor-tutorial-6">pyTailor Tutorial 6</h3>
-<p>This example introduces the following NEW concepts:</p>
+                <p>This example introduces the following NEW concepts:</p>
 <ul>
 <li>
 <p>Use BranchTask to "branch out" a single PythonTask</p>
@@ -590,8 +529,8 @@
 </ul>
 </li>
 </ul>
-<p>nch_data* is given as one or more query-expressions. When branching is performed</p>
-<p>query-expressions must evaluate to to a list or a dict. If the queries evaluates to a
+<p><em>branch_data</em> is given as one or more query-expressions. When branching is performed 
+query-expressions must evaluate to to a list or a dict. If the queries evaluates to a
 dict, that dict must have integer keys to represent the index of each branch.</p>
 <p>Branched tasks always become children of the BranchTask that created them.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">BranchTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Project</span>

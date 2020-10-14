@@ -55,11 +55,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#pytailor-tutorial-8" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -479,36 +474,9 @@
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
     
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Tutorial 8
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
     <a href="./" class="md-nav__link md-nav__link--active">
       Tutorial 8
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pytailor-tutorial-8" class="md-nav__link">
-    pyTailor Tutorial 8
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
     
   </li>
 
@@ -537,34 +505,6 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pytailor-tutorial-8" class="md-nav__link">
-    pyTailor Tutorial 8
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -577,20 +517,35 @@
                 
                   <h1>Tutorial 8</h1>
                 
-                <h3 id="pytailor-tutorial-8">pyTailor Tutorial 8</h3>
-<p>This example introduces the following NEW concepts:
-    Create WorkflowDefinition
-    For WorkflowDefinition:</p>
-<div class="highlight"><pre><span></span><code>- use *inputsschema* to specify the allowed parameters in main DAG
-
-- use *filesschema* to specify the allowed files in main DAG
-
-- use *description* to describe the workflow definition
-Use Account to manage your workflow definitions
-Add the workflow definition to a specific project.
-</code></pre></div>
+                <p>This example introduces the following NEW concepts:</p>
+<ul>
+<li>
+<p>Create WorkflowDefinition</p>
+</li>
+<li>
+<p>For WorkflowDefinition:</p>
+<ul>
+<li>
+<p>use <em>inputsschema</em> to specify the allowed parameters in main DAG</p>
+</li>
+<li>
+<p>use <em>filesschema</em> to specify the allowed files in main DAG</p>
+</li>
+<li>
+<p>use <em>description</em> to describe the workflow definition</p>
+</li>
+<li>
+<p>use <em>account</em> to manage your workflow definitions</p>
+</li>
+<li>
+<p>add the workflow definition to a specific project</p>
+</li>
+</ul>
+</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">WorkflowDefinition</span><span class="p">,</span> <span class="n">Account</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> \
-    <span class="n">InputsSchema</span><span class="p">,</span> <span class="n">FilesSchema</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">Files</span><span class="p">,</span> <span class="n">Outputs</span><span class="p">,</span> <span class="n">Inputs</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">FileSet</span>
+    <span class="n">InputsSchema</span><span class="p">,</span> <span class="n">FilesSchema</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">Files</span><span class="p">,</span> <span class="n">Outputs</span><span class="p">,</span> <span class="n">Inputs</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> \
+    <span class="n">FileSet</span>
 
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">shutil</span>

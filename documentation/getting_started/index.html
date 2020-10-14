@@ -660,14 +660,14 @@
                 
                 
                 <h1 id="getting-started">Getting started</h1>
-<p>To use Pytailor you need to connect to a Tailor backend. The easiest way to get started
-with Tailor is to sign up for a free account at <a href="https://tailor.wf">Tailor.wf</a>. For other
+<p>To use pytailor you need to connect to a Tailor backend. The easiest way to get started
+with Tailor is to sign up for a free account at <a href="https://tailor.wf">tailor.wf</a>. For other
 options please <a href="mailto:sales@tailor.wf">contact us</a>. In the following it us assumed that
-you are using Tailor.wf as your backend service.</p>
+you are using tailor.wf as your backend service.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="first-time-setup">First time setup</h3>
 <h4 id="1-install-pytailor">1. Install pytailor</h4>
-<p>Official releases of pytailor are available on pypi and can easily be installed with pip:
+<p>Official releases of pytailor are available on PyPI and can easily be installed with pip:
 <div class="highlight"><pre><span></span><code>pip install pytailor
 </code></pre></div></p>
 <details class="note" open="open"><summary>Note</summary><p>You can also clone the repository on github and install pytailor 
@@ -682,7 +682,7 @@ To install without development dependencies:
 </code></pre></div></p>
 </details>
 <h4 id="2-configure-backend">2. Configure backend</h4>
-<p>When pytailor is installed your ca use the CLI to set up a barebone config file:
+<p>When pytailor is installed you can use the CLI to set up a barebone config file:
 <div class="highlight"><pre><span></span><code>tailor init
 </code></pre></div></p>
 <p>This command generates a config file <code>.tailor/config.toml</code> under your home directory with
@@ -691,7 +691,7 @@ the following content:</p>
 <span class="n">API_BASE_URL</span> <span class="o">=</span> <span class="s">&quot;&lt;API BASE URL HERE&gt;&quot;</span>
 <span class="n">API_CLIENT_ID</span> <span class="o">=</span> <span class="s">&quot;&lt;API CLIENT ID HERE&gt;&quot;</span>
 <span class="n">API_WORKER_ID</span> <span class="o">=</span> <span class="s">&quot;&lt;API WORKER ID HERE&gt;&quot;</span>
-<span class="n">API_KEY</span> <span class="o">=</span> <span class="s">&quot;&lt;API KEY HERE&gt;&quot;</span>
+<span class="n">API_SECRET_KEY</span> <span class="o">=</span> <span class="s">&quot;&lt;API KEY HERE&gt;&quot;</span>
 <span class="n">API_IDP_URL</span> <span class="o">=</span> <span class="s">&quot;&lt;API IDP URL HERE&gt;&quot;</span>
 
 <span class="k">[worker.my_config]</span>
@@ -701,10 +701,12 @@ the following content:</p>
 <span class="n">project_ids</span> <span class="o">=</span> <span class="k">[]</span>
 <span class="n">capabilities</span> <span class="o">=</span> <span class="k">[]</span>
 </code></pre></div>
-<details class="note" open="open"><summary>Note</summary><p>It is also possible to configure pytailor with environmental variables by prefixing
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is also possible to configure pytailor with environmental variables by prefixing
 the environmental variables with <code>PYTAILOR_</code>. E.g. to set the API key, put it in an
-environmental variable called <code>PYTAILOR_API_KEY</code>.</p>
-</details>
+environmental variable called <code>PYTAILOR_API_SECRET_KEY</code>.</p>
+</div>
 <h4 id="3-testing">3. Testing</h4>
 <p>Once you are setup you can start working through the <a href="../../tutorials/example01_hello_world/">tutorials</a>.</p>
                 

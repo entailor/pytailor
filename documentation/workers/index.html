@@ -275,23 +275,62 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#worker-management" class="md-nav__link">
+    Worker management
+  </a>
+  
+    <nav class="md-nav" aria-label="Worker management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#filter-on-project" class="md-nav__link">
     Filter on project
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#worker-name" class="md-nav__link">
-    Worker name
+        
+          <li class="md-nav__item">
+  <a href="#filter-on-worker-name" class="md-nav__link">
+    Filter on worker name
+  </a>
+  
+    <nav class="md-nav" aria-label="Filter on worker name">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#capability" class="md-nav__link">
-    Capability
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-on-task-requirement" class="md-nav__link">
+    Filter on task requirement
   </a>
+  
+    <nav class="md-nav" aria-label="Filter on task requirement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -580,23 +619,62 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#worker-management" class="md-nav__link">
+    Worker management
+  </a>
+  
+    <nav class="md-nav" aria-label="Worker management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#filter-on-project" class="md-nav__link">
     Filter on project
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#worker-name" class="md-nav__link">
-    Worker name
+        
+          <li class="md-nav__item">
+  <a href="#filter-on-worker-name" class="md-nav__link">
+    Filter on worker name
+  </a>
+  
+    <nav class="md-nav" aria-label="Filter on worker name">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#capability" class="md-nav__link">
-    Capability
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-on-task-requirement" class="md-nav__link">
+    Filter on task requirement
   </a>
+  
+    <nav class="md-nav" aria-label="Filter on task requirement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -632,28 +710,75 @@ and write:</p>
 asking for tasks to execute.</p>
 <p>If you want to configure the worker to sleep for 5 seconds between each time it asks for work, using 
 10 cores on the computer.</p>
-<div class="highlight"><pre><span></span><code>tailor worker --sleep 5 --n_cores 10 
+<div class="highlight"><pre><span></span><code>tailor worker --sleep 5 --ncores 10 
 </code></pre></div>
 <p>For a complete list of possible worker configurations write</p>
 <div class="highlight"><pre><span></span><code>tailor worker --help
 </code></pre></div>
 <p>If you want to run several different workers with different configurations, simply open 
-several terminals and repeat</p>
-<h2 id="filter-on-project">Filter on project</h2>
-<p>Workers may be configured to only run tasks in a workflow that belong to a specific 
+several terminals and repeat.</p>
+<h2 id="worker-management">Worker management</h2>
+<h3 id="filter-on-project">Filter on project</h3>
+<p>Workers may be configured to only run tasks in a workflow that belongs to a specific 
 <a href="../account_management/">project</a>. This is done by assigning a project at initiation:</p>
-<div class="highlight"><pre><span></span><code>tailor worker --project_id_filter &lt;your_project_id_filter&gt;
+<div class="highlight"><pre><span></span><code>tailor worker --project-id-filter &lt;your_project_id_filter <span class="o">(</span>project.id<span class="o">)</span>&gt;
 </code></pre></div>
-<h2 id="worker-name">Worker name</h2>
-<p>At initiation of workflows, a workflow may be distributed to run only on workers with
- a given worker name. To run these workflows, the same worker name must be specified. </p>
-<div class="highlight"><pre><span></span><code>tailor worker --worker_name my_worker_name
+<p>Multiple projects may be assigned by repeating the configuration key:</p>
+<div class="highlight"><pre><span></span><code>tailor worker --project-id-filter &lt;id_1&gt; --project-id-filter &lt;id_2&gt;
 </code></pre></div>
-<h2 id="capability">Capability</h2>
-<p>Workers may be configured such that the tasks that <em>requires</em>
- a certain <em>capability</em> is run on the worker. This is done by assigning capabilities
- to the worker  at initiation:</p>
-<div class="highlight"><pre><span></span><code>tailor worker --capability &lt;specified_capability_requirement_in_task&gt;
+<h3 id="filter-on-worker-name">Filter on worker name</h3>
+<p>A workflow may be distributed to run only on workers with a given worker name. 
+To run these workflows, the same worker name must be specified. </p>
+<div class="highlight"><pre><span></span><code>tailor worker --workername &lt;my_worker_name (string)&gt;
+</code></pre></div>
+<h4 id="example">Example</h4>
+<p>Workflow execution
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">Workflow</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dag&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
+        <span class="n">function</span><span class="o">=</span><span class="s2">&quot;builtins.print&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;job 1&quot;</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="c1"># open a project</span>
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+
+<span class="c1">### workflow execution ###</span>
+
+<span class="c1"># create a workflow</span>
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
+    <span class="n">project</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hello from pytailor&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">wf</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">distributed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">workername</span><span class="o">=</span><span class="s1">&#39;my_worker&#39;</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Configuring worker
+<div class="highlight"><pre><span></span><code>tailor worker --workername my_worker
+</code></pre></div></p>
+<h3 id="filter-on-task-requirement">Filter on task requirement</h3>
+<p>Tasks may <em>require</em> a certain <em>capability</em> for the worker environment, such as installed software. 
+To tag a worker with the requirement, <em>capability</em> is applied at worker configuration. </p>
+<div class="highlight"><pre><span></span><code>tailor worker --capability &lt;specified_capability_requirement_in_task (string)&gt;
+</code></pre></div>
+<h4 id="example_1">Example</h4>
+<p>Task definition
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
+    <span class="n">function</span><span class="o">=</span><span class="s1">&#39;builtins.print&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;capability demo&#39;</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hello capability!&#39;</span><span class="p">],</span>
+    <span class="n">requirements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;key1&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<p>Configuring worker
+<div class="highlight"><pre><span></span><code>tailor worker --capability key1
+</code></pre></div></p>
+<p>Multiple capabilities may be assigned by repeating the configuration key:</p>
+<div class="highlight"><pre><span></span><code>tailor worker --capability key1 --capability key2
 </code></pre></div>
                 
               
