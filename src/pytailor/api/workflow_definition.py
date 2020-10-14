@@ -18,19 +18,20 @@ class WorkflowDefinition(APIBase):
     Create a new workflow definition.
     Workflow Definitions are parameterized and reusable blueprints for computing workflows.
 
-    Parameters
-    ----------
-    name : str, optional
+    **Parameters**
+
+
+    - **name** str, optional
         Provide a name for this workflow definition.
-    dag : DAG
+    - **dag** : DAG
         Provide a dag object for this workflow definition.
-    inputs_schema : dict, optional
+    - **inputs_schema** dict, optional
         JSON-schema for rendering of inputs in the react web app and validating the structure and data typing of the
         input parameters (dict)
-    outputs_schema : dict, optional
+    - **outputs_schema** dict, optional
         JSON-schema for validating the structure and data typing of the
         output parameters (dict)
-    files_schema : dict, optional
+    - **files_schema** dict, optional
         JSON-file for rendering of file upload tab in the react web app and
         validating file extensions etc.
     """
