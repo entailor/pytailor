@@ -1,4 +1,3 @@
-### pyTailor Tutorial 7
 This example introduces the following NEW concepts:
 
 - Use BranchTask to "branch out" a DAG
@@ -9,7 +8,7 @@ This example introduces the following NEW concepts:
 
 *branch_files* is given as one or more file tags.
 
-``` python 
+```python
 from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###

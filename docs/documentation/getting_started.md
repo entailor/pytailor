@@ -1,15 +1,15 @@
 # Getting started
 
-To use Pytailor you need to connect to a Tailor backend. The easiest way to get started
-with Tailor is to sign up for a free account at [Tailor.wf](https://tailor.wf). For other
+To use pytailor you need to connect to a Tailor backend. The easiest way to get started
+with Tailor is to sign up for a free account at [tailor.wf](https://tailor.wf). For other
 options please [contact us](mailto:sales@tailor.wf). In the following it us assumed that
-you are using Tailor.wf as your backend service.
+you are using tailor.wf as your backend service.
 
 ## Installation
 
 ### First time setup
 #### 1. Install pytailor
-Official releases of pytailor are available on pypi and can easily be installed with pip:
+Official releases of pytailor are available on PyPI and can easily be installed with pip:
 ```
 pip install pytailor
 ```
@@ -30,7 +30,7 @@ pip install pytailor
     ``` 
 
 #### 2. Configure backend
-When pytailor is installed your ca use the CLI to set up a barebone config file:
+When pytailor is installed you can use the CLI to set up a barebone config file:
 ```
 tailor init
 ```

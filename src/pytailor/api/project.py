@@ -41,7 +41,7 @@ class Project(APIBase):
             raise ValueError(f"Could not find project with name {project_name}.")
 
     @classmethod
-    def list_projects_names(cls):
+    def list_projects_names(cls) -> List[str]:
         with RestClient() as client:
             projects = cls._handle_request(
                 client.get_projects, error_msg=f"Error while fetching projects."

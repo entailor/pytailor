@@ -1,4 +1,3 @@
-### pyTailor Tutorial 5
 This example introduces the following NEW concepts:
 
 - For task definitions:
@@ -33,7 +32,7 @@ where val can be:
 File *names* can be accessed with queries: "<% $.files.<tag> %>" which is useful when e.g
 file name(s) are input to functions.
 
-``` python 
+```python
 from pytailor import PythonTask, DAG, Workflow, Project, FileSet
 
 ### workflow definition ###

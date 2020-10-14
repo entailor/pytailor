@@ -1,4 +1,3 @@
-### pyTailor Tutorial 3
 This example introduces the following NEW concepts:
 
 - For task definitions:
@@ -22,7 +21,7 @@ NOTE: Currently this mechanism only work with data that is directly
 -serializable. In the future non-JSON compatible objects may be handled
 as well (by use of pickling).
 
-``` python 
+```python
 from pytailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###

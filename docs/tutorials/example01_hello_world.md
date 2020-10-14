@@ -1,5 +1,4 @@
-### pyTailor Tutorial 1
-This is the Hello world example for pyTailor.
+This is the Hello world example for pytailor.
 
 This example introduces the following NEW concepts:
 
@@ -21,13 +20,13 @@ This example introduces the following NEW concepts:
 
     - Specifying a name for the DAG
 
-- Create a Workflow and run it in 'here_and_now' mode
+- Create a Workflow and run it with default settings (```distributed=False```)
 
 - Check status of the resulting Workflow after execution
 
 - Retrieve a workflow from the backend into a new Workflow object
 
-``` python 
+```python
 from pytailor import PythonTask, DAG, Project, Workflow
 
 ### dag definition ###

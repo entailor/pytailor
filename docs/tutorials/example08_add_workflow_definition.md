@@ -1,4 +1,3 @@
-### pyTailor Tutorial 8
 This example introduces the following NEW concepts:
     Create WorkflowDefinition
     For WorkflowDefinition:
@@ -12,10 +11,11 @@ This example introduces the following NEW concepts:
     Add the workflow definition to a specific project.
 
 
-``` python 
+```python
 
 from pytailor import PythonTask, DAG, WorkflowDefinition, Account, Project, \
-    InputsSchema, FilesSchema, Description, Files, Outputs, Inputs, Workflow, FileSet
+    InputsSchema, FilesSchema, Description, Files, Outputs, Inputs, Workflow, \
+    FileSet
 
 import glob
 import shutil

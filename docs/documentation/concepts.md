@@ -8,19 +8,20 @@ Directed Acyclic Graph.
 That the DAG is "Directed" means that the parent task is 
 computed before the child task. 
 
-That the DAG is "Acyclic" means that there is no way to start at any task _t_ and follow a consistently-directed 
-sequence of tasks that eventually loops back to _t_ again. In other words there are no loops in 
-the workflow. This means that strictly speaking an iteration loop (while loop) is not allowed in
-a Tailor workflow. Since iteration loops are a necessary part of many engineering workflows, 
-we are currently developing a WhileTask. A WhileTask has an internal loop that runs until a condition is met. 
-The child of the WhileTask only "sees" the resulting output and thus the WhileTask behaves just as 
-any other task in the workflow.
+That the DAG is "Acyclic" means that there is no way to start at any task _t_ and 
+follow a consistently-directed sequence of tasks that eventually loops back to _t_ 
+again. In other words there are no loops in the workflow. This means that strictly 
+speaking an iteration loop (while loop) is not allowed in a Tailor workflow. 
+Since iteration loops are a necessary part of many engineering workflows, we are 
+currently developing a WhileTask. A WhileTask has an internal loop that runs until a 
+condition is met. The child of the WhileTask only "sees" the resulting output and thus 
+the WhileTask behaves just as any other task in the workflow.
 
 ## Task definitions
 
 Task _definitions_ are parameterized and reusable blueprints for computing tasks.
 
-In Pytailor, tasks definitions are created using the
+In pytailor, tasks definitions are created using the
 [task definition classes](../api/taskdefs.md)
 
 The available task definition classes are:
@@ -36,8 +37,8 @@ The available task definition classes are:
 
 - **WhileTask** (in development)
     
-    This is the basic iteration building block. It runs the same task over and over with updated input data until a 
-    condition is met. 
+    This is the basic iteration building block. It runs the same task over and over 
+    with updated input data until a condition is met. 
 
 
 By combining the different task types, arbitrary complex tasks can be defined.
@@ -53,7 +54,7 @@ and [9](../tutorials/example09_add_workflow_definition.md).
 
 ## Workflows
 
-Workflows are instantiated DAGs with a given set of inputs and files.  Workflows are
+Workflows are instantiated DAGs with a given set of inputs and files. Workflows are
 stored on the Tailor backend under a given [Project](account_management.md).
 
 - dag
@@ -62,7 +63,7 @@ stored on the Tailor backend under a given [Project](account_management.md).
 - files (inputs files)
 - worker requirements
 
-In Pytailor, workflows are represented by the [Workflow](../api/workflow.md)  class
+In pytailor, workflows are represented by the [Workflow](../api/workflow.md) class
 
 ## Tasks
 Tasks are instantiated _task definitions_. Belongs to a _Workflow_.

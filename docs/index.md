@@ -1,10 +1,10 @@
 # Welcome to the pyTailor documentation
 
-## What is pyTailor?
+## What is pytailor?
 
-pyTailor is a python client for the Tailor automation and collaboration platform. See [Tailor.wf](https://tailor.wf) for more information.
+Pytailor is a python client for the Tailor automation and collaboration platform. See [tailor.wf](https://tailor.wf) for more information.
 
-With the pyTailor API you can:
+With the pytailor API you can:
 
 - Turn your existing python code into parameterized and reusable workflows.
 - Run workflows locally in your computer or distributed to dedicated worker nodes.
@@ -31,7 +31,7 @@ Say you have a three-step workflow like this:
     - returns a dict with essential post-processing results
 
 
-With pyTailor you can wrap these functions into [PythonTasks](api/taskdefs.md#pythontask), and then use a [DAG](api/taskdefs.md#dag) to define how these tasks relate to each other:
+With pytailor you can wrap these functions into [PythonTasks](api/taskdefs.md#pythontask), and then use a [DAG](api/taskdefs.md#dag) to define how these tasks relate to each other:
 
 
 ```python
@@ -72,19 +72,35 @@ with DAG(name="Advanced simulation dag") as dag:
     )
 ```
 
-The DAG object represents the recipe for how the the computations shall be performed. By instantiating a DAG no computations are performed, note that we are just *referencing* the functions we want to use, we are not *calling* them. DAG is short for [Directed Asyclic Graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph), a term used to describe the logical flow of computations in a workflow. The DAG defined above is visualized below:
+The DAG object represents the recipe for how the the computations shall be performed. 
+By instantiating a DAG no computations are performed, note that we are just *referencing* 
+the functions we want to use, we are not *calling* them. DAG is short for 
+[Directed Asyclic Graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph), 
+a term used to describe the logical flow of computations in a workflow. 
+The DAG defined above is visualized below:
 
 ![DAG](DAG.png)
 
-A key feature in this DAG is the use of [BranchTask](api/taskdefs.md#branchtask) to achieve parallelization or "fan-out" functionality. The term *branching* is used to describe this functionality, where one branch is created for each simulation.
+A key feature in this DAG is the use of [BranchTask](api/taskdefs.md#branchtask) 
+to achieve parallelization or "fan-out" functionality. The term *branching* is used 
+to describe this functionality, where one branch is created for each simulation.
 
-The [Inputs](api/parameterization.md#inputs), [Outputs](api/parameterization.md#outputs) and [Files](api/parameterization.md#files) objects are helper-objects for *parameterization*. When we e.g. say `kwargs={"parameters": inputs.pre_proc_data}` we are specifying that the value for the "parameters" keyword argument is parameterized and shall be looked up from the *pre_proc_data* name in the workflow's *inputs* when the task is executed. The concept of parameterization becomes clearer when we see how *inputs*, *outputs* and *files* are defined when we run a Workflow below.
+The [Inputs](api/parameterization.md#inputs), [Outputs](api/parameterization.md#outputs) 
+and [Files](api/parameterization.md#files) objects are helper-objects for 
+*parameterization*. When we e.g. say `kwargs={"parameters": inputs.pre_proc_data}` 
+we are specifying that the value for the "parameters" keyword argument is parameterized 
+and shall be looked up from the *pre_proc_data* name in the workflow's *inputs* when 
+the task is executed. The concept of parameterization becomes clearer when we see 
+how *inputs*, *outputs* and *files* are defined when we run a Workflow below.
 
-We now have a *parameterized* DAG describing the *recipe* of how we want to perform our computing workflow. Based on this definition we can *run* a [Workflow](api/workflow.md), and we have sereral options:
+We now have a *parameterized* DAG describing the *recipe* of how we want to perform 
+our computing workflow. Based on this definition we can *run* a 
+[Workflow](api/workflow.md), and we have several options:
 
 - run it directly
 - run it distributed (i.e in parallel, and optionally on several worker machines)
-- Store it as a [WorkflowDefinition](api/workflow_definition.md) so that it can be executed directly from the Tailor Webapp.
+- store it as a [WorkflowDefinition](api/workflow_definition.md) so that it can 
+be executed directly from the Tailor Webapp.
 
 For this example we're just going to run the workflow directly:
 
@@ -122,28 +138,38 @@ wf.run()
 
 ```
 
-Here we have introduced three new classes from the pyTailor API:
+Here we have introduced three new classes from the pytailor API:
 
-- [Project](documentation/account_management.md#Projects). A Tailor workflow has to be run in the context of a project.
-- [FileSet](documentation/contexts.md#Fileset). Represents an isolated file storage area in the Tailor backend and is associated with a specific workflow run.
-- [Workflow](api/workflow.md). Represents a single workflow *run*. In order to run a workflow we first instantiate the Workflow object, and then we call the `Workflow.run` method, which will start executing the workflow in the current python process.
+- [Project](documentation/account_management.md#Projects). A Tailor workflow has to be 
+run in the context of a project.
+- [FileSet](documentation/contexts.md#Fileset). Represents an isolated file storage 
+area in the Tailor backend and is associated with a specific workflow run.
+- [Workflow](api/workflow.md). Represents a single workflow *run*. In order to run a 
+workflow we first instantiate the Workflow object, and then we call the 
+`Workflow.run` method, which will start executing the workflow in the current python process.
 
 ???+ note
-    The direct mode of execution used here is handy when developing new workflows and for testing and debugging of new DAGs. For production workflow runs, *distributed* mode is suitable. See the [worker tutorial](documentation/workers.md) for more information.
+    The direct mode of execution used here is handy when developing new workflows and 
+    for testing and debugging of new DAGs. For production workflow runs, *distributed* 
+    mode is suitable. See the [worker tutorial](documentation/workers.md) for more information.
 
-Once the workflow has been started it can be monitored from the Tailor webapp. Below is shown how the workflow can be found in the list of workflows for the specific project by searching for the workflow name. When the worklfow is selected the workflow files appear on the right side for inspection and direct download.
+Once the workflow has been started it can be monitored from the Tailor webapp. 
+Below is shown how the workflow can be found in the list of workflows for the specific 
+project by searching for the workflow name. When the workflow is selected the workflow 
+files appear on the right side for inspection and direct download.
 
 ![List](List.png)
 
-Bu clicking on the *Details* link the workflow can be further inspected in the details view.
+By clicking on the *Details* link the workflow can be further inspected in the details view.
 
 ![List](Details.png)
 
 
 ## Get started with pyTailor
 
-Head over to the [Getting started](documentation/getting_started.md) section for instructions on how to setup pyTailor.
+Head over to the [Getting started](documentation/getting_started.md) section for 
+instructions on how to setup pytailor.
 
 Once you are setup you can start working through the [tutorials](tutorials/example01_hello_world.md).
 
-You can also consult the [API Reference](api/taskdefs.md) for documentation of the pyTailor API.
+You can also consult the [API Reference](api/taskdefs.md) for documentation of the pytailor API.

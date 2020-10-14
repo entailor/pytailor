@@ -1,11 +1,10 @@
-### pyTailor Tutorial 2
 This example introduces the following NEW concepts:
 
 - For PythonTasks:
 
     - Specifying keyword arguments (**kwargs) to the function
 
-``` python 
+```python
 from pytailor import PythonTask, DAG, Workflow, Project
 
 ### workflow definition ###

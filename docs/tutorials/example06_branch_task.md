@@ -1,4 +1,3 @@
-### pyTailor Tutorial 6
 This example introduces the following NEW concepts:
 
 - Use BranchTask to "branch out" a single PythonTask
@@ -16,7 +15,7 @@ dict, that dict must have integer keys to represent the index of each branch.
 Branched tasks always become children of the BranchTask that created them.
 
 
-``` python 
+```python
 from pytailor import PythonTask, BranchTask, DAG, Workflow, Project
 
 ### workflow definition ###
