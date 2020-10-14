@@ -55,7 +55,7 @@ capabilities = []
 
 ```
 
-???+ note
+!!! note
     It is also possible to configure pytailor with environmental variables by prefixing
     the environmental variables with `PYTAILOR_`. E.g. to set the API key, put it in an
     environmental variable called `PYTAILOR_API_SECRET_KEY`.

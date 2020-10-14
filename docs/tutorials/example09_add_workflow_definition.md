@@ -1,11 +1,10 @@
-### pyTailor Tutorial 9
-This example introduces nested inputs as an example of how a complex input schema is rendered in the web interface
+This example introduces nested inputs as an example of how a complex input schema 
+is rendered in the web interface
 
+```python
 
-``` python 
-
-from pytailor import PythonTask, BranchTask, DAG, WorkflowDefinition, Account, Project, \
-    InputsSchema, Description, Inputs
+from pytailor import PythonTask, BranchTask, DAG, WorkflowDefinition, Account, \
+    Project, InputsSchema, Description, Inputs
 
 import builtins
 

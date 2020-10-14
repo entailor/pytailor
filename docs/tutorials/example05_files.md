@@ -13,23 +13,24 @@ tags. These file tags refer to files in the fileset associated with
 the workflow.
 
 To send input files into a workflow the following steps are taken:
-    1. Instantiate a FileSet object
-    2. Upload files to the fileset with an associated tag
-    3. Pass the fileset along when instantiating the workflow
-    4. Tasks will now download files by referencing the file tags.
+
+- instantiate a FileSet object
+- upload files to the fileset with an associated tag
+- pass the fileset along when instantiating the workflow
+- tasks will now download files by referencing the file tags
 
 The *upload* argument to Task is used to specify files to send back to the
 fileset after a task has been run. *upload* must be a dict of (tag: val),
 where val can be:
-    1. one or more query expressions(str and list of str) which is applied
+
+- one or more query expressions(str and list of str) which is applied
        to the function output. The query result is then searched for actual files,
        these files are then uploaded to storage under the given tag.
-
-2. one or more glob-style strings (str and list of str) which is applied
+- one or more glob-style strings (str and list of str) which is applied
        in the task's working dir. Matching files are uploaded under the
        given tag.
 
-File *names* can be accessed with queries: "<% $.files.<tag> %>" which is useful when e.g
+File *names* can be accessed with queries: ```"<% $.files.<tag> %>"``` which is useful when e.g
 file name(s) are input to functions.
 
 ```python

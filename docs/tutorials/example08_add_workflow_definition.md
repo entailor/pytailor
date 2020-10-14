@@ -1,18 +1,20 @@
 This example introduces the following NEW concepts:
-    Create WorkflowDefinition
-    For WorkflowDefinition:
+
+- Create WorkflowDefinition
+
+- For WorkflowDefinition:
 
     - use *inputsschema* to specify the allowed parameters in main DAG
 
     - use *filesschema* to specify the allowed files in main DAG
 
     - use *description* to describe the workflow definition
-    Use Account to manage your workflow definitions
-    Add the workflow definition to a specific project.
-
+    
+    - use *account* to manage your workflow definitions
+    
+    - add the workflow definition to a specific project
 
 ```python
-
 from pytailor import PythonTask, DAG, WorkflowDefinition, Account, Project, \
     InputsSchema, FilesSchema, Description, Files, Outputs, Inputs, Workflow, \
     FileSet

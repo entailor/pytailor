@@ -47,7 +47,7 @@ which in turn consist of other task definitions as illustrated in tutorials
 [6](../tutorials/example06_branch_task.md), [7](../tutorials/example07_branch_dag.md) 
 and [9](../tutorials/example09_add_workflow_definition.md).
 
-???+ note
+!!! note
     Tailor is still in development and more task definition classes are likely to be
     introduced in the future to extend functionality.
 

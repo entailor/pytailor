@@ -16,10 +16,9 @@ https://yaql.readthedocs.io/en/latest/index.html.
 Inputs are immutable, in the sense that they cannot be changed during the execution
 of the workflow.
 
-NOTE: Currently this mechanism only work with data that is directly
-
--serializable. In the future non-JSON compatible objects may be handled
-as well (by use of pickling).
+!!! note
+    Currently this mechanism only works with data that is directly serializable. 
+    In the future non-JSON compatible objects may be handled as well (by use of pickling).
 
 ```python
 from pytailor import PythonTask, DAG, Workflow, Project

@@ -7,8 +7,7 @@ This example introduces the following NEW concepts:
     - Use *branch_data* to specify which data to use for branching
 
 
-nch_data* is given as one or more query-expressions. When branching is performed
-
+*branch_data* is given as one or more query-expressions. When branching is performed 
 query-expressions must evaluate to to a list or a dict. If the queries evaluates to a
 dict, that dict must have integer keys to represent the index of each branch.
 
