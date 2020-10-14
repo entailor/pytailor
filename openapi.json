@@ -2092,17 +2092,17 @@
       "ApiKey": {
         "title": "ApiKey",
         "required": [
-          "api_client_id",
-          "api_key"
+          "api_worker_id",
+          "api_secret_key"
         ],
         "type": "object",
         "properties": {
-          "api_client_id": {
-            "title": "Api Client Id",
+          "api_worker_id": {
+            "title": "Api Worker Id",
             "type": "string"
           },
-          "api_key": {
-            "title": "Api Key",
+          "api_secret_key": {
+            "title": "Api Secret Key",
             "type": "string"
           }
         }
