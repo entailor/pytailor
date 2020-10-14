@@ -41,25 +41,3 @@ class FileClient(httpx.Client):
                 with requests.get(fileset_link.url, stream=True) as r:
                     with open(local_filename, "wb") as f:
                         shutil.copyfileobj(r.raw, f)
-
-    @staticmethod
-    def _get_filename_prefix(scope_prefix, scope_indices):
-        p = PurePath(scope_prefix)
-        indices = [int(i) for i in p.parts[1:]]
-
-        if len(indices) <= len(scope_indices):
-            # downloading from a lower dup level
-            return ""
-        else:
-            # downloading from a higher dup level
-            target_indices = indices.copy()
-            for i in range(len(scope_indices)):
-                if indices[i] == scope_indices[i]:
-                    target_indices.pop(0)
-                else:
-                    break
-
-            filename_prefix = ""
-            for index in target_indices:
-                filename_prefix += str(index) + "_"
-            return filename_prefix
