@@ -181,7 +181,11 @@ class TaskRunner(APIBase):
                     )
                 # do uploads
                 with FileClient() as client:
-                    client.upload_files(files_to_upload, fileset)
+                    self._handle_request(
+                        client.upload_files,
+                        files_to_upload,
+                        fileset
+                    )
 
     def __store_output(self, task_def, function_output):
         # TODO: walk function_output and pickle non-JSON objects.
@@ -264,7 +268,11 @@ class TaskRunner(APIBase):
                 )
             # do downloads
             with FileClient() as client:
-                client.download_files(fileset, use_storage_dirs)
+                self._handle_request(
+                    client.download_files,
+                    fileset,
+                    use_storage_dirs
+                )
 
     def __handle_args(self, args):
         if as_query(args):

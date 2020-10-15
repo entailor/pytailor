@@ -51,7 +51,11 @@ class FileSet(APIBase):
             )
 
         with FileClient() as client:
-            client.upload_files(files, fileset_model)
+            self._handle_request(
+                client.upload_files,
+                files,
+                fileset_model
+            )
 
     def download(
         self, task_id: str = None, tags: List[str] = None, use_storage_dirs: bool = True
@@ -74,7 +78,11 @@ class FileSet(APIBase):
             )
 
         with FileClient() as client:
-            client.download_files(fileset_model, use_storage_dirs=use_storage_dirs)
+            self._handle_request(
+                client.download_files,
+                fileset_model,
+                use_storage_dirs
+            )
 
     def list_files(self, task_id: str = None, tags: List[str] = None):
         """List files with specified task_id and/or tags"""
