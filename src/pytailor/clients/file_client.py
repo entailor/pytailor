@@ -1,33 +1,24 @@
 from typing import Dict, List, Union
-from pathlib import Path, PurePath
-import httpx
+from pathlib import Path
 import requests
-from pytailor.models import FileSetUpload, FileSet
+from pytailor.models import FileSet
 import shutil
 import os
 
 
-class FileClient(httpx.Client):
+class FileClient(requests.Session):
     def upload_files(
         self, file_paths: Dict[str, List[Union[str, Path]]], fileset: FileSet
     ):
-
         for file_paths, fileset_links in zip(file_paths.values(), fileset.tags):
             for file_path, fileset_link in zip(file_paths, fileset_links.links):
                 if os.stat(file_path).st_size == 0:
                     response = requests.put(fileset_link.url, data=b"")
                 else:
                     with open(file_path, "rb") as f:
-                        # alt 1 not working:
-                        # response = self.put(fileset_link.url, data=f)
-
-                        # alt 2 not working:
-                        # request = self.build_request('PUT', fileset_link.url, data=f)
-                        # del request.headers['Transfer-Encoding']
-                        # response = self.send(request)
-
-                        # fallback to requests
-                        response = requests.put(fileset_link.url, data=f)
+                        response = self.put(fileset_link.url, data=f)
+                if not response.status_code == requests.codes.OK:
+                    response.raise_for_status()
 
     def download_files(self, fileset: FileSet, use_storage_dirs: bool = True):
         for fileset_links in fileset.tags:
@@ -38,6 +29,6 @@ class FileClient(httpx.Client):
                     path.parent.mkdir(parents=True, exist_ok=True)
                 else:
                     local_filename = path.name
-                with requests.get(fileset_link.url, stream=True) as r:
+                with self.get(fileset_link.url, stream=True) as r:
                     with open(local_filename, "wb") as f:
                         shutil.copyfileobj(r.raw, f)
