@@ -7,8 +7,8 @@ config = {
     "RUNDIR_TIME_FORMAT": "%Y-%m-%d-%H-%M-%S-%f",
     "LOGGING_FORMAT": "%(asctime)s %(levelname)s %(message)s",
     "API_BASE_URL": "http://localhost:8000/",
-    "API_CLIENT_ID": "15u3ho2p6p4dnrm3h7kusgq668",  # default to Tailor.wf
-    "API_IDP_URL": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_J1dKViGo4",  # default to Tailor.wf
+    "API_CLIENT_ID": "1ri1tr2uii1bfiqkr3eu9plu27",  # default to Tailor.wf
+    "API_IDP_URL": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_AoW09D1ut",  # default to Tailor.wf
     "API_WORKER_ID": "",
     "API_SECRET_KEY": "",
     "SYNC_REQUEST_TIMEOUT": 30.0,
