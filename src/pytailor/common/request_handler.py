@@ -55,7 +55,11 @@ def _handle_exception(exc, return_none_on, error_msg):
     if isinstance(exc, httpx.HTTPStatusError):
         if exc.response.status_code in return_none_on:
             return
-        error_msg += f" The response from the backend was: {exc}"
+        error_msg += f" The response from the backend was: {exc}."
+        try:
+            error_msg += f" Details: {exc.response.json()['detail']}"
+        except:
+            pass
         raise BackendResponseError(error_msg)
     elif isinstance(exc, httpx.RequestError):
         error_msg += f" {exc}"
