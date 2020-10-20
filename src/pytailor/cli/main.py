@@ -93,11 +93,8 @@ def init():
         toml.dump(
             {
                 "pytailor": {
-                    "API_BASE_URL": "<API BASE URL HERE>",
-                    "API_CLIENT_ID": "<API CLIENT ID HERE>",
                     "API_WORKER_ID": "<API WORKER ID HERE>",
-                    "API_SECRET_KEY": "<API KEY HERE>",
-                    "API_IDP_URL": "<API IDP URL HERE>",
+                    "API_SECRET_KEY": "<API SECRET KEY HERE>",
                 },
                 "worker": {
                     "my_config": {

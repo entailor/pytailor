@@ -6,7 +6,7 @@ from pathlib import Path
 config = {
     "RUNDIR_TIME_FORMAT": "%Y-%m-%d-%H-%M-%S-%f",
     "LOGGING_FORMAT": "%(asctime)s %(levelname)s %(message)s",
-    "API_BASE_URL": "http://localhost:8000/",
+    "API_BASE_URL": "https://api.tailor.wf/",
     "API_CLIENT_ID": "1ri1tr2uii1bfiqkr3eu9plu27",  # default to Tailor.wf
     "API_IDP_URL": "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_AoW09D1ut",  # default to Tailor.wf
     "API_WORKER_ID": "",

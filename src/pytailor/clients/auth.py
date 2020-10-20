@@ -120,13 +120,14 @@ class TailorAuth(httpx.Auth):
             request.headers["X-Amzn-Trace-Id"] = str(uuid.uuid4())
             yield request
         else:
-            raise AuthenticationError("Could not get access token")
+            raise AuthenticationError(
+                "Could not get access token. Check configuration.")
 
 
 # try to call refresh_tokens() when module is loaded
 try:
     refresh_tokens()
 except AuthenticationError as e:
-    # credential not configured (expected during unit tests)
+    # credential not configured (expected during unit tests and `tailor init` command)
     logger.error("Could not refresh access token. Check configuration.")
     logger.error(str(e))
