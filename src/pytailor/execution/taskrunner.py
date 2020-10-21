@@ -51,6 +51,13 @@ class TaskRunner(APIBase):
         self.__run_id = exec_data.run_id
         self.__project_id = exec_data.project_id
 
+    def __update_exec_data(self, exec_data: TaskExecutionData):
+        self.__context = exec_data.context.dict() or self.__context
+        self.__task = exec_data.task or self.__task
+        self.__fileset_id = exec_data.fileset_id or self.__fileset_id
+        self.__run_id = exec_data.run_id or self.__run_id
+        self.__project_id = exec_data.project_id or self.__project_id
+
     def run(self):
 
         self.logger.info(f"Starting task {self.__task.id}: {self.__task.name}")
@@ -67,7 +74,7 @@ class TaskRunner(APIBase):
             exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
-        self.__set_exec_data(exec_data)
+        self.__update_exec_data(exec_data)
 
         # run job in try/except:
         try:
@@ -95,7 +102,7 @@ class TaskRunner(APIBase):
                     task_update,
                     error_msg="Could not check in task.",
                 )
-            self.__set_exec_data(exec_data)
+            self.__update_exec_data(exec_data)
 
             self.logger.error(f"Task {self.__task.id} FAILED", exc_info=True)
         else:
@@ -113,7 +120,7 @@ class TaskRunner(APIBase):
                     task_update,
                     error_msg="Could not check in task.",
                 )
-            self.__set_exec_data(exec_data)
+            self.__update_exec_data(exec_data)
 
             self.logger.info(f"Task {self.__task.id} COMPLETED successfully")
 
@@ -188,9 +195,6 @@ class TaskRunner(APIBase):
                     )
 
     def __store_output(self, task_def, function_output):
-        # TODO: walk function_output and pickle non-JSON objects.
-        #       Need a mechanism to persist non-JSON objects on
-        #       the storage resource
         outputs = {}
         output_to = task_def.get("output_to")
         if output_to:
@@ -216,7 +220,7 @@ class TaskRunner(APIBase):
             exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
-        self.__set_exec_data(exec_data)
+        self.__update_exec_data(exec_data)
 
     def __run_function(self, task_def, args, kwargs):
 
@@ -330,7 +334,7 @@ class TaskRunner(APIBase):
                 task_update,
                 error_msg="Could not perform branching.",
             )
-        self.__set_exec_data(exec_data)
+        self.__update_exec_data(exec_data)
 
     def __eval_query(self, expression, data):
         # TODO: use a try/except and give a simpler error than what comes from yaql?
