@@ -6,10 +6,9 @@ from typing import Optional
 
 from pytailor.clients import RestClient
 from pytailor.common.base import APIBase
-from pytailor.common.state import State
 from pytailor.exceptions import BackendResourceError
 from pytailor.execution import SerialRunner
-from pytailor.models import Workflow as WorkflowModel, WorkflowCreate, TaskUpdate, \
+from pytailor.models import Workflow as WorkflowModel, WorkflowCreate, TaskState, \
     TaskOperation, TaskOperationType
 from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 
@@ -64,7 +63,7 @@ class Workflow(APIBase):
         self.__dag = dag
         self.__name = name or "Unnamed workflow"
         self.__inputs = inputs or {}
-        self.__state = State.PRE
+        self.__state = TaskState.PRE
         self.__fileset = fileset or FileSet(self.__project)
         self.__outputs = {}
         self.__id = None
@@ -89,7 +88,7 @@ class Workflow(APIBase):
 
     @property
     def state(self):
-        return self.__state.name
+        return self.__state
 
     @property
     def fileset(self):
@@ -120,7 +119,7 @@ class Workflow(APIBase):
     def __update_from_backend(self, wf_model: WorkflowModel):
         # used to set a references to the backend database record for the
         # workflow
-        self.__state = State[wf_model.state]
+        self.__state = wf_model.state
         self.__outputs = wf_model.outputs
         self.__id = wf_model.id
         self.__wf_def_id = wf_model.from_definition_id
@@ -216,7 +215,7 @@ class Workflow(APIBase):
         *distributed=False*
         """
 
-        if self.__state != State.PRE:
+        if self.__state != TaskState.PRE:
             raise BackendResourceError("Cannot run an existing workflow.")
 
         if not distributed:
@@ -262,7 +261,7 @@ class Workflow(APIBase):
         #     raise NotImplementedError
 
     def __assert_not_state_pre(self):
-        if self.__state == State.PRE:
+        if self.__state == TaskState.PRE:
             raise BackendResourceError(
                 "This workflow has not been run yet."
             )
