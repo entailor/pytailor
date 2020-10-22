@@ -45,14 +45,14 @@ class TaskRunner(APIBase):
         self.engine = yaql.factory.YaqlFactory().create()
 
     def __set_exec_data(self, exec_data: TaskExecutionData):
-        self.__context = exec_data.context.dict()
+        self.__context = exec_data.context.dict() if exec_data.context else None
         self.__task = exec_data.task
         self.__fileset_id = exec_data.fileset_id
         self.__run_id = exec_data.run_id
         self.__project_id = exec_data.project_id
 
     def __update_exec_data(self, exec_data: TaskExecutionData):
-        self.__context = exec_data.context.dict() or self.__context
+        self.__context = exec_data.context.dict() if exec_data.context else self.__context
         self.__task = exec_data.task or self.__task
         self.__fileset_id = exec_data.fileset_id or self.__fileset_id
         self.__run_id = exec_data.run_id or self.__run_id
@@ -65,16 +65,6 @@ class TaskRunner(APIBase):
         # step into run dir
         current_dir = Path.cwd()
         os.chdir(self.run_dir)
-
-        # check in state RUNNING
-        task_update = TaskUpdate(
-            task_id=self.__task.id, state=State.RUNNING.name, run_dir=str(self.run_dir)
-        )
-        with RestClient() as client:
-            exec_data = self._handle_request(
-                client.checkin_task, task_update, error_msg="Could not check in task."
-            )
-        self.__update_exec_data(exec_data)
 
         # run job in try/except:
         try:
@@ -138,6 +128,16 @@ class TaskRunner(APIBase):
             self.__run_branch_task()
 
     def __run_python_task(self, task_def):
+        # check in state RUNNING, and get exec data
+        task_update = TaskUpdate(
+            task_id=self.__task.id, state=State.RUNNING.name, run_dir=str(self.run_dir)
+        )
+        with RestClient() as client:
+            exec_data = self._handle_request(
+                client.checkin_task, task_update, error_msg="Could not check in task."
+            )
+        self.__update_exec_data(exec_data)
+
         parsed_args = self.__determine_args(task_def)
         parsed_kwargs = self.__determine_kwargs(task_def)
         self.__maybe_download_files(task_def)
@@ -324,9 +324,9 @@ class TaskRunner(APIBase):
 
     def __run_branch_task(self):
 
-        # check in updated outputs
         task_update = TaskUpdate(
-            run_id=self.__run_id, task_id=self.__task.id, perform_branching=True
+            task_id=self.__task.id, perform_branching=True, state=State.RUNNING.name,
+            run_dir=str(self.run_dir)
         )
         with RestClient() as client:
             exec_data = self._handle_request(
