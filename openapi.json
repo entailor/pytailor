@@ -2494,6 +2494,7 @@
       "TaskState": {
         "title": "TaskState",
         "enum": [
+          "PRE",
           "ARCHIVED",
           "FAILED",
           "STOPPED",
@@ -2691,6 +2692,10 @@
             "title": "current aggregated state of the workflow's tasks",
             "type": "string"
           },
+          "from_definition_id": {
+            "title": "The workflow definition this Workflow is based on",
+            "type": "string"
+          },
           "created_utc": {
             "title": "timestamp of when the workflow was created, in ISO-8601 datetime format",
             "type": "string"
@@ -2729,10 +2734,6 @@
           "files": {
             "title": "The Workflow's files",
             "type": "object"
-          },
-          "from_definition_id": {
-            "title": "The workflow definition this Workflow is based on",
-            "type": "string"
           },
           "tasks": {
             "title": "The Workflow's output",
@@ -2900,6 +2901,10 @@
           },
           "state": {
             "title": "current aggregated state of the workflow's tasks",
+            "type": "string"
+          },
+          "from_definition_id": {
+            "title": "The workflow definition this Workflow is based on",
             "type": "string"
           }
         }
