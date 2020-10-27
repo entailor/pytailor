@@ -40,11 +40,8 @@ the following content:
 
 ``` toml
 [pytailor]
-API_BASE_URL = "<API BASE URL HERE>"
-API_CLIENT_ID = "<API CLIENT ID HERE>"
 API_WORKER_ID = "<API WORKER ID HERE>"
-API_SECRET_KEY = "<API KEY HERE>"
-API_IDP_URL = "<API IDP URL HERE>"
+API_SECRET_KEY = "<API SECRET KEY HERE>"
 
 [worker.my_config]
 sleep = 3
@@ -55,10 +52,13 @@ capabilities = []
 
 ```
 
+Before you can start using pyTailor you need to fill in values for `API_WORKER_ID` and `API_SECRET_KEY` in the config file. These values can be found in the [profile page](https://tailor.wf/settings/profile) for your user on Tailor.wf.
+
+
 !!! note
     It is also possible to configure pytailor with environmental variables by prefixing
-    the environmental variables with `PYTAILOR_`. E.g. to set the API key, put it in an
-    environmental variable called `PYTAILOR_API_SECRET_KEY`.
+    the environmental variables with `PYTAILOR_`. E.g. to set the API secret key, put it in an environmental variable called `PYTAILOR_API_SECRET_KEY`.
+
 
 #### 3. Testing
 Once you are setup you can start working through the [tutorials](../tutorials/example01_hello_world.md).
