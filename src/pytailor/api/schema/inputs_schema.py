@@ -121,6 +121,8 @@ class InputsSchema:
 
         builder.add_schema({})
         assert isinstance(input_dict, dict), "inputs must be a dict"
+        input_json = json.dumps(input_dict)
+        input_dict = json.loads(input_json)
         builder.add_object(input_dict)
         return builder.to_schema()
 

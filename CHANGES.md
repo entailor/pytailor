@@ -2,6 +2,9 @@
 
 
 ### NEXT (Feature coming in next release, currently in master branch)
+- None yet
+
+### 0.2.3
 - Set default backend to https://api.tailor.wf/
 - Remove API_IDP_URL and API_CLIENT_ID from config.toml created by `tailor init` command
 
