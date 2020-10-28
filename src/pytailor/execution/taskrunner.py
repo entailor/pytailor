@@ -37,7 +37,7 @@ class TaskRunner(APIBase):
         self.__set_exec_data(exec_data)
 
         # get logger
-        self.logger = get_logger("JobRunner")
+        self.logger = get_logger("TaskRunner")
 
         # create a run directory (here or in self.run?)
         self.run_dir = create_rundir(logger=self.logger)
@@ -376,7 +376,7 @@ class TaskRunner(APIBase):
         if response.processing_status is ProcessingStatus.PENDING:
             retries = 0
             while response.processing_status is ProcessingStatus.PENDING:
-                print("waiting for backend result")
+                self.logger.info("Waiting for result from backend")
                 time.sleep(WAIT_SLEEP_TIME)
                 retries += 1
                 response = self._handle_request(*args, **kwargs)
