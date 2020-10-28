@@ -2267,6 +2267,16 @@
           "type": "string"
         }
       },
+      "ProcessingStatus": {
+        "title": "ProcessingStatus",
+        "enum": [
+          "COMPLETED",
+          "PENDING",
+          "FAILED"
+        ],
+        "type": "string",
+        "description": "A task checkout or checkin may initiate background processing on the backend and return a PENDING\nstatus, meaning that the caller mush check back later for the result."
+      },
       "Project": {
         "title": "Project",
         "type": "object",
@@ -2442,6 +2452,18 @@
           },
           "project_id": {
             "title": "Reference to the Workflow's project",
+            "type": "string"
+          },
+          "processing_status": {
+            "$ref": "#/components/schemas/ProcessingStatus"
+          },
+          "processing_id": {
+            "title": "Processing id",
+            "type": "string",
+            "description": "Use the processing id the retrieve PENDING results from /task/pending-results/{id}"
+          },
+          "processing_msg": {
+            "title": "A message with info about the processing result",
             "type": "string"
           }
         }
