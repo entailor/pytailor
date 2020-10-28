@@ -1,6 +1,7 @@
 import importlib
 import os
 import shutil
+import time
 from pathlib import Path
 
 import yaql
@@ -12,11 +13,14 @@ from pytailor.utils import (
     get_logger,
     list_files,
     as_query,
+    format_traceback,
+    get_basenames
 )
-from pytailor.utils import format_traceback, get_basenames
 from pytailor.models import *
 from pytailor.clients import RestClient, FileClient
 from pytailor.common.base import APIBase
+from pytailor.exceptions import BackendResponseError
+from pytailor.config import WAIT_RETRY_COUNT, WAIT_SLEEP_TIME
 
 
 def _resolve_callable(function_name):
@@ -294,7 +298,7 @@ class TaskRunner(APIBase):
                 error_msg="Could not perform branching.",
             )
             self.__update_exec_data(exec_data)
-            exec_data = self._wait_for_exec_data(
+            exec_data = self.__wait_for_task_result(
                 client.get_task_result,
                 exec_data.processing_id,
                 error_msg="Could not perform branching.",
@@ -365,6 +369,21 @@ class TaskRunner(APIBase):
         self.__update_exec_data(exec_data)
 
         self.logger.info(f"Task {self.__task.id} COMPLETED successfully")
+
+    def __wait_for_task_result(self, *args, **kwargs) -> Any:
+        time.sleep(WAIT_SLEEP_TIME)
+        response = self._handle_request(*args, **kwargs)
+        if response.processing_status is ProcessingStatus.PENDING:
+            retries = 0
+            while response.processing_status is ProcessingStatus.PENDING:
+                print("waiting for backend result")
+                time.sleep(WAIT_SLEEP_TIME)
+                retries += 1
+                response = self._handle_request(*args, **kwargs)
+                if retries > WAIT_RETRY_COUNT:
+                    raise BackendResponseError("Failed to retrieve result from "
+                                               "backend")
+        return response
 
 
 def run_task(checkout: TaskExecutionData):
