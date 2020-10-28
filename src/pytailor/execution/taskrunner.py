@@ -293,8 +293,14 @@ class TaskRunner(APIBase):
                 task_update,
                 error_msg="Could not perform branching.",
             )
+            self.__update_exec_data(exec_data)
+            exec_data = self._wait_for_exec_data(
+                client.get_task_result,
+                exec_data.processing_id,
+                error_msg="Could not perform branching.",
+            )
         self.__update_exec_data(exec_data)
-        self.state = TaskState.RUNNING
+        self.state = TaskState.COMPLETED
 
     def __eval_query(self, expression, data):
         # TODO: use a try/except and give a simpler error than what comes from yaql?

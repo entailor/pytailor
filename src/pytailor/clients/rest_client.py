@@ -177,3 +177,11 @@ class RestClient(httpx.Client):
             return TaskSummary.parse_obj(response.json())
         else:
             response.raise_for_status()
+
+    def get_task_result(self, processing_id: str) -> TaskExecutionData:
+        url = f"tasks/results/{processing_id}"
+        response = self.get(url)
+        if response.status_code == httpx.codes.OK:
+            return TaskExecutionData.parse_obj(response.json())
+        else:
+            response.raise_for_status()
