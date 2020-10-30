@@ -1,5 +1,6 @@
 import importlib
 import os
+import random
 import shutil
 import time
 from pathlib import Path
@@ -29,6 +30,15 @@ def _resolve_callable(function_name):
     module_name = ".".join(parts[:-1])
     function = getattr(importlib.import_module(module_name), func_name)
     return function
+
+
+MAX_SLEEP_TIME = 60
+
+
+def _get_sleep_time_seconds(n):
+    exp_backoff = 2 ** n
+    jitter = random.random()
+    return min(exp_backoff + jitter, MAX_SLEEP_TIME)
 
 
 class TaskRunner(APIBase):
@@ -97,6 +107,12 @@ class TaskRunner(APIBase):
             exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
+        self.__update_exec_data(exec_data)
+        exec_data = self.__wait_for_task_result(
+            client.get_task_result,
+            exec_data.processing_id,
+            error_msg="Could not perform branching.",
+        )
         self.__update_exec_data(exec_data)
         self.state = TaskState.RUNNING
 
@@ -371,14 +387,14 @@ class TaskRunner(APIBase):
         self.logger.info(f"Task {self.__task.id} COMPLETED successfully")
 
     def __wait_for_task_result(self, *args, **kwargs) -> Any:
-        time.sleep(WAIT_SLEEP_TIME)
+        retries = 0
+        time.sleep(_get_sleep_time_seconds(retries))
         response = self._handle_request(*args, **kwargs)
         if response.processing_status is ProcessingStatus.PENDING:
-            retries = 0
             while response.processing_status is ProcessingStatus.PENDING:
-                self.logger.info("Waiting for result from backend")
-                time.sleep(WAIT_SLEEP_TIME)
                 retries += 1
+                self.logger.info("Waiting for result from backend")
+                time.sleep(_get_sleep_time_seconds(retries))
                 response = self._handle_request(*args, **kwargs)
                 if retries > WAIT_RETRY_COUNT:
                     raise BackendResponseError("Failed to retrieve result from "
