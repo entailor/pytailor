@@ -1,7 +1,10 @@
 import json
+import os
 from typing import List
 
 # todo: titles and descriptions should be asserted for type
+from ..dag import DAG
+from ..fileset import FileSet
 
 files_base = {"in": {}}
 
@@ -120,6 +123,44 @@ class FilesSchema:
     def to_json(self, filename: str, indent: int = 4):
         files_dict = self.to_dict()
         json.dump(files_dict, open(filename, "w+"), indent=indent)
+
+    @classmethod
+    def from_fileset_and_dag(cls, fileset: FileSet, dag: DAG):
+        download_tags = []
+        cls._get_file_tags(dag.to_dict(), key="download", tags=download_tags)
+        upload_tags = []
+        cls._get_file_tags(dag.to_dict(), key="upload", tags=upload_tags)
+        files_schema = cls()
+        for tag in download_tags:
+            if tag not in upload_tags:
+                files = fileset.list_files(tags=[tag])[0]["filenames"]
+                multiple = True if len(files) > 1 else False
+                ext = list(set([os.path.splitext(file)[1] for file in files]))
+                files_schema.add_file(tag=tag,
+                                      ext=ext,
+                                      required=True,
+                                      multiple=multiple)
+        return files_schema
+
+    @classmethod
+    def _get_file_tags(cls, dag_item, key="download", tags=None):
+        if tags is None:
+            tags = []
+        if isinstance(dag_item, dict):
+            if dag_item.get(key):
+                tag = dag_item.get(key)
+                if isinstance(tag, dict):
+                    tag = list(tag.keys())
+                if not isinstance(tag, list):
+                    tag = [tag]
+                tags.extend(tag)
+            if dag_item.get("tasks"):
+                cls._get_file_tags(dag_item["tasks"], key, tags)
+            if dag_item.get("task"):
+                cls._get_file_tags(dag_item["task"], key, tags)
+        if isinstance(dag_item, list):
+            for sub_item in dag_item:
+                cls._get_file_tags(sub_item, key, tags)
 
     @property
     def tags(self):

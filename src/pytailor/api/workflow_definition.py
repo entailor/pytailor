@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import os
 from typing import Optional, List
 
+from .schema import InputsSchema, FilesSchema
+
+from .schema.description import Description
 from pytailor.clients import RestClient
 from pytailor.common.base import APIBase
 from pytailor.exceptions import BackendResourceError
@@ -11,6 +15,7 @@ from pytailor.utils import dict_keys_str_to_int, dict_keys_int_to_str
 from .account import Account
 from .dag import DAG
 from .project import Project
+from .workflow import Workflow
 
 
 class WorkflowDefinition(APIBase):
@@ -144,6 +149,26 @@ class WorkflowDefinition(APIBase):
         wf_def.__update_from_backend(wf_def_model)
 
         return wf_def
+
+    @classmethod
+    def from_workflow(cls, wf: Workflow, wf_def_name: str, wf_def_description: str):
+        assert wf.id, 'the workflow must be an existing run to access ' \
+                                  'filesset and generate definition'
+        description = Description.from_dag(wf.dag,
+                                           wf_def_name=wf_def_name,
+                                           wf_def_description=wf_def_description)
+        inputs_schema = InputsSchema(inputs=wf.inputs)
+        inputs_schema.add_defaults(wf.inputs)
+        files_schema = FilesSchema.from_fileset_and_dag(fileset=wf.fileset, dag=wf.dag)
+
+        return cls(
+            name=description.name,
+            description=description.to_string(),
+            dag=wf.dag,
+            inputs_schema=inputs_schema.to_dict(),
+            outputs_schema=None,
+            files_schema=files_schema.to_dict(),
+        )
 
     def __update_from_backend(self, wf_def_model: WorkflowDefinitionModel):
         self.__id = wf_def_model.id
