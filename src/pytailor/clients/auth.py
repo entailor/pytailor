@@ -120,8 +120,7 @@ class TailorAuth(httpx.Auth):
             request.headers["Authorization"] = "Bearer " + access_token
             # Add AWS correlation ID in order to trace requests through the network
             request.headers["X-Amzn-Trace-Id"] = str(uuid.uuid4())
-            request.headers["X-TAILOR-CLIENT"] = "pytailor"
-            request.headers["X-CLIENT-VERSION"] = __version__
+            request.headers["User-Agent"] = "pytailor/" + __version__
             yield request
         else:
             raise AuthenticationError(
