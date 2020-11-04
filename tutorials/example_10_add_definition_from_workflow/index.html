@@ -13,7 +13,7 @@
     
     
       
-        <title>Tutorial 8 - pyTailor</title>
+        <title>Tutorial 10 - pyTailor</title>
       
     
     
@@ -79,7 +79,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Tutorial 8
+              Tutorial 10
             
           </span>
         </div>
@@ -466,18 +466,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../example08_add_workflow_definition/" class="md-nav__link">
       Tutorial 8
     </a>
-    
   </li>
 
         
@@ -497,11 +490,18 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../example_10_add_definition_from_workflow/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       Tutorial 10
     </a>
+    
   </li>
 
         
@@ -522,146 +522,34 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/entailor/pytailor/edit/master/docs/tutorials/example08_add_workflow_definition.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/entailor/pytailor/edit/master/docs/tutorials/example_10_add_definition_from_workflow.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>Tutorial 8</h1>
+                  <h1>Tutorial 10</h1>
                 
-                <p>This example introduces the following NEW concepts:</p>
-<ul>
-<li>
-<p>Create WorkflowDefinition</p>
-</li>
-<li>
-<p>For WorkflowDefinition:</p>
-<ul>
-<li>
-<p>use <em>inputsschema</em> to specify the allowed parameters in main DAG</p>
-</li>
-<li>
-<p>use <em>filesschema</em> to specify the allowed files in main DAG</p>
-</li>
-<li>
-<p>use <em>description</em> to describe the workflow definition</p>
-</li>
-<li>
-<p>use <em>account</em> to manage your workflow definitions</p>
-</li>
-<li>
-<p>add the workflow definition to a specific project</p>
-</li>
-</ul>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">PythonTask</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">WorkflowDefinition</span><span class="p">,</span> <span class="n">Account</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> \
-    <span class="n">InputsSchema</span><span class="p">,</span> <span class="n">FilesSchema</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">Files</span><span class="p">,</span> <span class="n">Outputs</span><span class="p">,</span> <span class="n">Inputs</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> \
-    <span class="n">FileSet</span>
-
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-
-<span class="c1"># a modified dag description with parametrization from example 5</span>
-
-<span class="n">files</span> <span class="o">=</span> <span class="n">Files</span><span class="p">()</span>
-<span class="n">outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">()</span>
-<span class="n">inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
-
-<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dag&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
-
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 1&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;**/*.txt&quot;</span><span class="p">],</span>
-        <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;recursive&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-        <span class="n">download</span><span class="o">=</span><span class="n">files</span><span class="o">.</span><span class="n">testfiles</span><span class="p">,</span>  <span class="c1"># refers to a file tag</span>
-        <span class="n">output_to</span><span class="o">=</span><span class="n">outputs</span><span class="o">.</span><span class="n">downloaded_files</span><span class="p">,</span>  <span class="c1"># put function&#39;s return value on</span>
-        <span class="c1"># outputs.downloaded_files</span>
-    <span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 2&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">files</span><span class="o">.</span><span class="n">inpfile</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;newfile.txt&quot;</span><span class="p">],</span>
-        <span class="n">download</span><span class="o">=</span><span class="n">files</span><span class="o">.</span><span class="n">inpfile</span><span class="p">,</span>
-        <span class="n">upload</span><span class="o">=</span><span class="p">{</span><span class="n">files</span><span class="o">.</span><span class="n">outfile</span><span class="p">:</span> <span class="s2">&quot;newfile.txt&quot;</span><span class="p">},</span>
-    <span class="p">)</span>
-    <span class="n">t3</span> <span class="o">=</span> <span class="n">PythonTask</span><span class="p">(</span>
-        <span class="n">function</span><span class="o">=</span><span class="nb">print</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;task 3&quot;</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;My input print&quot;</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">print</span><span class="p">],</span>
-        <span class="n">parents</span><span class="o">=</span><span class="n">t1</span><span class="p">,</span>
-    <span class="p">)</span>
-
-<span class="c1"># define inputsschema</span>
-<span class="n">example_inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;print&#39;</span><span class="p">:</span> <span class="s1">&#39;hello, world!&#39;</span><span class="p">}</span>
-<span class="n">inputs_schema</span> <span class="o">=</span> <span class="n">InputsSchema</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">example_inputs</span><span class="p">)</span>
-<span class="n">inputs_schema</span><span class="o">.</span><span class="n">add_defaults</span><span class="p">(</span><span class="n">example_inputs</span><span class="p">)</span>
-
-<span class="c1"># define filesschema</span>
-<span class="n">files_schema</span> <span class="o">=</span> <span class="n">FilesSchema</span><span class="p">()</span>
-<span class="n">files_schema</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;inpfile&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;txt&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">multiple</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">files_schema</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;testfiles&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;txt&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">multiple</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <p>This example shows how to create a workflow definition from an existing workflow</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pytailor</span> <span class="kn">import</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">FilesSchema</span><span class="p">,</span> <span class="n">WorkflowDefinition</span><span class="p">,</span> <span class="n">Account</span>
 
 <span class="n">wf_def_description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">This workflow definition has the following steps:</span>
-<span class="s2">    - Download testfiles and sends filename as output</span>
-<span class="s2">    - Download inpfile and upload files</span>
-<span class="s2">    - prints the inputs.print argument</span>
+<span class="s2">It is useful to write a stepwise description of your workflow</span>
+<span class="s2">The description is rendered in the Tailor Web App with </span>
+<span class="s2"> [Markdown syntax](https://www.markdownguide.org/basic-syntax/).</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">description</span> <span class="o">=</span> <span class="n">Description</span><span class="o">.</span><span class="n">from_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span>
-                                   <span class="n">wf_def_name</span><span class="o">=</span><span class="s1">&#39;Example 8 Hello world workflow &#39;</span>
-                                               <span class="s1">&#39;definition&#39;</span><span class="p">,</span>
-                                   <span class="n">wf_def_description</span><span class="o">=</span><span class="n">wf_def_description</span><span class="p">)</span>
 
 
-<span class="c1"># create the workflow definition</span>
+<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="o">.</span><span class="n">from_project_and_id</span><span class="p">(</span><span class="n">prj</span><span class="p">,</span> <span class="mi">277</span><span class="p">)</span> <span class="c1"># replace with existing wf.id in project</span>
+<span class="n">wf_def</span> <span class="o">=</span> <span class="n">WorkflowDefinition</span><span class="o">.</span><span class="n">from_workflow</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">wf_def_description</span><span class="o">=</span><span class="n">wf_def_description</span><span class="p">,</span>
+                                          <span class="n">wf_def_name</span><span class="o">=</span><span class="s1">&#39;A descriptive name&#39;</span><span class="p">)</span>
 
-<span class="n">wf_def</span> <span class="o">=</span> <span class="n">WorkflowDefinition</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="n">description</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span>
-    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
-    <span class="n">inputs_schema</span><span class="o">=</span><span class="n">inputs_schema</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-    <span class="n">files_schema</span><span class="o">=</span><span class="n">files_schema</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-<span class="p">)</span>
-
-<span class="c1"># get an account and add wf_def to account</span>
-<span class="c1"># (requires account admin privileges)</span>
 <span class="n">account</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">get_my_accounts</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">wf_def</span><span class="o">.</span><span class="n">add_to_account</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
-
-<span class="c1"># wf_def has now gotten an id</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-<span class="c1"># the workflow definition can now be added to a project</span>
-<span class="c1"># (requires account admin privileges)</span>
-<span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
 <span class="n">prj</span><span class="o">.</span><span class="n">add_workflow_definition</span><span class="p">(</span><span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </code></pre></div>
-<p>The workflow definition is now available as a definition to create a new workflow in the 
-Tailor Web APP</p>
-<p><img alt="List" src="../New_workflow.png" /></p>
-<p>You can list available workflow definitions 
-<div class="highlight"><pre><span></span><code><span class="n">prj</span><span class="o">.</span><span class="n">list_available_workflow_definitions</span><span class="p">()</span>
-</code></pre></div></p>
-<p>The definition can be collected from project and definition id at a later stage, and a
- workflow can also be instantiated from a workflow definition id. </p>
-<div class="highlight"><pre><span></span><code><span class="n">wf_def</span> <span class="o">=</span> <span class="n">WorkflowDefinition</span><span class="o">.</span><span class="n">from_project_and_id</span><span class="p">(</span><span class="n">prj</span><span class="p">,</span> <span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-
-<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="o">.</span><span class="n">from_definition_id</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span>
-                                 <span class="n">wf_def_id</span><span class="o">=</span><span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my workflow&quot;</span><span class="p">,</span>
-                                 <span class="n">inputs</span><span class="o">=</span><span class="n">example_inputs</span><span class="p">,</span>
-                                 <span class="n">fileset</span><span class="o">=</span><span class="n">fileset</span><span class="p">)</span>
-<span class="n">wf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-</code></pre></div>
-<p>Executing a workflow from workflow definition makes it possible to start it 
-from the Tailor Web App.</p>
-<p><img alt="List" src="../Start_new.png" /></p>
-<p>You can remove your own definitions from project</p>
-<div class="highlight"><pre><span></span><code><span class="n">prj</span><span class="o">.</span><span class="n">remove_workflow_definition</span><span class="p">(</span><span class="n">wf_def</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-</code></pre></div>
+<p>The Definition is now available in the Tailor Web App.</p>
+<p><img alt="List" src="../Def_from_wf.png" /></p>
                 
               
               
@@ -680,7 +568,7 @@ from the Tailor Web App.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../example07_branch_dag/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../example09_add_workflow_definition/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -689,25 +577,11 @@ from the Tailor Web App.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Tutorial 7
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../example09_add_workflow_definition/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
                 Tutorial 9
               </div>
             </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
           </a>
+        
         
       </nav>
     </div>
