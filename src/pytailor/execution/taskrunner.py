@@ -54,11 +54,13 @@ class TaskRunner(APIBase):
 
         self.engine = yaql.factory.YaqlFactory().create()
 
-        self.state = exec_data.task.state
+        self.state = TaskState.RESERVED
 
     def __set_exec_data(self, exec_data: TaskExecutionData):
         self.__context = exec_data.context.dict() if exec_data.context else None
-        self.__task = exec_data.task
+        self.__task_id = exec_data.task_id
+        self.__definition = exec_data.definition
+        self.__name = self.__definition["name"] if self.__definition else None
         self.__fileset_id = exec_data.fileset_id
         self.__run_id = exec_data.run_id
         self.__project_id = exec_data.project_id
@@ -66,14 +68,17 @@ class TaskRunner(APIBase):
     def __update_exec_data(self, exec_data: TaskExecutionData):
         self.__context = exec_data.context.dict() if exec_data.context \
             else self.__context
-        self.__task = exec_data.task or self.__task
+        self.__task_id = exec_data.task_id or self.__task_id
+        self.__definition = exec_data.definition or self.__definition
+        self.__name = self.__definition["name"] if self.__definition else self.__name
         self.__fileset_id = exec_data.fileset_id or self.__fileset_id
         self.__run_id = exec_data.run_id or self.__run_id
         self.__project_id = exec_data.project_id or self.__project_id
 
     def run(self):
 
-        self.logger.info(f"Starting task {self.__task.id}: {self.__task.name}")
+        self.state = TaskState.RUNNING
+        self.logger.info(f"Starting task {self.__task_id}: {self.__name}")
 
         # step into run dir
         current_dir = Path.cwd()
@@ -92,7 +97,7 @@ class TaskRunner(APIBase):
 
     def __execute_task(self):
         # call job-type specific code
-        task_def = self.__task.definition
+        task_def = self.__definition
         if TaskType(task_def["type"]) == TaskType.PYTHON:
             self.__run_python_task(task_def)
         elif TaskType(task_def["type"]) == TaskType.BRANCH:
@@ -101,7 +106,7 @@ class TaskRunner(APIBase):
     def __run_python_task(self, task_def):
         # check in state RUNNING, and get exec data
         task_update = TaskUpdate(
-            task_id=self.__task.id, state=TaskState.RUNNING, run_dir=str(self.run_dir)
+            task_id=self.__task_id, state=self.state, run_dir=str(self.run_dir)
         )
         with RestClient() as client:
             exec_data = self._handle_request(
@@ -114,7 +119,6 @@ class TaskRunner(APIBase):
             error_msg="Could not perform branching.",
         )
         self.__update_exec_data(exec_data)
-        self.state = TaskState.RUNNING
 
         parsed_args = self.__determine_args(task_def)
         parsed_kwargs = self.__determine_kwargs(task_def)
@@ -154,7 +158,7 @@ class TaskRunner(APIBase):
                 # DO UPLOAD
 
                 fileset_upload = FileSetUpload(
-                    task_id=self.__task.id, tags=get_basenames(files_to_upload)
+                    task_id=self.__task_id, tags=get_basenames(files_to_upload)
                 )
                 # get upload links
                 with RestClient() as client:
@@ -193,7 +197,7 @@ class TaskRunner(APIBase):
 
         # check in updated outputs
         task_update = TaskUpdate(
-            run_id=self.__run_id, task_id=self.__task.id, outputs=outputs
+            run_id=self.__run_id, task_id=self.__task_id, outputs=outputs
         )
         with RestClient() as client:
             exec_data = self._handle_request(
@@ -239,7 +243,7 @@ class TaskRunner(APIBase):
         # DO DOWNLOAD
         if download:
             use_storage_dirs = task_def.get("use_storage_dirs", True)
-            fileset_download = FileSetDownload(task_id=self.__task.id, tags=download)
+            fileset_download = FileSetDownload(task_id=self.__task_id, tags=download)
             # get download links
             with RestClient() as client:
                 fileset = self._handle_request(
@@ -304,7 +308,7 @@ class TaskRunner(APIBase):
     def __run_branch_task(self):
 
         task_update = TaskUpdate(
-            task_id=self.__task.id, perform_branching=True, state=TaskState.RUNNING,
+            task_id=self.__task_id, perform_branching=True, state=self.state,
             run_dir=str(self.run_dir)
         )
         with RestClient() as client:
@@ -320,6 +324,8 @@ class TaskRunner(APIBase):
                 error_msg="Could not perform branching.",
             )
         self.__update_exec_data(exec_data)
+        # dont need to check in completed which is already done backend
+        # just update state locally
         self.state = TaskState.COMPLETED
 
     def __eval_query(self, expression, data):
@@ -345,14 +351,14 @@ class TaskRunner(APIBase):
         self.state = TaskState.FAILED
 
         failure_detail = "".join(format_traceback(e))
-        failure_summary = f"Error when executing task {self.__task.id}"
+        failure_summary = f"Error when executing task {self.__task_id}"
         if hasattr(e, "message"):
             failure_summary: str = e.message
 
         # check in state FAILED
         task_update = TaskUpdate(
             run_id=self.__run_id,
-            task_id=self.__task.id,
+            task_id=self.__task_id,
             state=self.state,
             failure_detail=failure_detail,
             failure_summary=failure_summary,
@@ -365,7 +371,7 @@ class TaskRunner(APIBase):
             )
         self.__update_exec_data(exec_data)
 
-        self.logger.error(f"Task {self.__task.id} FAILED", exc_info=True)
+        self.logger.error(f"Task {self.__task_id} FAILED", exc_info=True)
 
     def __checkin_completed(self):
         self.state = TaskState.COMPLETED
@@ -373,7 +379,7 @@ class TaskRunner(APIBase):
         # check in state COMPLETED
         task_update = TaskUpdate(
             run_id=self.__run_id,
-            task_id=self.__task.id,
+            task_id=self.__task_id,
             state=self.state,
         )
         with RestClient() as client:
@@ -384,7 +390,7 @@ class TaskRunner(APIBase):
             )
         self.__update_exec_data(exec_data)
 
-        self.logger.info(f"Task {self.__task.id} COMPLETED successfully")
+        self.logger.info(f"Task {self.__task_id} COMPLETED successfully")
 
     def __wait_for_task_result(self, *args, **kwargs) -> Any:
         retries = 0

@@ -701,6 +701,53 @@
         ]
       }
     },
+    "/tasks/results/{processing_id}": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Check for results of backend processing job",
+        "operationId": "task_results_tasks_results__processing_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Processing Id",
+              "type": "string"
+            },
+            "name": "processing_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskExecutionData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
     "/profile": {
       "get": {
         "tags": [
@@ -2430,13 +2477,13 @@
             "title": "The current Task Run id, if it is running",
             "type": "string"
           },
-          "task": {
-            "title": "The task",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Task"
-              }
-            ]
+          "task_id": {
+            "title": "The task's id",
+            "type": "string"
+          },
+          "definition": {
+            "title": "The task's definition",
+            "type": "object"
           },
           "context": {
             "title": "The task's context",
