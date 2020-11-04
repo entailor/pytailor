@@ -203,3 +203,43 @@ data_workflow_create_dag = {
     "worker_name_restriction": None,
     "fileset_id": "1",
 }
+
+
+dag_data = {
+        "name": "dag",
+        "links": {},
+        "tasks": [
+            {
+                "name": "branch",
+                "task": {
+                    "name": "sub-dag",
+                    "links": {"0": [2], "1": [2], "2": []},
+                    "tasks": [
+                        {
+                            "name": "task 1",
+                            "function": "builtins.print",
+                            "type": "python",
+                        },
+                        {
+                            "name": "task 2",
+                            "args": [
+                                "This arg will be overwritten by the BranchTask"
+                            ],
+                            "function": "builtins.print",
+                            "type": "python",
+                        },
+                        {
+                            "name": "task 3",
+                            "args": ["Hello from task 3 which got no args from duplicate..."],
+                            "function": "builtins.print",
+                            "type": "python",
+                        },
+                    ],
+                    "type": "dag",
+                },
+                "branch_data": ["Duplicated 1", "Duplicated 2"],
+                "type": "branch",
+            }
+        ],
+        "type": "dag",
+}
