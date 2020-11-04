@@ -92,9 +92,14 @@ print(wf_def.id)
 prj = Project.from_name("Test")
 prj.add_workflow_definition(wf_def.id)
 
-# if you want ...
+# The workflow definition is now available to generate a new workflow in the
+# Tailor Web APP
+
+# You can list available workflow definitions
 prj.list_available_workflow_definitions()
 
+# The definition can be collected from project and definition id, and a
+#  workflow can also be instantiated from a workflow definition id and run
 wf_def = WorkflowDefinition.from_project_and_id(prj, wf_def.id)
 fileset = FileSet(prj)
 fileset.upload(
@@ -102,13 +107,6 @@ fileset.upload(
     inpfile=["testfiles/testfile_03.txt"],
 )
 
-# wf = Workflow(project=prj,
-#               dag=wf_def.dag,
-#               name="my workflow",
-#               inputs=example_inputs,
-#               fileset=fileset)
-
-# a workflow can also be instantiated from a workflow definition id
 wf = Workflow.from_definition_id(project=prj,
                                  wf_def_id=wf_def.id,
                                  name="my workflow",
@@ -117,5 +115,5 @@ wf = Workflow.from_definition_id(project=prj,
 
 wf.run()
 
-# if you want ...
-prj.remove_workflow_definition(wf_def.id)
+# You can remove your own definitions from project
+# prj.remove_workflow_definition(wf_def.id)

@@ -98,31 +98,44 @@ print(wf_def.id)
 prj = Project.from_name("Test")
 prj.add_workflow_definition(wf_def.id)
 
-# if you want ...
+``` 
+
+The workflow definition is now available as a definition to create a new workflow in the 
+Tailor Web APP
+
+![List](New_workflow.png)
+
+You can list available workflow definitions 
+```python
+
 prj.list_available_workflow_definitions()
 
+```
 
+The definition can be collected from project and definition id at a later stage, and a
+ workflow can also be instantiated from a workflow definition id. 
+
+```python
 wf_def = WorkflowDefinition.from_project_and_id(prj, wf_def.id)
-fileset = FileSet(prj)
-fileset.upload(
-    testfiles=["testfiles/testfile_01.txt", "testfiles/testfile_02.txt"],
-    inpfile=["testfiles/testfile_03.txt"],
-)
 
-wf = Workflow(project=prj,
-              dag=wf_def.dag,
-              name="my workflow",
-              inputs=example_inputs,
-              fileset=fileset)
 
-# not yet implemented:
-# Workflow.from_definition(wf_def.id,
-#                          name="my workflow",
-#                          inputs=example_inputs,
-#                          fileset=fileset)
-
+wf = Workflow.from_definition_id(project=prj,
+                                 wf_def_id=wf_def.id,
+                                 name="my workflow",
+                                 inputs=example_inputs,
+                                 fileset=fileset)
 wf.run()
+```
 
-# if you want ...
+Executing a workflow from workflow definition makes it possible to start it 
+from the Tailor Web App.
+
+![List](Start_new.png)
+
+ 
+
+You can remove your own definitions from project
+
+```python
 prj.remove_workflow_definition(wf_def.id)
 ```

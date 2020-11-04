@@ -23,6 +23,7 @@ nav:
       - Tutorial 7: tutorials/example07_branch_dag.md
       - Tutorial 8: tutorials/example08_add_workflow_definition.md
       - Tutorial 9: tutorials/example09_add_workflow_definition.md
+      - Tutorial 10: tutorials/example_10_add_definition_from_workflow.md
 
 theme:
   name: material
