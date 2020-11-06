@@ -39,9 +39,6 @@ prj = Project.from_name("Test")
 # create a workflow:
 wf = Workflow(project=prj, dag=dag, name="inputs workflow", inputs=workflow_inputs)
 
-# run the workflow
-wf.run(distributed=True)
-
 target_outputs = {
     'out1': {'0': {'0': 'panel1', '1': 'panel1', '2': 'panel1'},
              '1': {'0': 'panel2', '1': 'panel2'},
@@ -49,5 +46,3 @@ target_outputs = {
     'out2': {'0': {'0': '1', '1': '2', '2': '3'},
              '1': {'0': '1', '1': '2'},
              '2': {'0': '1', '1': '2', '2': '3', '3': '4'}}}
-
-# assert wf.outputs == target_outputs

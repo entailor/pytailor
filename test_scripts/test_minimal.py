@@ -9,17 +9,24 @@ with DAG(name="dag") as dag:
         args=["OK"],
     )
 
-### workflow run ###
 
-# open a project
-prj = Project.from_name("Test")
+if __name__ == "__main__":
+    ### workflow run ###
 
-# create a workflow:
-wf = Workflow(project=prj, dag=dag, name="minimal workflow")
+    # open a project
+    prj = Project.from_name("Test")
 
-# run the workflow
-wf.run()
+    # create a workflow:
+    wf = Workflow(project=prj, dag=dag, name="minimal workflow")
 
-# check the status of the workflow
-print("The workflow finished with state:")
-print(wf.state)
+    # run the workflow
+    wf.run()
+
+    # check the status of the workflow
+    print("The workflow finished with state:")
+    print(wf.state)
+
+    assert wf.state == "COMPLETED"
+
+    # cleanup
+    prj.delete_workflow(wf.id)

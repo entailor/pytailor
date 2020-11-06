@@ -34,10 +34,6 @@ inputs = {"data1": [0, 1], "data2": [2, 3]}
 # create a workflow
 wf = Workflow(project=prj, dag=dag, name="scope inheritance test", inputs=inputs)
 
-# run the workflow
-# wf.run(distributed=True, worker_name='test_worker')
-wf.run()
-
 target_outputs = {
     "downloaded": {
         "0": {
@@ -50,5 +46,3 @@ target_outputs = {
         },
     }
 }
-
-assert wf.outputs == target_outputs

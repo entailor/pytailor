@@ -38,3 +38,8 @@ wf.run()
 # check the status of the workflow
 print("The workflow finished with state:")
 print(wf.state)
+
+assert wf.state == "COMPLETED"
+
+# cleanup
+prj.delete_workflow(wf.id)

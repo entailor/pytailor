@@ -83,10 +83,6 @@ wf = Workflow(
     project=prj, dag=dag, name="file branching test", fileset=fileset, inputs=inputs
 )
 
-# run the workflow
-# wf.run(distributed=True, worker_name='test_worker')
-wf.run()
-
 target_outputs = {
     "downloaded_files": {
         "0": [
@@ -114,5 +110,3 @@ target_outputs = {
         "'testfiles\\\\1\\\\testfile_02.txt']",
     },
 }
-
-assert wf.outputs == target_outputs
