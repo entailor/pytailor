@@ -140,9 +140,6 @@ wf = Workflow(
     inputs=inputs,
 )
 
-# run the workflow
-wf.run(distributed=True, worker_name='test_worker')
-# wf.run()
 
 target_outputs = {
     "out_from_T1": [3, 4, 5],

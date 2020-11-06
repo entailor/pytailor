@@ -64,6 +64,3 @@ wf = Workflow(project=prj,
               name="simulation workflow",
               inputs=workflow_inputs,
               fileset=fileset)
-
-# run the workflow
-wf.run()

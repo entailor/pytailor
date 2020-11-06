@@ -1,0 +1,15 @@
+These scripts are used for integration testing of Tailor.
+
+Two run scripts are used to execute the tests:
+    1. run_test_scripts_direct.py
+       This script must be run with the "Run file in python console" command in PyCharm.
+    2. run_test_scripts_distributed.py
+       This script must be executed i two parts:
+           - The first part runs the workflows in distributed mode
+           - The second part makes assertions on the completed workflows
+       This requires that a Tailor worker is running in the /test_scripts directory
+       with worker_name set equal to the worker name defined in the script
+
+Notes:
+    - some assertions will currently fail with non-Windows workers due to use of file
+      path string representations.
