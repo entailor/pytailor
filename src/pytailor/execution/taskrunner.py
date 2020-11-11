@@ -112,12 +112,12 @@ class TaskRunner(APIBase):
             exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
-        self.__update_exec_data(exec_data)
-        exec_data = self.__wait_for_task_result(
-            client.get_task_result,
-            exec_data.processing_id,
-            error_msg="Could not perform branching.",
-        )
+            self.__update_exec_data(exec_data)
+            exec_data = self.__wait_for_task_result(
+                client.get_task_result,
+                exec_data.processing_id,
+                error_msg="Could not perform branching.",
+            )
         self.__update_exec_data(exec_data)
 
         parsed_args = self.__determine_args(task_def)
