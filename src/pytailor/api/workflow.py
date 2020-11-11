@@ -63,7 +63,7 @@ class Workflow(APIBase):
         self.__dag = dag
         self.__name = name or "Unnamed workflow"
         self.__inputs = inputs or {}
-        self.__state = TaskState.PRE
+        self.__state = None
         self.__fileset = fileset or FileSet(self.__project)
         self.__outputs = {}
         self.__id = None
@@ -127,7 +127,7 @@ class Workflow(APIBase):
 
     def reset_task(self, task_id: str):
         """Reset task."""
-        self.__assert_not_state_pre()
+        self.__assert_has_state()
         task_operation = TaskOperation(
             type=TaskOperationType.RESET,
         )
@@ -143,7 +143,7 @@ class Workflow(APIBase):
 
     def refresh(self) -> None:
         """Update with latest data from backend."""
-        self.__assert_not_state_pre()
+        self.__assert_has_state()
         wf_model = self.__fetch_model(self.project.id, self.id)
         self.__update_from_backend(wf_model)
 
@@ -215,7 +215,7 @@ class Workflow(APIBase):
         *distributed=False*
         """
 
-        if self.__state != TaskState.PRE:
+        if self.__state:
             raise BackendResourceError("Cannot run an existing workflow.")
 
         if not distributed:
@@ -260,8 +260,8 @@ class Workflow(APIBase):
         #     # no actions needed here
         #     raise NotImplementedError
 
-    def __assert_not_state_pre(self):
-        if self.__state == TaskState.PRE:
+    def __assert_has_state(self):
+        if not self.__state:
             raise BackendResourceError(
                 "This workflow has not been run yet."
             )
