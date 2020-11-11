@@ -54,3 +54,7 @@ inputs = {
 
 # create a workflow:
 wf = Workflow(project=prj, dag=dag, name="branch workflow", inputs=inputs)
+
+
+if __name__ == "__main__":
+    wf.run(distributed=True, worker_name="test_worker")

@@ -64,3 +64,7 @@ wf = Workflow(project=prj,
               name="simulation workflow",
               inputs=workflow_inputs,
               fileset=fileset)
+
+
+if __name__ == "__main__":
+    wf.run(distributed=True, worker_name="test_worker")

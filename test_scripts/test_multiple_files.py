@@ -110,3 +110,7 @@ target_outputs = {
         "'testfiles\\\\1\\\\testfile_02.txt']",
     },
 }
+
+
+if __name__ == "__main__":
+    wf.run(distributed=True, worker_name="test_worker")

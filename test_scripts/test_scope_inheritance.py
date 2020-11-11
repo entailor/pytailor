@@ -46,3 +46,7 @@ target_outputs = {
         },
     }
 }
+
+
+if __name__ == "__main__":
+    wf.run(distributed=True, worker_name="test_worker")
