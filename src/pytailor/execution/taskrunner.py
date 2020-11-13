@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-
 import importlib
 import os
+import random
 import shutil
-import sys
+import time
 from pathlib import Path
 
 import yaql
 
-from pytailor.common.state import State
 from pytailor.api.dag import TaskType
 from pytailor.utils import (
     create_rundir,
@@ -16,11 +14,14 @@ from pytailor.utils import (
     get_logger,
     list_files,
     as_query,
+    format_traceback,
+    get_basenames
 )
-from pytailor.utils import format_traceback, get_basenames
 from pytailor.models import *
 from pytailor.clients import RestClient, FileClient
 from pytailor.common.base import APIBase
+from pytailor.exceptions import BackendResponseError
+from pytailor.config import WAIT_RETRY_COUNT, WAIT_SLEEP_TIME
 
 
 def _resolve_callable(function_name):
@@ -31,112 +32,101 @@ def _resolve_callable(function_name):
     return function
 
 
+MAX_SLEEP_TIME = 60
+
+
+def _get_sleep_time_seconds(n):
+    exp_backoff = 2 ** n
+    jitter = random.random()
+    return min(exp_backoff + jitter, MAX_SLEEP_TIME)
+
+
 class TaskRunner(APIBase):
     def __init__(self, exec_data: TaskExecutionData):
 
         self.__set_exec_data(exec_data)
 
         # get logger
-        self.logger = get_logger("JobRunner")
+        self.logger = get_logger("TaskRunner")
 
         # create a run directory (here or in self.run?)
         self.run_dir = create_rundir(logger=self.logger)
 
         self.engine = yaql.factory.YaqlFactory().create()
 
+        self.state = TaskState.RESERVED
+
     def __set_exec_data(self, exec_data: TaskExecutionData):
-        self.__context = exec_data.context.dict()
-        self.__task = exec_data.task
+        self.__context = exec_data.context.dict() if exec_data.context else None
+        self.__task_id = exec_data.task_id
+        self.__definition = exec_data.definition
+        self.__name = self.__definition["name"] if self.__definition else None
         self.__fileset_id = exec_data.fileset_id
         self.__run_id = exec_data.run_id
         self.__project_id = exec_data.project_id
 
+    def __update_exec_data(self, exec_data: TaskExecutionData):
+        self.__context = exec_data.context.dict() if exec_data.context \
+            else self.__context
+        self.__task_id = exec_data.task_id or self.__task_id
+        self.__definition = exec_data.definition or self.__definition
+        self.__name = self.__definition["name"] if self.__definition else self.__name
+        self.__fileset_id = exec_data.fileset_id or self.__fileset_id
+        self.__run_id = exec_data.run_id or self.__run_id
+        self.__project_id = exec_data.project_id or self.__project_id
+
     def run(self):
 
-        self.logger.info(f"Starting task {self.__task.id}: {self.__task.name}")
+        self.state = TaskState.RUNNING
+        self.logger.info(f"Starting task {self.__task_id}: {self.__name}")
 
         # step into run dir
         current_dir = Path.cwd()
         os.chdir(self.run_dir)
 
-        # check in state RUNNING
-        task_update = TaskUpdate(
-            task_id=self.__task.id, state=State.RUNNING.name, run_dir=str(self.run_dir)
-        )
-        with RestClient() as client:
-            exec_data = self._handle_request(
-                client.checkin_task, task_update, error_msg="Could not check in task."
-            )
-        self.__set_exec_data(exec_data)
-
         # run job in try/except:
         try:
             self.__execute_task()
         except Exception as e:
-
-            state = State.FAILED
-
-            failure_detail = "".join(format_traceback(e))
-            failure_summary = f"Error when executing task {self.__task.id}"
-            if hasattr(e, "message"):
-                failure_summary: str = e.message
-
-            # check in state FAILED
-            task_update = TaskUpdate(
-                run_id=self.__run_id,
-                task_id=self.__task.id,
-                state=state.name,
-                failure_detail=failure_detail,
-                failure_summary=failure_summary,
-            )
-            with RestClient() as client:
-                exec_data = self._handle_request(
-                    client.checkin_task,
-                    task_update,
-                    error_msg="Could not check in task.",
-                )
-            self.__set_exec_data(exec_data)
-
-            self.logger.error(f"Task {self.__task.id} FAILED", exc_info=True)
-        else:
-            state = State.COMPLETED
-
-            # check in state COMPLETED
-            task_update = TaskUpdate(
-                run_id=self.__run_id,
-                task_id=self.__task.id,
-                state=state.name,
-            )
-            with RestClient() as client:
-                exec_data = self._handle_request(
-                    client.checkin_task,
-                    task_update,
-                    error_msg="Could not check in task.",
-                )
-            self.__set_exec_data(exec_data)
-
-            self.logger.info(f"Task {self.__task.id} COMPLETED successfully")
+            self.__checkin_failed(e)
 
         # step out of run dir
         os.chdir(current_dir)
-        self.__cleanup_after_run(state)
+        self.__cleanup_after_run()
         return True
 
     def __execute_task(self):
         # call job-type specific code
-        task_def = self.__task.definition
+        task_def = self.__definition
         if TaskType(task_def["type"]) == TaskType.PYTHON:
             self.__run_python_task(task_def)
         elif TaskType(task_def["type"]) == TaskType.BRANCH:
             self.__run_branch_task()
 
     def __run_python_task(self, task_def):
+        # check in state RUNNING, and get exec data
+        task_update = TaskUpdate(
+            task_id=self.__task_id, state=self.state, run_dir=str(self.run_dir)
+        )
+        with RestClient() as client:
+            exec_data = self._handle_request(
+                client.checkin_task, task_update, error_msg="Could not check in task."
+            )
+            self.__update_exec_data(exec_data)
+            exec_data = self.__wait_for_task_result(
+                client.get_task_result,
+                exec_data.processing_id,
+                error_msg="Could not perform branching.",
+            )
+        self.__update_exec_data(exec_data)
+
         parsed_args = self.__determine_args(task_def)
         parsed_kwargs = self.__determine_kwargs(task_def)
         self.__maybe_download_files(task_def)
         function_output = self.__run_function(task_def, parsed_args, parsed_kwargs)
         self.__store_output(task_def, function_output)
         self.__maybe_upload_files(task_def, function_output)
+        self.__checkin_completed()
 
     def __maybe_upload_files(self, task_def, function_output):
         upload = task_def.get("upload")
@@ -168,7 +158,7 @@ class TaskRunner(APIBase):
                 # DO UPLOAD
 
                 fileset_upload = FileSetUpload(
-                    task_id=self.__task.id, tags=get_basenames(files_to_upload)
+                    task_id=self.__task_id, tags=get_basenames(files_to_upload)
                 )
                 # get upload links
                 with RestClient() as client:
@@ -188,9 +178,6 @@ class TaskRunner(APIBase):
                     )
 
     def __store_output(self, task_def, function_output):
-        # TODO: walk function_output and pickle non-JSON objects.
-        #       Need a mechanism to persist non-JSON objects on
-        #       the storage resource
         outputs = {}
         output_to = task_def.get("output_to")
         if output_to:
@@ -210,13 +197,13 @@ class TaskRunner(APIBase):
 
         # check in updated outputs
         task_update = TaskUpdate(
-            run_id=self.__run_id, task_id=self.__task.id, outputs=outputs
+            run_id=self.__run_id, task_id=self.__task_id, outputs=outputs
         )
         with RestClient() as client:
             exec_data = self._handle_request(
                 client.checkin_task, task_update, error_msg="Could not check in task."
             )
-        self.__set_exec_data(exec_data)
+        self.__update_exec_data(exec_data)
 
     def __run_function(self, task_def, args, kwargs):
 
@@ -256,7 +243,7 @@ class TaskRunner(APIBase):
         # DO DOWNLOAD
         if download:
             use_storage_dirs = task_def.get("use_storage_dirs", True)
-            fileset_download = FileSetDownload(task_id=self.__task.id, tags=download)
+            fileset_download = FileSetDownload(task_id=self.__task_id, tags=download)
             # get download links
             with RestClient() as client:
                 fileset = self._handle_request(
@@ -320,9 +307,9 @@ class TaskRunner(APIBase):
 
     def __run_branch_task(self):
 
-        # check in updated outputs
         task_update = TaskUpdate(
-            run_id=self.__run_id, task_id=self.__task.id, perform_branching=True
+            task_id=self.__task_id, perform_branching=True, state=self.state,
+            run_dir=str(self.run_dir)
         )
         with RestClient() as client:
             exec_data = self._handle_request(
@@ -330,33 +317,95 @@ class TaskRunner(APIBase):
                 task_update,
                 error_msg="Could not perform branching.",
             )
-        self.__set_exec_data(exec_data)
+            self.__update_exec_data(exec_data)
+            exec_data = self.__wait_for_task_result(
+                client.get_task_result,
+                exec_data.processing_id,
+                error_msg="Could not perform branching.",
+            )
+        self.__update_exec_data(exec_data)
+        # dont need to check in completed which is already done backend
+        # just update state locally
+        self.state = TaskState.COMPLETED
 
     def __eval_query(self, expression, data):
         # TODO: use a try/except and give a simpler error than what comes from yaql?
         return self.engine(expression).evaluate(data=data)
 
-    def __cleanup_after_run(self, state):
+    def __cleanup_after_run(self):
         # delete run dir
-        if state == State.COMPLETED:  # only remove non-empty run dir if COMPLETED
+        if self.state is TaskState.COMPLETED:  # only remove non-empty run dir if COMPLETED
             try:
                 shutil.rmtree(self.run_dir, ignore_errors=True)
                 self.logger.info("Deleted run dir")
             except:
                 self.logger.info("Could not delete run dir", exc_info=1)
-
-            # TODO: trigger additional actions (FUTURE features):
-            #   - is this the last job of a COMPLETED workflow:
-            #       - if so: cleanup temporary storage, etc.
-            #   - is this the last job of a COMPLETED context group:
-            #       - if so: do context mapping (update inputs of downstream contexts)
-
         else:  # always remove empty dirs
             try:
                 self.run_dir.rmdir()
                 self.logger.info("Deleted empty run dir")
             except:  # non-empty dir, leave as is
                 pass
+
+    def __checkin_failed(self, e: Exception):
+        self.state = TaskState.FAILED
+
+        failure_detail = "".join(format_traceback(e))
+        failure_summary = f"Error when executing task {self.__task_id}"
+        if hasattr(e, "message"):
+            failure_summary: str = e.message
+
+        # check in state FAILED
+        task_update = TaskUpdate(
+            run_id=self.__run_id,
+            task_id=self.__task_id,
+            state=self.state,
+            failure_detail=failure_detail,
+            failure_summary=failure_summary,
+        )
+        with RestClient() as client:
+            exec_data = self._handle_request(
+                client.checkin_task,
+                task_update,
+                error_msg="Could not check in task.",
+            )
+        self.__update_exec_data(exec_data)
+
+        self.logger.error(f"Task {self.__task_id} FAILED", exc_info=True)
+
+    def __checkin_completed(self):
+        self.state = TaskState.COMPLETED
+
+        # check in state COMPLETED
+        task_update = TaskUpdate(
+            run_id=self.__run_id,
+            task_id=self.__task_id,
+            state=self.state,
+        )
+        with RestClient() as client:
+            exec_data = self._handle_request(
+                client.checkin_task,
+                task_update,
+                error_msg="Could not check in task.",
+            )
+        self.__update_exec_data(exec_data)
+
+        self.logger.info(f"Task {self.__task_id} COMPLETED successfully")
+
+    def __wait_for_task_result(self, *args, **kwargs) -> Any:
+        retries = 0
+        time.sleep(_get_sleep_time_seconds(retries))
+        response = self._handle_request(*args, **kwargs)
+        if response.processing_status is ProcessingStatus.PENDING:
+            while response.processing_status is ProcessingStatus.PENDING:
+                retries += 1
+                self.logger.info("Waiting for result from backend")
+                time.sleep(_get_sleep_time_seconds(retries))
+                response = self._handle_request(*args, **kwargs)
+                if retries > WAIT_RETRY_COUNT:
+                    raise BackendResponseError("Failed to retrieve result from "
+                                               "backend")
+        return response
 
 
 def run_task(checkout: TaskExecutionData):

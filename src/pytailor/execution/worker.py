@@ -61,8 +61,8 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
 
                     if task_exec_data:
                         logger.info(
-                            f"Task available, starting run for task"
-                            f"{task_exec_data.task.id}"
+                            f"Task available, starting run for task "
+                            f"{task_exec_data.task_id}"
                         )
                         asyncio_task = asyncio.create_task(
                             async_run_task(pool, task_exec_data)

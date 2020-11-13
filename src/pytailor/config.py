@@ -16,6 +16,8 @@ config = {
     "ASYNC_REQUEST_TIMEOUT": 30.0,
     "ASYNC_CONNECT_TIMEOUT": 60.0,
     "REQUEST_RETRY_COUNT": 5,
+    "WAIT_RETRY_COUNT": 10,
+    "WAIT_SLEEP_TIME": 2.,
 }
 
 allowed_config_names = list(config.keys())

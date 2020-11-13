@@ -14,6 +14,8 @@ from pytailor.config import (
     API_WORKER_ID,
     API_SECRET_KEY
 )
+from pytailor import __version__
+
 
 COGNITO_HEADERS = {
     "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
@@ -117,7 +119,8 @@ class TailorAuth(httpx.Auth):
         if access_token:
             request.headers["Authorization"] = "Bearer " + access_token
             # Add AWS correlation ID in order to trace requests through the network
-            request.headers["X-Amzn-Trace-Id"] = str(uuid.uuid4())
+            request.headers["X-Amzn-Trace-Id"] = "Root=" + str(uuid.uuid4())
+            request.headers["User-Agent"] = "pytailor/" + __version__
             yield request
         else:
             raise AuthenticationError(

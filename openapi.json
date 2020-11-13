@@ -3,7 +3,7 @@
   "info": {
     "title": "Tailor.wf REST API",
     "description": "Tailor Workflow System",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "paths": {
     "/projects/{project_id}": {
@@ -672,6 +672,53 @@
           },
           "required": true
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskExecutionData"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/tasks/results/{processing_id}": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Reports the current state of the task with the given processing_id",
+        "operationId": "task_results_tasks_results__processing_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Processing Id",
+              "type": "string"
+            },
+            "name": "processing_id",
+            "in": "path"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1488,7 +1535,7 @@
           "worker"
         ],
         "summary": "Creates a new API Key for the given account",
-        "operationId": "create_accounts__account_id__apikey_post",
+        "operationId": "create_for_account_accounts__account_id__apikey_post",
         "parameters": [
           {
             "description": "Account id",
@@ -1537,7 +1584,7 @@
           "worker"
         ],
         "summary": "Creates a new API Key for the given user",
-        "operationId": "create_accounts__account_id__users__user_id__apikey_post",
+        "operationId": "create_for_user_accounts__account_id__users__user_id__apikey_post",
         "parameters": [
           {
             "description": "Account id",
@@ -1821,6 +1868,83 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/workflows": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Lists all workflows",
+        "operationId": "account_list_admin_workflows_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Account List Admin Workflows Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/workflows/{workflow_id}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Information about a specific workflow",
+        "operationId": "account_list_admin_workflows__workflow_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Workflow Id",
+              "type": "string"
+            },
+            "name": "workflow_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
                 }
               }
             }
@@ -2267,6 +2391,16 @@
           "type": "string"
         }
       },
+      "ProcessingStatus": {
+        "title": "ProcessingStatus",
+        "enum": [
+          "COMPLETED",
+          "PENDING",
+          "FAILED"
+        ],
+        "type": "string",
+        "description": "A task checkout or checkin may initiate background processing on the backend and return a PENDING\nstatus, meaning that the caller must check back later for the result."
+      },
       "Project": {
         "title": "Project",
         "type": "object",
@@ -2284,7 +2418,12 @@
             "type": "string"
           },
           "storage_type": {
-            "$ref": "#/components/schemas/StorageType"
+            "title": "File storage type",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StorageType"
+              }
+            ]
           },
           "storage_identifier": {
             "title": "Name or equivalent within the given storage_type",
@@ -2339,7 +2478,12 @@
             "type": "string"
           },
           "state": {
-            "$ref": "#/components/schemas/TaskState"
+            "title": "current state of the task",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskState"
+              }
+            ]
           },
           "created_utc": {
             "title": "timestamp of when the task was created, in ISO-8601 datetime format",
@@ -2420,13 +2564,13 @@
             "title": "The current Task Run id, if it is running",
             "type": "string"
           },
-          "task": {
-            "title": "The task",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Task"
-              }
-            ]
+          "task_id": {
+            "title": "The task's id",
+            "type": "string"
+          },
+          "definition": {
+            "title": "The task's definition",
+            "type": "object"
           },
           "context": {
             "title": "The task's context",
@@ -2443,6 +2587,24 @@
           "project_id": {
             "title": "Reference to the Workflow's project",
             "type": "string"
+          },
+          "processing_status": {
+            "title": "Status of the checkout/checkin",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProcessingStatus"
+              }
+            ],
+            "default": "COMPLETED"
+          },
+          "processing_id": {
+            "title": "Processing id",
+            "type": "string",
+            "description": "Use the processing id to retrieve PENDING results from /task/pending-results/{id}"
+          },
+          "processing_msg": {
+            "title": "A message with info about the processing result",
+            "type": "string"
           }
         }
       },
@@ -2451,7 +2613,12 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/TaskOperationType"
+            "title": "The type of operation to be performed",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskOperationType"
+              }
+            ]
           }
         }
       },
@@ -2468,7 +2635,12 @@
         "type": "object",
         "properties": {
           "state": {
-            "$ref": "#/components/schemas/TaskState"
+            "title": "state of the task run",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskState"
+              }
+            ]
           },
           "ended_utc": {
             "title": "timestamp of when the workflow ended, in ISO-8601 datetime format",
@@ -2523,7 +2695,12 @@
             "type": "string"
           },
           "state": {
-            "$ref": "#/components/schemas/TaskState"
+            "title": "current state of the task",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskState"
+              }
+            ]
           }
         }
       },
@@ -2540,7 +2717,12 @@
             "type": "string"
           },
           "state": {
-            "$ref": "#/components/schemas/TaskState"
+            "title": "The updated state of the task run",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskState"
+              }
+            ]
           },
           "outputs": {
             "title": "The updated outputs of the task run",
@@ -2691,6 +2873,10 @@
             "title": "current aggregated state of the workflow's tasks",
             "type": "string"
           },
+          "from_definition_id": {
+            "title": "The workflow definition this Workflow is based on",
+            "type": "string"
+          },
           "created_utc": {
             "title": "timestamp of when the workflow was created, in ISO-8601 datetime format",
             "type": "string"
@@ -2729,10 +2915,6 @@
           "files": {
             "title": "The Workflow's files",
             "type": "object"
-          },
-          "from_definition_id": {
-            "title": "The workflow definition this Workflow is based on",
-            "type": "string"
           },
           "tasks": {
             "title": "The Workflow's output",
@@ -2900,6 +3082,10 @@
           },
           "state": {
             "title": "current aggregated state of the workflow's tasks",
+            "type": "string"
+          },
+          "from_definition_id": {
+            "title": "The workflow definition this Workflow is based on",
             "type": "string"
           }
         }

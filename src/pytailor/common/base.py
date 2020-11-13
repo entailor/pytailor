@@ -1,3 +1,4 @@
+import time
 from typing import Any
 
 from .request_handler import handle_request

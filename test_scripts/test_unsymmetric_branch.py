@@ -46,3 +46,7 @@ target_outputs = {
     'out2': {'0': {'0': '1', '1': '2', '2': '3'},
              '1': {'0': '1', '1': '2'},
              '2': {'0': '1', '1': '2', '2': '3', '3': '4'}}}
+
+
+if __name__ == "__main__":
+    wf.run(distributed=True, worker_name="test_worker")
