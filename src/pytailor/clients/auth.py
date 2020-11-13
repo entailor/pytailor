@@ -107,6 +107,8 @@ def __authenticate_with_idp():
         msg = "Could not authenticate."
         if "__type" in payload:
             msg += f" {payload['__type']}: {payload['message']}"
+            msg = msg.replace("username", "API_WORKER_ID")
+            msg = msg.replace("password", "API_SECRET_KEY")
         raise AuthenticationError(msg)
     return (payload["AuthenticationResult"]["AccessToken"],
             payload["AuthenticationResult"]["RefreshToken"])
