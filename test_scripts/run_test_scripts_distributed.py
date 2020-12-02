@@ -14,8 +14,8 @@ prj = Project.from_name("Test")
 from test_2level_branching import wf as wf1
 wf1.run(distributed=True, worker_name=worker_name)
 
-from test_engineering_example import wf as wf2
-wf2.run(distributed=True, worker_name=worker_name)
+# from test_engineering_example import wf as wf2
+# wf2.run(distributed=True, worker_name=worker_name)
 
 from test_many_branches import wf as wf3
 wf3.run(distributed=True, worker_name=worker_name)
@@ -37,9 +37,9 @@ wf6.run(distributed=True, worker_name=worker_name)
 # assert wf1.state == "COMPLETED"
 # prj.delete_workflow(wf1.id)
 #
-# wf2.refresh()
-# assert wf2.state == "COMPLETED"
-# prj.delete_workflow(wf2.id)
+# # wf2.refresh()
+# # assert wf2.state == "COMPLETED"
+# # prj.delete_workflow(wf2.id)
 #
 # wf3.refresh()
 # assert wf3.state == "COMPLETED"
