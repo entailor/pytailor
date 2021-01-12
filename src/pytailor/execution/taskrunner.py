@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 
 import yaql
+import jmespath
 
 from pytailor.api.dag import TaskType
 from pytailor.utils import (
@@ -330,7 +331,8 @@ class TaskRunner(APIBase):
 
     def __eval_query(self, expression, data):
         # TODO: use a try/except and give a simpler error than what comes from yaql?
-        return self.engine(expression).evaluate(data=data)
+        # return self.engine(expression).evaluate(data=data)
+        return jmespath.search(expression, data)
 
     def __cleanup_after_run(self):
         # delete run dir
