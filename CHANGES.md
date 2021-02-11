@@ -4,6 +4,9 @@
 ### NEXT (Feature coming in next release, currently in master branch)
 - None yet
 
+### 0.3.1
+- Improve error logging for worker
+
 ### 0.3.0
 - Adapt to REST-API version 2.0.0
 - Create WorkflowDefinition from existing workflow (see example 10)
