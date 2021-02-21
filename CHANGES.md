@@ -6,6 +6,9 @@
 - Replace yaql in favour of jmespath for parsing query expressions
 - Support nested query expressions in *args* and *kwargs* arguments to PythonTask (see example 11)
 
+### 0.3.1
+- Improve error logging for worker
+
 ### 0.3.0
 - Adapt to REST-API version 2.0.0
 - Create WorkflowDefinition from existing workflow (see example 10)

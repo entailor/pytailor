@@ -21,10 +21,12 @@ async def do_checkout(checkout_query: TaskCheckout) -> Optional[TaskExecutionDat
         )
 
 
-async def async_run_task(pool, task_execution_data: TaskExecutionData):
+async def async_run_task(pool, task_execution_data: TaskExecutionData, logger):
     loop = asyncio.get_running_loop()
-    result = await loop.run_in_executor(pool, run_task, task_execution_data)
-    return result
+    try:
+        return await loop.run_in_executor(pool, run_task, task_execution_data)
+    except Exception as e:
+        logger.exception(msg="Unexpected error during task execution", exc_info=e)
 
 
 # job run-manager
@@ -65,7 +67,7 @@ async def run_manager(checkout_query: TaskCheckout, n_cores, sleep):
                             f"{task_exec_data.task_id}"
                         )
                         asyncio_task = asyncio.create_task(
-                            async_run_task(pool, task_exec_data)
+                            async_run_task(pool, task_exec_data, logger)
                         )
                         asyncio_tasks.add(asyncio_task)
                         handle_finished(asyncio_tasks)
