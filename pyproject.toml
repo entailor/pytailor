@@ -17,7 +17,7 @@ toml = "^0.10.1"
 pydantic = "^1.5.1"
 requests = "^2.24.0"
 genson = "^1.2.2"
-jmespath = "^0.10.0"
+jsonpath-ng = "^1.5.2"
 
 [tool.poetry.dev-dependencies]
 datamodel-code-generator = "^0.7.0"

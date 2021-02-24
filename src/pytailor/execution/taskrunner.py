@@ -5,8 +5,7 @@ import shutil
 import time
 from pathlib import Path
 
-# import yaql
-import jmespath
+from jsonpath_ng import parse
 
 from pytailor.api.dag import TaskType
 from pytailor.utils import (
@@ -53,8 +52,6 @@ class TaskRunner(APIBase):
 
         # create a run directory (here or in self.run?)
         self.run_dir = create_rundir(logger=self.logger)
-
-        # self.engine = yaql.factory.YaqlFactory().create()
 
         self.state = TaskState.RESERVED
 
@@ -322,13 +319,13 @@ class TaskRunner(APIBase):
         self.state = TaskState.COMPLETED
 
     def __eval_query(self, expression, data):
-        if expression == "":
-            return data
+        vals = [match.value for match in parse(expression).find(data)]
+        if not vals:
+            raise QueryError(f"Query expression {expression} did not return any data.")
+        if len(vals) == 1:
+            return vals[0]
         else:
-            val = jmespath.search(expression, data)
-            if val is None:
-                raise QueryError(f"Query expression {expression} did not return any data.")
-            return val
+            return vals
 
     def __eval_nested(self, data):
         val_apply = lambda v: self.__eval_query(as_query(v), self.__context)

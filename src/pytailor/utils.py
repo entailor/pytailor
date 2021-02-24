@@ -210,12 +210,6 @@ def get_basenames(
 
 def as_query(arg):
     if isinstance(arg, str) and arg.startswith("<%") and arg.endswith("%>"):
-        query = arg[2:-2].strip()
+        return arg[2:-2].strip()
     else:
         return False
-    if query.startswith("$.") and len(query) > 2:
-        return query[2:]
-    elif query.startswith("$"):
-        return query[1:]
-    else:
-        return query
