@@ -11,15 +11,13 @@ Query expressions is a means to parameterize the inputs that are specified in
 a task definition. The query will be applied later when the workflow is
 executed and the parameters to use will be extracted from the input provided
 to that specific workflow. To use a query, the query string must be on the
-format "<% query %>". The yaql python package is used for handling queries, see
-https://yaql.readthedocs.io/en/latest/index.html.
+format "<% query %>". The query language is based on the JSONPath specification,
+see https://goessner.net/articles/JsonPath/
 
 Inputs are immutable, in the sense that they cannot be changed during the execution
 of the workflow.
 
-NOTE: Currently this mechanism only work with data that is directly
-JSON-serializable. In the future non-JSON compatible objects may be handled
-as well (by use of pickling).
+NOTE: input data must be JSON-serializable.
 """
 
 from pytailor import PythonTask, DAG, Workflow, Project
@@ -27,7 +25,6 @@ from pytailor import PythonTask, DAG, Workflow, Project
 ### workflow definition ###
 
 with DAG(name="dag") as dag:
-
     t1 = PythonTask(
         function="time.sleep", name="task 1", args=["<% $.inputs.sleep_time %>"]
     )

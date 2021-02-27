@@ -20,3 +20,7 @@ class ParameterizationError(PytailorBaseError):
 
 class AuthenticationError(PytailorBaseError):
     pass
+
+
+class QueryError(PytailorBaseError):
+    pass

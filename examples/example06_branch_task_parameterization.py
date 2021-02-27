@@ -35,7 +35,6 @@ prj = Project.from_name("Test")
 
 wf_inputs = {
     "data": [1, 2],
-    # 'data': {0: 1, 1: 2},  # alternatively use a dict with int keys
     "other": "this is not used for branching",
 }
 

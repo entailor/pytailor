@@ -19,23 +19,22 @@ from pytailor import PythonTask, BranchTask, DAG, Workflow, Project
 ### workflow definition ###
 
 with DAG(name="dag") as dag:
-    with BranchTask(name="duplicate", branch_data=["<% $.inputs.data %>"]):
+    with BranchTask(name="duplicate", branch_data="<% $.inputs.data %>"):
         PythonTask(
             function="builtins.print",
             name="task 1",
             args=["<% $.inputs.data %>", "<% $.inputs.other %>"],
         )
 
+inputs = {
+    "data": [1, 2],
+    "other": "this is not used for branching",
+}
+
 ### workflow run ###
 
 # open a project
 prj = Project.from_name("Test")
-
-inputs = {
-    "data": [1, 2],
-    # 'data': {0: 1, 1: 2},  # alternatively use a dict with int keys
-    "other": "this is not used for branching",
-}
 
 # create a workflow:
 wf = Workflow(project=prj, dag=dag, name="branch workflow", inputs=inputs)

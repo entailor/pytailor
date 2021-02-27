@@ -5,7 +5,7 @@ import shutil
 import time
 from pathlib import Path
 
-import yaql
+from jsonpath_ng import parse
 
 from pytailor.api.dag import TaskType
 from pytailor.utils import (
@@ -15,12 +15,13 @@ from pytailor.utils import (
     list_files,
     as_query,
     format_traceback,
-    get_basenames
+    get_basenames,
+    walk_and_apply
 )
 from pytailor.models import *
 from pytailor.clients import RestClient, FileClient
 from pytailor.common.base import APIBase
-from pytailor.exceptions import BackendResponseError
+from pytailor.exceptions import BackendResponseError, QueryError
 from pytailor.config import WAIT_RETRY_COUNT, WAIT_SLEEP_TIME
 
 
@@ -51,8 +52,6 @@ class TaskRunner(APIBase):
 
         # create a run directory (here or in self.run?)
         self.run_dir = create_rundir(logger=self.logger)
-
-        self.engine = yaql.factory.YaqlFactory().create()
 
         self.state = TaskState.RESERVED
 
@@ -189,8 +188,9 @@ class TaskRunner(APIBase):
             # For each (tag: query), the query is applied to function_output
             # and the result is put on $.outputs.<tag>
             for k, v in output_extraction.items():
-                if as_query(v):
-                    val = self.__eval_query(as_query(v), function_output)
+                q = as_query(v)
+                if q or q == "":
+                    val = self.__eval_query(q, function_output)
                 else:
                     raise ValueError("Bad values for *output_extraction* parameter...")
                 outputs[k] = val
@@ -262,8 +262,9 @@ class TaskRunner(APIBase):
                 )
 
     def __handle_args(self, args):
-        if as_query(args):
-            parsed_args = self.__eval_query(as_query(args), self.__context)
+        q = as_query(args)
+        if q:
+            parsed_args = self.__eval_query(q, self.__context)
             if not isinstance(parsed_args, list):
                 raise TypeError(
                     f"Query expression must evaluate to list. Got "
@@ -271,21 +272,16 @@ class TaskRunner(APIBase):
                 )
         elif not isinstance(args, list):
             raise TypeError(
-                f"*args* must be list or query-expression.. Got {type(args)}"
+                f"*args* must be list or query-expression. Got {type(args)}"
             )
         else:
-            parsed_args = []
-            for arg in args:
-                if as_query(arg):
-                    parsed_arg = self.__eval_query(as_query(arg), self.__context)
-                    parsed_args.append(parsed_arg)
-                else:
-                    parsed_args.append(arg)
+            parsed_args = self.__eval_nested(args)
         return parsed_args
 
     def __handle_kwargs(self, kwargs):
-        if as_query(kwargs):
-            parsed_kwargs = self.__eval_query(as_query(kwargs), self.__context)
+        q = as_query(kwargs)
+        if q:
+            parsed_kwargs = self.__eval_query(q, self.__context)
             if not isinstance(parsed_kwargs, dict):
                 raise TypeError(
                     f"Query expression must evaluate to dict. Got "
@@ -293,16 +289,10 @@ class TaskRunner(APIBase):
                 )
         elif not isinstance(kwargs, dict):
             raise TypeError(
-                f"*kwargs* must be dict or query-expression.. Got " f"{type(kwargs)}"
+                f"*kwargs* must be dict or query-expression. Got " f"{type(kwargs)}"
             )
         else:
-            parsed_kwargs = {}
-            for kw, arg in kwargs.items():
-                if as_query(arg):
-                    parsed_arg = self.__eval_query(as_query(arg), self.__context)
-                    parsed_kwargs[kw] = parsed_arg
-                else:
-                    parsed_kwargs[kw] = arg
+            parsed_kwargs = self.__eval_nested(kwargs)
         return parsed_kwargs
 
     def __run_branch_task(self):
@@ -329,8 +319,17 @@ class TaskRunner(APIBase):
         self.state = TaskState.COMPLETED
 
     def __eval_query(self, expression, data):
-        # TODO: use a try/except and give a simpler error than what comes from yaql?
-        return self.engine(expression).evaluate(data=data)
+        vals = [match.value for match in parse(expression).find(data)]
+        if not vals:
+            raise QueryError(f"Query expression {expression} did not return any data.")
+        if len(vals) == 1:
+            return vals[0]
+        else:
+            return vals
+
+    def __eval_nested(self, data):
+        val_apply = lambda v: self.__eval_query(as_query(v), self.__context)
+        return walk_and_apply(data, val_cond=as_query, val_apply=val_apply)
 
     def __cleanup_after_run(self):
         # delete run dir

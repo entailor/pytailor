@@ -1,6 +1,7 @@
 [![Tests](https://github.com/entailor/pytailor/workflows/Tests/badge.svg)](https://github.com/entailor/pytailor/actions?workflow=Tests)
 [![Tests](https://github.com/entailor/pytailor/workflows/Release/badge.svg)](https://github.com/entailor/pytailor/actions?workflow=Release)
 [![PyPI version](https://badge.fury.io/py/pytailor.svg)](https://badge.fury.io/py/pytailor)
+[![Python versions](https://img.shields.io/pypi/pyversions/pytailor.svg)](https://badge.fury.io/py/pytailor)
 
 # pyTailor - A python client for Tailor.wf
 

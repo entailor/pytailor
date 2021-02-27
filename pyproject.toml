@@ -15,16 +15,16 @@ httpx = "^0.16.1"
 click = "^7.1.2"
 toml = "^0.10.1"
 pydantic = "^1.5.1"
-yaql = "^1.1.3"
 requests = "^2.24.0"
 genson = "^1.2.2"
+jsonpath-ng = "^1.5.2"
 
 [tool.poetry.dev-dependencies]
-datamodel-code-generator = "^0.6.4"
+datamodel-code-generator = "^0.8.3"
 pytest = "^6.0.1"
 pytest-cov = "^2.10.1"
 pytest_httpx = "^0.10.0"
-mkdocs-material = "^6.0.1"
+mkdocs-material = "^6.2.8"
 pymdown-extensions = "^8.0"
 pygments = "^2.6.1"
 markdown = "^3.2.2"
@@ -34,6 +34,6 @@ nox = "^2020.8.22"
 [tool.poetry.scripts]
 tailor = 'pytailor.cli.main:cli'
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.0"]
 build-backend = "poetry.masonry.api"
 

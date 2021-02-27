@@ -2,7 +2,9 @@
 
 
 ### NEXT (Feature coming in next release, currently in master branch)
-- None yet
+- Add support for Python 3.9
+- Replace yaql in favour of jsonpath-ng for parsing query expressions
+- Support nested query expressions in *args* and *kwargs* arguments to PythonTask (see example 11)
 
 ### 0.3.1
 - Improve error logging for worker

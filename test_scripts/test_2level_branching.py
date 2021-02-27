@@ -10,7 +10,7 @@ from pytailor import PythonTask, BranchTask, DAG, Workflow, Project, FileSet
 with DAG(name="DAG") as dag_2lvl_dup:
     # root task of outer dag
     t1 = PythonTask(
-        name="T1", function=dict, kwargs={"0": 3, "1": 4, "2": 5},
+        name="T1", function=list, args=[[3, 4, 5]],
         output_to="out_from_T1"
     )
 
@@ -141,7 +141,7 @@ wf = Workflow(
     inputs=inputs,
 )
 
-target_outputs = {'out_from_T1': {'0': 3, '1': 4, '2': 5},
+target_outputs = {'out_from_T1': [3, 4, 5],
                   'out_from_T10': {'0': 'newfile1.txt',
                                    '1': 'newfile1.txt',
                                    '2': 'newfile1.txt'},

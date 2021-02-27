@@ -208,10 +208,8 @@ def get_basenames(
     return tag_basename_mapping
 
 
-def as_query(arg, accept_no_escape=False):
+def as_query(arg):
     if isinstance(arg, str) and arg.startswith("<%") and arg.endswith("%>"):
         return arg[2:-2].strip()
-    elif accept_no_escape and arg.startswith("$."):
-        return arg.strip()
     else:
         return False
