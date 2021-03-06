@@ -18,7 +18,8 @@ RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY,
                     httpx.codes.GATEWAY_TIMEOUT]
 
 RETRY_ERRORS = (httpx.TimeoutException,
-                httpx.NetworkError)
+                httpx.NetworkError,
+                ConnectionResetError)
 
 MAX_SLEEP_TIME = 900
 
