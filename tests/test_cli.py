@@ -21,20 +21,17 @@ mocked_worker_config = {
 
 
 @patch("pytailor.cli.main.run_worker")
-@patch("pytailor.cli.main.workflow_definition_compliance_test")
-def test_worker_no_args(wf_def_check, run_worker):
+def test_worker_no_args(run_worker):
     runner = CliRunner()
     result = runner.invoke(cli, ["worker"])
 
     assert result.exit_code == 0
     run_worker.assert_called_once_with(
         3, cpu_count() - 1, default_worker_name(), [], [])
-    wf_def_check.assert_called_once_with([])
 
 
 @patch("pytailor.cli.main.run_worker")
-@patch("pytailor.cli.main.workflow_definition_compliance_test")
-def test_worker_with_args(wf_def_check, run_worker):
+def test_worker_with_args(run_worker):
     runner = CliRunner()
     result = runner.invoke(cli, ["worker",
                                  "--sleep", 1,
@@ -48,20 +45,39 @@ def test_worker_with_args(wf_def_check, run_worker):
     assert result.exit_code == 0
     run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"],
                                        ["capability1", "capability2"])
+
+
+@patch("pytailor.cli.main.run_worker")
+@patch("pytailor.cli.main.workflow_definition_compliance_test")
+def test_worker_with_args_and_checks(wf_def_check, run_worker):
+    runner = CliRunner()
+    result = runner.invoke(cli, ["worker",
+                                 "--sleep", 1,
+                                 "--ncores", 2,
+                                 "--workername", "asdf",
+                                 "--project-id-filter", "prj_id_1",
+                                 "--project-id-filter", "prj_id_2",
+                                 "--capability", "capability1",
+                                 "--capability", "capability2",
+                                 "--checks"
+                                 ])
+    assert result.exit_code == 0
+    run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"],
+                                       ["capability1", "capability2"])
     wf_def_check.assert_called_once_with(["prj_id_1", "prj_id_2"])
 
 
 @patch("pytailor.cli.main.run_worker")
 @patch("pytailor.cli.main.workflow_definition_compliance_test")
-def test_worker_no_checks(wf_def_check, run_worker):
+def test_worker_checks(wf_def_check, run_worker):
     runner = CliRunner()
     result = runner.invoke(cli, ["worker",
-                                 "--no-checks"
+                                 "--checks"
                                  ])
     assert result.exit_code == 0
     run_worker.assert_called_once_with(
         3, cpu_count() - 1, default_worker_name(), [], [])
-    assert not wf_def_check.called
+    wf_def_check.assert_called_once_with([])
 
 
 @patch("pytailor.cli.main.run_worker")
@@ -78,8 +94,7 @@ def test_worker_checks_only(wf_def_check, run_worker):
 
 @patch.dict(pytailor.config.worker_configurations, mocked_worker_config, clear=True)
 @patch("pytailor.cli.main.run_worker")
-@patch("pytailor.cli.main.workflow_definition_compliance_test")
-def test_worker_config_only(wf_def_check, run_worker):
+def test_worker_config_only(run_worker):
     runner = CliRunner()
     result = runner.invoke(cli, ["worker",
                                  "--config", "my_config"
@@ -87,13 +102,11 @@ def test_worker_config_only(wf_def_check, run_worker):
     assert result.exit_code == 0
     run_worker.assert_called_once_with(1, 2, "asdf", ["prj_id_1", "prj_id_2"],
                                        ["capability1", "capability2"])
-    wf_def_check.assert_called_once_with(["prj_id_1", "prj_id_2"])
 
 
 @patch.dict(pytailor.config.worker_configurations, mocked_worker_config, clear=True)
 @patch("pytailor.cli.main.run_worker")
-@patch("pytailor.cli.main.workflow_definition_compliance_test")
-def test_worker_config_and_args(wf_def_check, run_worker):
+def test_worker_config_and_args(run_worker):
     runner = CliRunner()
     result = runner.invoke(cli, ["worker",
                                  "--config", "my_config",
@@ -109,8 +122,6 @@ def test_worker_config_and_args(wf_def_check, run_worker):
     run_worker.assert_called_once_with(
         1, 2, "asdf", ["prj_id_3", "prj_id_4", "prj_id_1", "prj_id_2"],
     ["capability3", "capability4", "capability1", "capability2"])
-    wf_def_check.assert_called_once_with(
-        ["prj_id_3", "prj_id_4", "prj_id_1", "prj_id_2"])
 
 
 @patch.dict(pytailor.config.worker_configurations, mocked_worker_config, clear=True)

@@ -25,6 +25,12 @@ def get_http_exception_raising_func(exception):
     return request_func
 
 
+def get_exception_raising_func(exception):
+    request_func = MagicMock()
+    request_func.side_effect = exception(exception.__name__)
+    return request_func
+
+
 @patch("pytailor.common.request_handler._get_sleep_time_seconds",
        side_effect=len(RETRY_HTTP_CODES) * REQUEST_RETRY_COUNT * [0])
 def test_handle_http_status_retry(_get_sleep_time_seconds, caplog):
@@ -44,12 +50,22 @@ def test_handle_http_status_retry(_get_sleep_time_seconds, caplog):
        side_effect=len(RETRY_HTTP_CODES) * REQUEST_RETRY_COUNT * [0])
 def test_handle_exception_retry(_get_sleep_time_seconds, caplog):
     for exception in RETRY_ERRORS:
-        with pytest.raises(BackendResponseError) as e:
-            handle_request(
-                get_http_exception_raising_func(exception),
-                "http://test_url"
-            )
+        # httpx errors
+        if issubclass(exception, httpx.RequestError):
+            with pytest.raises(BackendResponseError) as e:
+                handle_request(
+                    get_http_exception_raising_func(exception),
+                    "http://test_url"
+                )
+        # other errors
+        else:
+            with pytest.raises(Exception) as e:
+                handle_request(
+                    get_exception_raising_func(exception),
+                    "http://test_url"
+                )
         assert exception.__name__ in str(e)
+
     total_retries = REQUEST_RETRY_COUNT * len(RETRY_ERRORS)
     assert _get_sleep_time_seconds.call_count == total_retries
     assert len(caplog.messages) == total_retries
