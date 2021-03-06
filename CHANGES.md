@@ -1,7 +1,11 @@
-#Release notes
+# Release notes
 
 ### NEXT (Feature coming in next release, currently in master branch)
 - Nothing yet
+
+### 0.3.3
+- Change default for `--checks/--no-checks` flag for `tailor worker` cli command
+- Do retry on ConnectionResetError
 
 ### 0.3.2
 - Add support for Python 3.9
