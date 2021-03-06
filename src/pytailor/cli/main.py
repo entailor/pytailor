@@ -34,7 +34,7 @@ def cli():
 )
 @click.option(
     "--checks/--no-checks",
-    default=True,
+    default=False,
     help="Perform checks to validate the worker environment before starting the worker"
 )
 @click.option(
