@@ -77,6 +77,8 @@ def worker(sleep, ncores, workername, project_id_filter, checks, checks_only,
         # TODO: create a wf_def_filter based on wf_defs_info ?
 
     if checks_only:
+        if not checks:
+            wf_defs_info = workflow_definition_compliance_test(project_ids)
         return
 
     run_worker(sleep, ncores, workername, project_ids, capabilities)
