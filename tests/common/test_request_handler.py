@@ -47,7 +47,7 @@ def test_handle_http_status_retry(_get_sleep_time_seconds, caplog):
 
 
 @patch("pytailor.common.request_handler._get_sleep_time_seconds",
-       side_effect=len(RETRY_HTTP_CODES) * REQUEST_RETRY_COUNT * [0])
+       side_effect=len(RETRY_ERRORS) * REQUEST_RETRY_COUNT * [0])
 def test_handle_exception_retry(_get_sleep_time_seconds, caplog):
     for exception in RETRY_ERRORS:
         # httpx errors
@@ -59,7 +59,7 @@ def test_handle_exception_retry(_get_sleep_time_seconds, caplog):
                 )
         # other errors
         else:
-            with pytest.raises(Exception) as e:
+            with pytest.raises(exception) as e:
                 handle_request(
                     get_exception_raising_func(exception),
                     "http://test_url"

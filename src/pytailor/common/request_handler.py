@@ -4,12 +4,13 @@ import time
 from typing import Callable, Any, Union, List, Optional, Awaitable
 
 import httpx
+import requests
+import urllib3
 from pydantic import BaseModel
+from pytailor.clients.auth import refresh_tokens
 from pytailor.config import REQUEST_RETRY_COUNT
 from pytailor.exceptions import BackendResponseError
 from pytailor.utils import get_logger
-from pytailor.clients.auth import refresh_tokens
-
 
 logger = get_logger("RequestHandler")
 
@@ -17,9 +18,12 @@ RETRY_HTTP_CODES = [httpx.codes.BAD_GATEWAY,
                     httpx.codes.SERVICE_UNAVAILABLE,
                     httpx.codes.GATEWAY_TIMEOUT]
 
-RETRY_ERRORS = (httpx.TimeoutException,
-                httpx.NetworkError,
-                ConnectionResetError)
+RETRY_ERRORS = (
+    httpx.TimeoutException,
+    httpx.NetworkError,
+    requests.exceptions.ConnectionError,
+    urllib3.exceptions.ProtocolError
+)
 
 MAX_SLEEP_TIME = 900
 
