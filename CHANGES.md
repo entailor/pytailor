@@ -3,6 +3,9 @@
 ### NEXT (Feature coming in next release, currently in master branch)
 - Nothing yet
 
+### 0.3.4
+- Use retry for a broader set of connection errors
+
 ### 0.3.3
 - Change default for `--checks/--no-checks` flag for `tailor worker` cli command
 - Do retry on ConnectionResetError
