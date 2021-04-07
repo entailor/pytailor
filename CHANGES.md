@@ -1,7 +1,7 @@
 # Release notes
 
 ### NEXT (Feature coming in next release, currently in master branch)
-- Nothing yet
+- New example showing branching on two lists of files with zip logic
 
 ### 0.3.4
 - Use retry for a broader set of connection errors
