@@ -115,7 +115,7 @@ class TaskRunner(APIBase):
             exec_data = self.__wait_for_task_result(
                 client.get_task_result,
                 exec_data.processing_id,
-                error_msg="Could not perform branching.",
+                error_msg="Could not get scoped context. Backend processing timed out.",
             )
         self.__update_exec_data(exec_data)
 
@@ -311,7 +311,7 @@ class TaskRunner(APIBase):
             exec_data = self.__wait_for_task_result(
                 client.get_task_result,
                 exec_data.processing_id,
-                error_msg="Could not perform branching.",
+                error_msg="Could not perform branching. Backend processing timed out.",
             )
         self.__update_exec_data(exec_data)
         # dont need to check in completed which is already done backend
